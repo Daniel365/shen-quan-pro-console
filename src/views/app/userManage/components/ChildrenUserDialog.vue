@@ -50,7 +50,7 @@ const detailsData = computed<UserListItem>(() => props.currentRowData);
 
 // 弹窗标题
 const title = computed(() => {
-  return `${detailsData.value.nickname || '用户'} 的下级用户列表`;
+  return i18nText('userManage.childrenUserDialogTitle', { nickname: detailsData.value.nickname });
 });
 
 // 表格搜索参数

@@ -368,6 +368,7 @@
   },
   "userManage": {
     "deleteConfirm": "Are you sure you want to delete user {username}?",
-    "editUser": "Edit User"
+    "editUser": "Edit User",
+    "childrenUserDialogTitle": "List of subordinate users for {nickname}"
   }
 }

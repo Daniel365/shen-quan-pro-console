@@ -369,6 +369,7 @@
   },
   "userManage": {
     "deleteConfirm": "确定要删除用户 {username} 吗？",
-    "editUser": "编辑用户"
+    "editUser": "编辑用户",
+    "childrenUserDialogTitle": "{nickname} 的下级用户列表"
   }
 }
