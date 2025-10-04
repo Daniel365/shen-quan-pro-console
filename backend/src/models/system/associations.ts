@@ -3,7 +3,7 @@
  * @Date: 2025-08-31 19:34:49
  * @Description:
  */
-import { User, Role, Menu, OperationLog, Notification } from "./system/index";
+import { User, Menu, OperationLog, Notification } from "./index";
 
 // 菜单自关联（父子关系） - 建立菜单树形结构
 // 一个菜单可以有多个子菜单
@@ -61,4 +61,5 @@ Notification.belongsTo(User, {
   foreignKey: 'receiver_uuid',
   targetKey: 'uuid',
 })
+
 

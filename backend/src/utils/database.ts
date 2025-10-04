@@ -17,9 +17,13 @@ export const sequelizeSyncConfig = () => {
   return false;
 };
 
-/** 获取表名 */
+/** 获取管理端表名 */
 export const getDbName = (name: string) => {
   return `console_${name}`;
+};
+/** 获取app端表名 */
+export const getAppDbName = (name: string) => {
+  return `app_${name}`;
 };
 
 /** 默认查询列表配置 */

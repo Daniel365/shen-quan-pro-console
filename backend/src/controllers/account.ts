@@ -1,22 +1,170 @@
 /*
  * @Author: 350296245@qq.com
  * @Date: 2025-09-06 15:03:12
- * @Description: 通过token - 账号相关处理逻辑
+ * @Description: 注册、登录、忘记密码， 账号相关处理逻辑
  */
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import jwt from 'jsonwebtoken';
 import { emailService } from '@/config/email';
-
 import { User, Role, Menu } from '@/models/system';
 // utils
 import { buildRouterTree } from '@/utils/menu';
 import { onParamsVerify, verifyRule } from '@/paramsVerify';
+import { onPattern, RegexPatterns } from '@/utils/regexPatterns';
+import { JwtUtils } from '@/utils/jwt';
 // type
 import { StatusEnum } from '@/types/database';
 import { EmailVerificationType } from '@/types/email';
 
 export class AccountController {
+  // 注册
+  static async register(req: Request, res: Response) {
+    try {
+      const { username, email, phone, password, confirm_password, code } = req.body;
+      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.registerFormRule);
+      if (!isValid) {
+        return res.responseBuilder.error(messageKey, 400);
+      }
+
+      if (password !== confirm_password) {
+        return res.responseBuilder.error('user.passwordNotMatch');
+      }
+
+      if (!code) {
+        return res.responseBuilder.error('email.verificationCodeRequired');
+      }
+
+      const verifyResult = emailService.verifyCode(email, code, EmailVerificationType.REGISTER);
+      if (!verifyResult.verifyFlag) {
+        return res.responseBuilder.error(verifyResult.messageKey, 400);
+      }
+
+      const existingUser = await User.findOne({
+        where: {
+          [Op.or]: [{ username }, email ? { email } : {}, phone ? { phone } : {}],
+        },
+      });
+      if (existingUser) {
+        return res.responseBuilder.error('user.alreadyExists');
+      }
+
+      const user = await User.create({
+        username,
+        email,
+        phone,
+        password,
+        status: 1,
+      });
+
+      return res.responseBuilder.created({ uuid: user.uuid }, 'user.userCreated');
+    } catch (error) {
+      console.log('err', error);
+      return res.responseBuilder.error('user.registrationFailed', 500);
+    }
+  }
+
+  // 登录
+  static async login(req: Request, res: Response) {
+    try {
+      const { username, password } = req.body;
+
+      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.loginFormRule);
+      if (!isValid) {
+        return res.responseBuilder.error(messageKey, 400);
+      }
+
+      const isEmail = onPattern(username, RegexPatterns.email);
+      const user = await User.findOne({
+        where: isEmail ? { email: username } : { username },
+      });
+
+      if (!user || !(await user.validatePassword(password))) {
+        return res.responseBuilder.error('auth.invalidCredentials');
+      }
+      // 生成令牌
+      const token = JwtUtils.generateToken(user.uuid);
+      res.setHeader('Authorization', `Bearer ${token}`);
+
+      return res.responseBuilder.success(
+        {
+          username: user.username,
+          token,
+        },
+        'auth.loginSuccess'
+      );
+    } catch (error) {
+      return res.responseBuilder.error('auth.loginFailed', 500);
+    }
+  }
+  
+  // 退出登录
+  static async logout(req: Request, res: Response) {
+    try {
+      const { uuid } = req?.accountInfo || {};
+
+      // 清除请求头中的token
+      res.setHeader('Authorization', '');
+
+      return res.responseBuilder.success({}, 'auth.logoutSuccess');
+    } catch (error) {
+      return res.responseBuilder.error('auth.logoutFailed', 500);
+    }
+  }
+
+  // 设置新密码
+  static async setNewPassword(req: Request, res: Response) {
+    try {
+      const { email, code, new_password } = req.body;
+
+      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.forgotPasswordFormRule);
+      if (!isValid) {
+        return res.responseBuilder.error(messageKey, 400);
+      }
+
+      const verifyResult = emailService.verifyCode(
+        email,
+        code,
+        EmailVerificationType.RESET_PASSWORD
+      );
+      if (!verifyResult.verifyFlag) {
+        return res.responseBuilder.error(verifyResult.messageKey, 400);
+      }
+
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.responseBuilder.error('user.notFound');
+      }
+
+      user.password = new_password;
+      await user.save();
+
+      return res.responseBuilder.success({}, 'user.passwordResetSuccess');
+    } catch (error) {
+      return res.responseBuilder.error('user.passwordResetFailed', 500);
+    }
+  }
+
+  // 重置密码
+  static async resetPassword(req: Request, res: Response) {
+    try {
+      const { email } = req.body;
+      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.forgotPasswordFormRule);
+      if (!isValid) {
+        return res.responseBuilder.error(messageKey, 400);
+      }
+
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.responseBuilder.error('user.emailNotFound');
+      }
+
+      AccountController.setNewPassword(req, res);
+    } catch (error) {
+      console.log('err', error);
+      return res.responseBuilder.error('common.operationFailed', 500);
+    }
+  }
   // 设置新密码
   static async editPassword(req: Request, res: Response) {
     try {

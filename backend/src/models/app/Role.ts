@@ -1,12 +1,12 @@
 /*
  * @Author: 350296245@qq.com
- * @Date: 2025-08-31 19:34:25
- * @Description:
+ * @Date: 2025-10-04 13:05:24
+ * @Description: 角色 - 模型
  */
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize, { sequelizeTimeConfig } from "../database";
-import { getDbName } from "../utils/database";
-import { publicOptions } from "../database/common";
+import sequelize, { sequelizeTimeConfig } from "@/database";
+import { getAppDbName } from "@/utils/database";
+import { publicOptions } from "@/database/common";
 
 interface RoleAttributes {
   uuid: string;
@@ -75,7 +75,7 @@ Role.init(
   },
   {
     sequelize,
-    tableName: getDbName("role"),
+    tableName: getAppDbName("role"),
     ...sequelizeTimeConfig,
   }
 );

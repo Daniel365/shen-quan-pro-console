@@ -13,7 +13,7 @@ import { API_VERSION } from './config/default';
 // database
 import sequelize from './database';
 // 导入模型关联定义
-import './models/associations';
+import './models/system/associations';
 // middleware
 import autoLogOperation from './middleware/autoLog';
 import i18nMiddleware from './middleware/i18n';
@@ -25,6 +25,7 @@ import adminRoutes from './routes/admin';
 import accountRoutes from './routes/account';
 import uploadRoutes from './routes/upload';
 import { userRoutes, roleRoutes, menuRoutes, operationLogRoutes, notificationRoutes } from './routes/system';
+import { appUserRoutes, appRoleRoutes } from './routes/app';
 // utils
 import { sequelizeSyncConfig } from './utils/database';
 
@@ -58,12 +59,16 @@ app.use(autoLogOperation());
 app.use(`${API_VERSION}/email`, emailRoutes);
 app.use(`${API_VERSION}/admin`, adminRoutes);
 app.use(`${API_VERSION}/account`, accountRoutes);
+app.use(`${API_VERSION}/upload`, uploadRoutes);
+// system
 app.use(`${API_VERSION}/user`, userRoutes);
 app.use(`${API_VERSION}/role`, roleRoutes);
 app.use(`${API_VERSION}/menu`, menuRoutes);
 app.use(`${API_VERSION}/operation-log`, operationLogRoutes);
 app.use(`${API_VERSION}/notification`, notificationRoutes);
-app.use(`${API_VERSION}/upload`, uploadRoutes);
+// app
+app.use(`${API_VERSION}/app/user`, appUserRoutes);
+app.use(`${API_VERSION}/app/role`, appRoleRoutes);
 
 // 根路由
 app.get('/', (req, res) => {

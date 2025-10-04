@@ -5,17 +5,17 @@
  */
 
 import { Router } from "express";
-import { UserController } from "@/controllers/system";
+import { AccountController } from "@/controllers/account";
 
 const router = Router();
 
 // 注册
-router.post("/register", UserController.register);
+router.post("/register", AccountController.register);
 // 登录
-router.post("/login", UserController.login);
+router.post("/login", AccountController.login);
 // 退出登录
-router.post("/logout", UserController.logout);
+router.post("/logout", AccountController.logout);
 // 重置密码
-router.post("/reset-password", UserController.resetPassword);
+router.post("/reset-password", AccountController.resetPassword);
 
 export default router;
