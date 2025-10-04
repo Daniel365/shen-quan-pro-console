@@ -1,0 +1,18 @@
+/** 
+ * @Author: 350296245@qq.com
+ * @Date: 2025-09-29 17:15:50
+ * @Explain: 系统变量 - 全局导入- additionalData
+ */
+$font-family: 'Helvetica', 'PingFang SC', 'sans-serif';
+$sidebar-width: var(--el-aside-width); // 侧边栏宽度
+$sidebar-width-collapsed: 54px; // 侧边栏收缩宽度
+$navbar-height: 50px; // 导航栏高度
+$tags-view-height: 34px; // TagsView 高度
+
+// 颜色变量
+$menu-background: var(--menu-background); // 菜单背景色
+$menu-text: var(--menu-text); // 菜单文字颜色
+$menu-active-text: var(--menu-active-text); // 菜单激活文字颜色
+$menu-hover: var(--menu-hover); // 菜单悬停背景色
+$sidebar-logo-background: var(--sidebar-logo-background); // 侧边栏 Logo 背景色
+$sidebar-logo-text-color: var(--sidebar-logo-text-color); // 侧边栏 Logo 文字颜色

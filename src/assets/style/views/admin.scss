@@ -1,0 +1,142 @@
+/*
+ * @Author: 350296245@qq.com
+ * @Date: 2025-08-29 15:07:59
+ * @Description: 登录、注册
+ */
+
+.admin-container {
+  min-height: calc(100vh - 40px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.admin-warp {
+  background: var(--el-container-bg-color);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  width: 100%;
+  max-width: 420px;
+}
+
+.admin-content {
+  padding: 40px;
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 40px;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    img {
+      width: 32px;
+      height: 32px;
+      margin-right: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+
+  .subtitle {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+.admin-form {
+  .form-title {
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .form-options {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .forgot-link {
+      color: #1890ff;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .admin-button {
+    height: 48px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
+    border: none;
+
+    &:hover {
+      background: linear-gradient(135deg, #40a9ff 0%, #1890ff 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+    }
+  }
+}
+
+.admin-extra {
+  margin-top: 32px;
+
+  .divider {
+    position: relative;
+    text-align: center;
+    margin: 24px 0;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #e8e8e8;
+    }
+
+    span {
+      background: white;
+      padding: 0 16px;
+      color: #999;
+      font-size: 12px;
+    }
+  }
+}
+
+// 次要动作区域（去登录/去注册/去找回）
+.admin-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+
+  a {
+    color: #1890ff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

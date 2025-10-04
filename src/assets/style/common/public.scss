@@ -1,0 +1,184 @@
+/*
+ * @Author: 350296245@qq.com
+ * @Date: 2025-08-31 09:41:13
+ * @Description: 公用类样式
+ */
+
+@charset "utf-8";
+
+// background
+.bg-none {
+  background-color: transparent !important;
+  box-shadow: none;
+}
+
+.bg-white {
+  background-color: #fff !important;
+}
+
+// 清除浮动
+.clearfix {
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+
+// 超出省略号
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 超出2行后省略号
+.cell-ellipsis2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 强制文本换行
+.break-all {
+  word-break: break-all;
+}
+
+// 不换行
+.white-space-nowrap {
+  white-space: nowrap;
+}
+
+// 普通
+.font-weight-normal {
+  font-weight: normal !important;
+}
+
+// 粗体
+.font-weight-bold {
+  font-weight: bold;
+}
+
+// 粗体 - 加粗
+.font-weight-bolder {
+  font-weight: bolder;
+}
+
+// flex
+.flex-block {
+  display: flex;
+}
+
+// 弹性盒上下居中
+.flex-align-items {
+  align-items: center;
+}
+// inline flex
+.flex-inline-block {
+  display: inline-flex;
+}
+// 换行
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+// flex 调整主轴方向
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-justify-center {
+  justify-items: center;
+  align-items: center;
+}
+
+.flex-justify-content-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-justify-between {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-justify-space-between {
+  justify-content: space-between;
+}
+
+.flex-justify-end {
+  justify-content: flex-end;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+// 展示
+.dp-block {
+  display: block;
+}
+
+// 隐藏
+.dp-none {
+  display: none !important;
+}
+
+// 行内
+.inline-block {
+  display: inline-block;
+}
+
+// 用div标签，解析textarea的换行符
+.pre-line {
+  white-space: pre-line;
+}
+
+// 固定定位
+.position-relative {
+  position: relative;
+}
+
+// 绝对定位
+.position-absolute {
+  position: absolute;
+}
+
+// 鼠标可点击模式
+.pointer {
+  cursor: pointer;
+}
+
+// 鼠标不可点击模式
+.not-allowed {
+  cursor: not-allowed;
+}
+
+// text-align
+.text-align-left {
+  text-align: left;
+}
+.text-align-right {
+  text-align: right;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+// height
+.height-100 {
+  height: 100%;
+}
+
+// width
+.width-100 {
+  width: 100%;
+}
+
+// width
+.width-50 {
+  width: 50%;
+}
