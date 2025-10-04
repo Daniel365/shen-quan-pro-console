@@ -12,7 +12,11 @@
     "lint:fix": "eslint . --ext .js,.ts,.vue --fix",
     "lint:src": "eslint src --ext .js,.ts,.vue",
     "lint:src:fix": "eslint src --ext .js,.ts,.vue --fix",
-    "lint:js": "eslint src/**/*.{js,ts} --fix"
+    "lint:js": "eslint src/**/*.{js,ts} --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "format:src": "prettier --write src/",
+    "format:fix": "prettier --write . && eslint . --ext .js,.ts,.vue --fix"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

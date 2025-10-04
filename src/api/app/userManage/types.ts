@@ -10,8 +10,12 @@
 export interface UserListParams extends PageQuery {
   /** 用户名，支持模糊查询 */
   nickname?: string;
-  /** 邮箱地址，支持模糊查询 */
+  /** 手机号，支持模糊查询 */
   phone?: string;
+  /** 邀请码，支持模糊查询 */
+  inviteCode?: string;
+  /** 性别（0-未知，1-男，2-女） */
+  gender?: number;
   /** 用户状态（0-禁用，1-启用） */
   status?: number;
 }
@@ -26,6 +30,12 @@ export interface UserListItem {
   nickname: string;
   /** 手机号 */
   phone: string;
+  /** 邀请码 */
+  inviteCode?: string;
+  /** 性别（0-未知，1-男，2-女） */
+  gender?: number;
+  /** 最后登录时间 */
+  lastLoginAt?: string;
   /** 用户状态（0-禁用，1-启用） */
   status: number;
   /** 关联的角色UUID */

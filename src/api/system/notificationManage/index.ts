@@ -6,14 +6,14 @@
 import alovaInstance from '@/utils/instance';
 
 import type {
-  NotificationListParams,
-  NotificationListItem,
-  NotificationMarkReadParams,
-  NotificationSendParams,
   NotificationDeleteParams,
-  NotificationUnreadCountResponse,
+  NotificationListItem,
+  NotificationListParams,
+  NotificationMarkReadParams,
   NotificationOnlineStatusResponse,
-} from './data.d';
+  NotificationSendParams,
+  NotificationUnreadCountResponse,
+} from './types';
 
 /**
  * 通知管理API接口集合

@@ -15,7 +15,7 @@
       ref="tableRef"
       v-model:loading="loading"
       v-model:data-list="tableData"
-      :api="roleManageApi.getList"
+      :api="appRoleManageApi.getList"
       :search-params="searchParams"
       :columns="columns"
     >
@@ -41,8 +41,8 @@
       :action-type="actionType"
       :form-fields="roleFormFields"
       :form-rules="roleFormRules"
-      :add-api="roleManageApi.onCreate"
-      :edit-api="roleManageApi.onEdit"
+      :add-api="appRoleManageApi.onCreate"
+      :edit-api="appRoleManageApi.onEdit"
       :details-data="currentRole"
       @success="handleRefresh"
     />
@@ -61,7 +61,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 // utils
-import type { RoleListItem, RoleListParams } from '@/api/system/roleManage/types';
+import type { RoleListItem, RoleListParams } from '@/api/app/roleManage/types';
 import { enabledStatusOptions } from '@/utils/options';
 
 // 表格引用
@@ -243,7 +243,7 @@ const handlePermissionConfirm = async (menuIds: (string | number)[]) => {
   if (!currentRole.value) return;
 
   try {
-    await roleManageApi.onAssignPerm({
+    await appRoleManageApi.onAssignPerm({
       menuIds,
       uuid: currentRole.value.uuid,
     });
@@ -264,7 +264,7 @@ const handleDelete = (record: RoleListItem) => {
   )
     .then(async () => {
       try {
-        await roleManageApi.onDelete({ uuid: record.uuid });
+        await appRoleManageApi.onDelete({ uuid: record.uuid });
         ElMessage.success(i18nText('action.deleteSuccess'));
         tableRef.value?.refresh();
       } catch (error) {

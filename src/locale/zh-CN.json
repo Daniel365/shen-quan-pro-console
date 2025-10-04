@@ -65,6 +65,7 @@
     "resetFail": "重置失败",
     "resetSuccess": "重置成功",
     "save": "保存",
+    "submit": "提交",
     "search": "搜索",
     "send": "发送",
     "sendCodeFail": "发送验证码失败",
@@ -211,7 +212,19 @@
     "userAgent": "用户代理",
     "userUuid": "用户UUID",
     "username": "用户名",
-    "visibleStatus": "显示状态"
+    "nickname": "昵称",
+    "phone": "手机号",
+    "enterNickname": "请输入昵称",
+    "enterPhone": "请输入手机号",
+    "visibleStatus": "显示状态",
+    "gender": "性别",
+    "male": "男",
+    "female": "女",
+    "unknown": "未知",
+    "lastLoginTime": "最后登录时间",
+    "inviteCode": "邀请码",
+    "enterInviteCode": "请输入邀请码",
+    "selectGender": "请选择性别"
   },
   "menuManage": {
     "button": "按钮",
@@ -306,7 +319,23 @@
     "assignSuccess": "权限分配成功",
     "deleteConfirm": "确定要删除角色 {roleName} 吗？",
     "editRole": "编辑角色",
-    "permissionAssignment": "【{roleName}】 权限分配"
+    "permissionAssignment": "【{roleName}】 权限分配",
+    "message": {
+      "roleCode": {
+        "required": "请输入角色编码",
+        "maxLength": "角色编码不能超过100个字符"
+      },
+      "roleName": {
+        "required": "请输入角色名称",
+        "maxLength": "角色名称不能超过100个字符"
+      },
+      "roleDesc": {
+        "maxLength": "角色描述不能超过150个字符"
+      },
+      "status": {
+        "required": "请选择状态"
+      }
+    }
   },
   "systemSetting": {
     "applyToFile": "应用到文件",

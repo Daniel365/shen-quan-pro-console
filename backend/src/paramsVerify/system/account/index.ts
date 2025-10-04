@@ -1,55 +1,55 @@
-import { DataTypes } from "sequelize";
-import { ReqParamsVerifyRule } from "../../types/interfaceRequest";
+import { DataTypes } from 'sequelize';
+import { ReqParamsVerifyRule } from '../../../types/interfaceRequest';
 
 /** 编辑密码表单校验 */
 export const editPasswordFormRule: ReqParamsVerifyRule[] = [
   {
-    filed: "current_password",
+    filed: 'current_password',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.currentPasswordRequired",
+        messageKey: 'validation.currentPasswordRequired',
       },
     ],
   },
   {
-    filed: "email",
+    filed: 'email',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.emailRequired",
+        messageKey: 'validation.emailRequired',
       },
     ],
   },
   {
-    filed: "code",
+    filed: 'code',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.verificationCodeRequired",
+        messageKey: 'validation.verificationCodeRequired',
       },
     ],
   },
   {
-    filed: "password",
+    filed: 'password',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.newPasswordRequired",
+        messageKey: 'validation.newPasswordRequired',
       },
     ],
   },
   {
-    filed: "confirm_password",
+    filed: 'confirm_password',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.confirmPasswordRequired",
+        messageKey: 'validation.confirmPasswordRequired',
       },
     ],
   },
@@ -58,32 +58,32 @@ export const editPasswordFormRule: ReqParamsVerifyRule[] = [
 /** 编辑个人资料表单校验 */
 export const editProfileFormRule: ReqParamsVerifyRule[] = [
   {
-    filed: "username",
+    filed: 'username',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.usernameRequired",
+        messageKey: 'validation.usernameRequired',
       },
     ],
   },
   {
-    filed: "email",
+    filed: 'email',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.emailRequired",
+        messageKey: 'validation.emailRequired',
       },
     ],
   },
   {
-    filed: "code",
+    filed: 'code',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.verificationCodeRequired",
+        messageKey: 'validation.verificationCodeRequired',
       },
     ],
   },

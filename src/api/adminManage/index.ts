@@ -6,7 +6,7 @@
 
 import alovaInstance from '@/utils/instance';
 
-import type { RegisterProps, LoginProps, ResetPasswordProps } from './data.d';
+import type { LoginProps, RegisterProps, ResetPasswordProps } from './types';
 
 export default {
   // 登录

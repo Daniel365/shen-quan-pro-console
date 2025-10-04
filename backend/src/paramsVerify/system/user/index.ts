@@ -1,55 +1,55 @@
-import { DataTypes } from "sequelize";
-import { ReqParamsVerifyRule } from "../../types/interfaceRequest";
+import { DataTypes } from 'sequelize';
+import { ReqParamsVerifyRule } from '../../../types/interfaceRequest';
 
 /** 注册表单校验 */
 export const registerFormRule: ReqParamsVerifyRule[] = [
   {
-    filed: "username",
+    filed: 'username',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.usernameRequired",
+        messageKey: 'validation.usernameRequired',
       },
     ],
   },
   {
-    filed: "email",
+    filed: 'email',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.emailRequired",
+        messageKey: 'validation.emailRequired',
       },
     ],
   },
   {
-    filed: "phone",
+    filed: 'phone',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: false,
-        messageKey: "validation.phoneRequired",
+        messageKey: 'validation.phoneRequired',
       },
     ],
   },
   {
-    filed: "password",
+    filed: 'password',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.passwordRequired",
+        messageKey: 'validation.passwordRequired',
       },
     ],
   },
   {
-    filed: "confirm_password",
+    filed: 'confirm_password',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.confirmPasswordRequired",
+        messageKey: 'validation.confirmPasswordRequired',
       },
     ],
   },
@@ -58,22 +58,22 @@ export const registerFormRule: ReqParamsVerifyRule[] = [
 /** 登录表单校验 */
 export const loginFormRule: ReqParamsVerifyRule[] = [
   {
-    filed: "username",
+    filed: 'username',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.usernameRequired",
+        messageKey: 'validation.usernameRequired',
       },
     ],
   },
   {
-    filed: "password",
+    filed: 'password',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.passwordRequired",
+        messageKey: 'validation.passwordRequired',
       },
     ],
   },
@@ -82,32 +82,32 @@ export const loginFormRule: ReqParamsVerifyRule[] = [
 /** 忘记密码表单校验 */
 export const forgotPasswordFormRule: ReqParamsVerifyRule[] = [
   {
-    filed: "email",
+    filed: 'email',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.emailRequired",
+        messageKey: 'validation.emailRequired',
       },
     ],
   },
   {
-    filed: "code",
+    filed: 'code',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.verificationCodeRequired",
+        messageKey: 'validation.verificationCodeRequired',
       },
     ],
   },
   {
-    filed: "new_password",
+    filed: 'new_password',
     dataType: DataTypes.STRING,
     rule: [
       {
         required: true,
-        messageKey: "validation.newPasswordRequired",
+        messageKey: 'validation.newPasswordRequired',
       },
     ],
   },

@@ -9,10 +9,4 @@ import operationLogApi from './operationLog';
 import roleManageApi from './roleManage';
 import userManageApi from './userManage';
 
-export {
-	menuManageApi,
-	operationLogApi,
-	roleManageApi,
-	userManageApi,
-	notificationManageApi,
-};
+export { menuManageApi, notificationManageApi, operationLogApi, roleManageApi, userManageApi };

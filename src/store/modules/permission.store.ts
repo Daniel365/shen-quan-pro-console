@@ -4,7 +4,7 @@
  * @Description: 菜单权限
  */
 
-import type { AccountMenu } from '@/api/accountManage/data.d';
+import type { AccountMenu } from '@/api/accountManage/types';
 import router, { constantRoutes } from '@/router';
 import { store } from '@/store';
 // type

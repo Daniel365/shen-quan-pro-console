@@ -3,7 +3,7 @@
  * @Date: 2025-09-27
  * @Description: 统一的SSE连接管理
  */
-import type { SSEMessageData } from '@/api/system/notificationManage/data.d';
+import type { SSEMessageData } from '@/api/system/notificationManage/types';
 import { getApiUrl } from '@/utils/tool';
 
 /**

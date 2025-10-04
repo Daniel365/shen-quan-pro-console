@@ -5,17 +5,20 @@
  */
 import alovaInstance from '@/utils/instance';
 
-import type {
-  UserEditParams,
-  UserListParams,
-  UserListItem,
-  UserDeleteParams,
-} from './data.d';
+import type { UserDeleteParams, UserEditParams, UserListItem, UserListParams } from './types';
 
 /**
  * 用户管理API接口集合
  */
 export default {
+  /**
+   * 获取下级用户列表
+   * @param data 查询参数
+   * @returns 下级用户列表数据
+   */
+  getChildrenList(data: any): Promise<InterfaceResult<PageResult<UserListItem>>> {
+    return alovaInstance.Post(RequestPath.APP_USER_CHILDREN_LIST, data);
+  },
   /**
    * 获取用户列表
    * @param data 查询参数

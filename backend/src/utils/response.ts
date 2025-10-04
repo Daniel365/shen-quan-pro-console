@@ -3,8 +3,8 @@
  * @Date: 2025-09-28 17:58:37
  * @Explain: 控制器响应统一返回逻辑
  */
+import { defaultLocale } from '@/config/default';
 import { Response } from 'express';
-import { defaultLocale } from '../config/default';
 import { i18nText } from './i18n';
 
 export interface ApiResponse<T = any> {

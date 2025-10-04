@@ -67,7 +67,11 @@
     "logoutFailed": "退出登录失败",
     "passwordResetSuccess": "密码重置成功",
     "passwordChangeSuccess": "密码修改成功",
-    "profileUpdateSuccess": "个人资料更新成功"
+    "profileUpdateSuccess": "个人资料更新成功",
+    "listFailed": "获取用户列表失败",
+    "childrenListFailed": "获取下级用户列表失败",
+    "inviteCodeRequired": "邀请码不能为空",
+    "inviterNotFound": "邀请人不存在"
   },
   "role": {
     "roleNotFound": "角色不存在",

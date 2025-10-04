@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import { ElMessage, type FormInstance } from 'element-plus';
 
-import { EmailVerificationType } from '@/api/common/data.d';
+import { EmailVerificationType } from '@/api/common/types';
 import { isRoot } from '@/constants';
 
 const { accountInfo, setAccountInfo } = useAccountStore();

@@ -4,7 +4,7 @@
  * @Description: 上传验证中间件
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { uploadUtils } from '../utils/upload';
 import { requireAuth } from './auth';
 
@@ -15,7 +15,7 @@ import { requireAuth } from './auth';
 export function createUploadValidator(isMultiple: boolean = false) {
   return [
     // 1. 身份验证
-    requireAuth({}),
+    requireAuth(),
 
     // 2. 上传验证
     (req: Request, res: Response, next: NextFunction) => {

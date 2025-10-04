@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus';
 
-import { MenuFormProps, MenuListItem } from '@/api/system/menuManage/data.d';
+import { MenuFormProps, MenuListItem } from '@/api/system/menuManage/types';
 
 import { defaultFormData, getFormFields } from '../utils/const';
 

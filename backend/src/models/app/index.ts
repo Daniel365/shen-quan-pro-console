@@ -5,5 +5,6 @@
  */
 import User from "./User";
 import Role from "./Role";
+import UserInvite from "./UserInvite";
 
-export { User, Role };
+export { User, Role, UserInvite };

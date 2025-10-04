@@ -128,10 +128,10 @@ import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'elem
 // utils
 // types
 import type {
-  NotificationType,
   NotificationSendParams,
-} from '@/api/system/notificationManage/data.d';
-import type { UserListItem } from '@/api/system/userManage/data.d';
+  NotificationType,
+} from '@/api/system/notificationManage/types';
+import type { UserListItem } from '@/api/system/userManage/types';
 
 import { notificationTypeOptions, receiverTypeOptions } from './utils/options';
 

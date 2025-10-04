@@ -4,24 +4,15 @@
  * @Description: 用户api
  */
 
-import { Router } from "express";
-import { UserController } from "@/controllers/system";
-import { requireAuth } from "@/middleware/auth";
-
+import { UserController } from '@/controllers/system';
+import { requireAuth } from '@/middleware/auth';
+import { Router } from 'express';
 
 const router = Router();
 
 // 用户管理
-router.post("/list", requireAuth(), UserController.list);
-router.put(
-  "/update",
-  requireAuth(),
-  UserController.update
-);
-router.delete(
-  "/delete",
-  requireAuth(),
-  UserController.delete
-);
+router.post('/list', requireAuth(), UserController.list);
+router.put('/update', requireAuth(), UserController.update);
+router.delete('/delete', requireAuth(), UserController.delete);
 
 export default router;

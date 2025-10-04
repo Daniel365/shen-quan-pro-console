@@ -124,7 +124,7 @@ import { DocumentCopy, Refresh } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
 
 // types
-import type { UserListItem } from '@/api/system/userManage/data.d';
+import type { UserListItem } from '@/api/system/userManage/types';
 import type { TableColumn } from '@/components/DataTable/index.vue';
 
 interface Props {

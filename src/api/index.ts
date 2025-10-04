@@ -3,30 +3,15 @@
  * @Date: 2025-08-28 21:07:18
  * @Description: 统一接口输出
  */
-import accountManageApi from './accountManage';
-import adminManageApi from './adminManage';
-import {
-  appUserManageApi
-} from './app'
-import commonApi from './common';
-import {
-  menuManageApi,
-  operationLogApi,
-  roleManageApi,
-  userManageApi,
-  notificationManageApi,
-} from './system'
-import uploadManageApi from './uploadManage';
-
+export { default as accountManageApi } from './accountManage';
+export { default as adminManageApi } from './adminManage';
+export { appRoleManageApi, appUserManageApi } from './app';
+export { default as commonApi } from './common';
 export {
-  appUserManageApi,
-  accountManageApi,
-  adminManageApi,
-  commonApi,
   menuManageApi,
+  notificationManageApi,
   operationLogApi,
   roleManageApi,
   userManageApi,
-  notificationManageApi,
-  uploadManageApi,
-};
+} from './system';
+export { default as uploadManageApi } from './uploadManage';

@@ -3,7 +3,7 @@
  * @Date: 2025-09-27
  * @Description: 通知管理选项配置
  */
-import { NotificationType } from '@/api/system/notificationManage/data.d';
+import { NotificationType } from '@/api/system/notificationManage/types';
 
 /**
  * 通知类型选项

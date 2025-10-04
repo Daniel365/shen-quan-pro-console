@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 // type
-import type { OperationLogListItem } from '@/api/system/operationLog/data.d';
+import type { OperationLogListItem } from '@/api/system/operationLog/types';
 
 // 表格引用
 const tableRef = ref();

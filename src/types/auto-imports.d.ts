@@ -6,11 +6,14 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const ...system: typeof import('../api/index')['...system']
   const ActionTypeEnum: typeof import('../enums/system')['ActionTypeEnum']
   const ComponentSize: typeof import('../enums/ui')['ComponentSize']
   const DeviceEnum: typeof import('../enums/ui')['DeviceEnum']
   const EffectScope: typeof import('vue')['EffectScope']
+  const EnabledStatusEnum: typeof import('../enums/system')['EnabledStatusEnum']
   const FormTypeEnum: typeof import('../enums/ui')['FormTypeEnum']
+  const GenderEnum: typeof import('../enums/system')['GenderEnum']
   const LAYOUT_KEY: typeof import('../enums/storageKeys')['LAYOUT_KEY']
   const LanguageEnum: typeof import('../enums/system')['LanguageEnum']
   const LayoutMode: typeof import('../enums/ui')['LayoutMode']
@@ -36,10 +39,13 @@ declare global {
   const accountManageApi: typeof import('../api/index')['accountManageApi']
   const adminManageApi: typeof import('../api/index')['adminManageApi']
   const apiVersionUrl: typeof import('../api/requestUtils')['apiVersionUrl']
+  const app: typeof import('../api/index')['app']
+  const appRoleManageApi: typeof import('../api/index')['appRoleManageApi']
   const appUserManageApi: typeof import('../api/index')['appUserManageApi']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const commonApi: typeof import('../api/index')['commonApi']
+  const commonManageApi: typeof import('../api/index')['commonManageApi']
   const computed: typeof import('vue')['computed']
   const computedAsync: typeof import('@vueuse/core')['computedAsync']
   const computedEager: typeof import('@vueuse/core')['computedEager']
@@ -66,6 +72,7 @@ declare global {
   const defineStore: typeof import('pinia')['defineStore']
   const eagerComputed: typeof import('@vueuse/core')['eagerComputed']
   const effectScope: typeof import('vue')['effectScope']
+  const enabledStatusEnum: typeof import('../enums/system')['enabledStatusEnum']
   const extendRef: typeof import('@vueuse/core')['extendRef']
   const getActivePinia: typeof import('pinia')['getActivePinia']
   const getApiUrl: typeof import('../utils/tool')['getApiUrl']
@@ -147,6 +154,7 @@ declare global {
   const storeToRefs: typeof import('pinia')['storeToRefs']
   const syncRef: typeof import('@vueuse/core')['syncRef']
   const syncRefs: typeof import('@vueuse/core')['syncRefs']
+  const system: typeof import('../api/index')['system']
   const templateRef: typeof import('@vueuse/core')['templateRef']
   const throttledRef: typeof import('@vueuse/core')['throttledRef']
   const throttledWatch: typeof import('@vueuse/core')['throttledWatch']
@@ -370,7 +378,7 @@ declare global {
   export type { SSEStatus, SSEStatus } from '../hooks/useSSE'
   import('../hooks/useSSE')
   // @ts-ignore
-  export type { LanguageEnum, ActionTypeEnum, MenuTypeEnum, MenuVisibleStatusEnum, RouterPath, RequestPath, LanguageEnum, ActionTypeEnum, MenuTypeEnum, MenuVisibleStatusEnum, RouterPath, RequestPath } from '../enums/system'
+  export type { LanguageEnum, ActionTypeEnum, MenuTypeEnum, EnabledStatusEnum, MenuVisibleStatusEnum, GenderEnum, RouterPath, RequestPath, LanguageEnum, ActionTypeEnum, MenuTypeEnum, EnabledStatusEnum, MenuVisibleStatusEnum, GenderEnum, RouterPath, RequestPath } from '../enums/system'
   import('../enums/system')
   // @ts-ignore
   export type { FormTypeEnum, FormTypeEnum } from '../enums/ui'
@@ -389,7 +397,9 @@ declare module 'vue' {
     readonly ComponentSize: UnwrapRef<typeof import('../enums/ui')['ComponentSize']>
     readonly DeviceEnum: UnwrapRef<typeof import('../enums/ui')['DeviceEnum']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly EnabledStatusEnum: UnwrapRef<typeof import('../enums/system')['EnabledStatusEnum']>
     readonly FormTypeEnum: UnwrapRef<typeof import('../enums/ui')['FormTypeEnum']>
+    readonly GenderEnum: UnwrapRef<typeof import('../enums/system')['GenderEnum']>
     readonly LAYOUT_KEY: UnwrapRef<typeof import('../enums/storageKeys')['LAYOUT_KEY']>
     readonly LanguageEnum: UnwrapRef<typeof import('../enums/system')['LanguageEnum']>
     readonly LayoutMode: UnwrapRef<typeof import('../enums/ui')['LayoutMode']>
@@ -415,6 +425,7 @@ declare module 'vue' {
     readonly accountManageApi: UnwrapRef<typeof import('../api/index')['accountManageApi']>
     readonly adminManageApi: UnwrapRef<typeof import('../api/index')['adminManageApi']>
     readonly apiVersionUrl: UnwrapRef<typeof import('../api/requestUtils')['apiVersionUrl']>
+    readonly appRoleManageApi: UnwrapRef<typeof import('../api/index')['appRoleManageApi']>
     readonly appUserManageApi: UnwrapRef<typeof import('../api/index')['appUserManageApi']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>

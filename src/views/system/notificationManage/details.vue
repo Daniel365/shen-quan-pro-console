@@ -59,10 +59,10 @@
 import { ElMessage } from 'element-plus';
 
 // utils
-import type { NotificationListItem } from '@/api/system/notificationManage/data.d';
+import type { NotificationListItem } from '@/api/system/notificationManage/types';
 import { formatIsoDate } from '@/utils/format/dateTime';
 
-import { notificationTypeOptions, notificationReadStatusOptions } from './utils/options';
+import { notificationReadStatusOptions, notificationTypeOptions } from './utils/options';
 // type
 
 interface Props {

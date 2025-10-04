@@ -6,24 +6,24 @@
 
 /** 匹配类型枚举 */
 export enum MatchTypeEnum {
-  LIKE = "like",
-  EXACT = "exact",
-  IN = "in",
-  NE = "ne",
-  RANGE = "range",
-  GT = "gt",
-  LT = "lt",
-  GTE = "gte",
-  LTE = "lte",
+  LIKE = 'like',
+  EXACT = 'exact',
+  IN = 'in',
+  NE = 'ne',
+  RANGE = 'range',
+  GT = 'gt',
+  LT = 'lt',
+  GTE = 'gte',
+  LTE = 'lte',
 }
 
 /** 数据类型枚举 */
 export enum DataTypeEnum {
-  STRING = "string",
-  NUMBER = "number",
-  BOOLEAN = "boolean",
-  ARRAY = "array",
-  DATE = "date",
+  STRING = 'string',
+  NUMBER = 'number',
+  BOOLEAN = 'boolean',
+  ARRAY = 'array',
+  DATE = 'date',
 }
 
 /** 查询接口 - 配置 */
@@ -41,4 +41,14 @@ export enum StatusEnum {
   DISABLE = 0,
   /** 启用 */
   ENABLE = 1,
+}
+
+/** 性别枚举 */
+export enum GenderEnum {
+  /** 未知 */
+  UNKNOWN = 0,
+  /** 男 */
+  MALE = 1,
+  /** 女 */
+  FEMALE = 2,
 }

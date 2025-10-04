@@ -5,13 +5,7 @@
  */
 import alovaInstance from '@/utils/instance';
 
-import type {
-  UserEditParams,
-  UserListParams,
-  UserListItem,
-  UserCreateParams,
-  UserDeleteParams,
-} from './data.d';
+import type { UserDeleteParams, UserEditParams, UserListItem, UserListParams } from './types';
 
 /**
  * 用户管理API接口集合

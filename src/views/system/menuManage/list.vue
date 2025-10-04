@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus';
 
-import type { MenuListItem } from '@/api/system/menuManage/data.d';
+import type { MenuListItem } from '@/api/system/menuManage/types';
 import { isHasArrayData } from '@/utils/dataJudgment';
 
 import { menuTypeOptions, menuVisibleStatusOptions } from './utils/options';

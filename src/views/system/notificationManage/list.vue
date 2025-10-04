@@ -75,11 +75,11 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import type {
   NotificationListItem,
   NotificationListParams,
-} from '@/api/system/notificationManage/data.d';
+} from '@/api/system/notificationManage/types';
 
 // components
 import NotificationDetails from './details.vue';
-import { notificationTypeOptions, notificationReadStatusOptions } from './utils/options';
+import { notificationReadStatusOptions, notificationTypeOptions } from './utils/options';
 
 /**
  * App Store
@@ -261,5 +261,3 @@ watch(
   }
 );
 </script>
-
-

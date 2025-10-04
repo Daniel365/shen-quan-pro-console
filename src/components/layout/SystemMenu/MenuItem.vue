@@ -22,23 +22,23 @@
 </template>
 
 <script setup lang="ts">
-import { MenuMeta } from "@/api/accountManage/data.d";
+import { MenuMeta } from '@/api/accountManage/types';
 
-import type { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from 'vue-router';
 
 interface Props {
   route: RouteRecordRaw;
 }
 
 interface Emits {
-  (e: "menu-click", route: RouteRecordRaw): void;
+  (e: 'menu-click', route: RouteRecordRaw): void;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const meta: globalThis.ComputedRef<MenuMeta> = computed(
-  () => props.route.meta || { icon: "", title: "" }
+  () => props.route.meta || { icon: '', title: '' }
 );
 
 const hasChildren = computed(() => {
@@ -46,6 +46,6 @@ const hasChildren = computed(() => {
 });
 
 const handleMenuClick = () => {
-  emit("menu-click", props.route);
+  emit('menu-click', props.route);
 };
 </script>

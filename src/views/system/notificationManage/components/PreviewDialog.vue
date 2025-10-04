@@ -22,10 +22,7 @@
       </el-form-item>
 
       <el-form-item :label="$t('notificationManage.receiver')">
-        <StatusText
-          :options="receiverTypeOptions"
-          :value="formData.receiverType"
-        />
+        <StatusText :options="receiverTypeOptions" :value="formData.receiverType" />
       </el-form-item>
 
       <el-form-item :label="$t('form.content')">
@@ -52,10 +49,10 @@
     <template #footer>
       <div class="flex justify-center gap-3">
         <el-button class="px-6" @click="handleCancel">
-          {{ $t("action.cancel") }}
+          {{ $t('action.cancel') }}
         </el-button>
         <el-button type="primary" :loading="loading" class="px-6" @click="handleSend">
-          {{ $t("action.send") }}
+          {{ $t('action.send') }}
         </el-button>
       </div>
     </template>
@@ -63,14 +60,12 @@
 </template>
 
 <script setup lang="ts">
-import { User, Message } from "@element-plus/icons-vue";
-
 // utils
 // types
-import type { NotificationType } from "@/api/system/notificationManage/data.d";
-import type { UserListItem } from "@/api/system/userManage/data.d";
+import type { NotificationType } from '@/api/system/notificationManage/types';
+import type { UserListItem } from '@/api/system/userManage/types';
 
-import { notificationTypeOptions, receiverTypeOptions } from "../utils/options"
+import { notificationTypeOptions, receiverTypeOptions } from '../utils/options';
 
 interface Props {
   modelValue: boolean;
@@ -78,7 +73,7 @@ interface Props {
     title: string;
     content: string;
     type: NotificationType;
-    receiverType: "all" | "specific";
+    receiverType: 'all' | 'specific';
     receiverUuid?: string;
   };
   userOptions?: UserListItem[];
@@ -86,8 +81,8 @@ interface Props {
 }
 
 interface Emits {
-  (e: "update:modelValue", value: boolean): void;
-  (e: "send"): void;
+  (e: 'update:modelValue', value: boolean): void;
+  (e: 'send'): void;
 }
 
 const props = defineProps<Props>();
@@ -98,19 +93,18 @@ const emit = defineEmits<Emits>();
  */
 const visible = computed({
   get: () => props.modelValue,
-  set: (value) => emit("update:modelValue", value),
+  set: (value) => emit('update:modelValue', value),
 });
 
 /**
  * 选中的用户信息
  */
 const selectedUser = computed(() => {
-  if (props.formData.receiverType === "specific" && props.formData.receiverUuid) {
+  if (props.formData.receiverType === 'specific' && props.formData.receiverUuid) {
     return props.userOptions?.find((user) => user.uuid === props.formData.receiverUuid);
   }
   return null;
 });
-
 
 /**
  * 处理取消操作
@@ -123,6 +117,6 @@ const handleCancel = () => {
  * 处理发送操作
  */
 const handleSend = () => {
-  emit("send");
+  emit('send');
 };
 </script>

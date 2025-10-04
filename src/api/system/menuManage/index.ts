@@ -6,7 +6,7 @@
 
 import alovaInstance from '@/utils/instance';
 
-import { MenuFormProps, MenuListItem, TreeListItem, MenuListParams } from './data.d';
+import { MenuFormProps, MenuListItem, MenuListParams, TreeListItem } from './types';
 
 export default {
   // 获取菜单列表

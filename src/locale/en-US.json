@@ -65,6 +65,7 @@
     "resetFail": "Reset failed",
     "resetSuccess": "Reset successful",
     "save": "Save",
+    "submit": "Submit",
     "search": "Search",
     "send": "Send",
     "sendCodeFail": "Failed to send verification code",
@@ -211,7 +212,19 @@
     "userAgent": "User Agent",
     "userUuid": "User UUID",
     "username": "Username",
-    "visibleStatus": "Visible Status"
+    "nickname": "Nickname",
+    "phone": "Phone Number",
+    "enterNickname": "Please enter nickname",
+    "enterPhone": "Please enter phone number",
+    "visibleStatus": "Visible Status",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "unknown": "Unknown",
+    "lastLoginTime": "Last Login Time",
+    "inviteCode": "Invite Code",
+    "enterInviteCode": "Please enter invite code",
+    "selectGender": "Please select gender"
   },
   "menuManage": {
     "button": "Button",
@@ -305,7 +318,23 @@
     "assignSuccess": "Permissions assigned successfully",
     "deleteConfirm": "Are you sure you want to delete role {roleName}?",
     "editRole": "Edit Role",
-    "permissionAssignment": "【{roleName}】 Permission Assignment"
+    "permissionAssignment": "【{roleName}】 Permission Assignment",
+    "message": {
+      "roleCode": {
+        "required": "Please enter role code",
+        "maxLength": "Role code cannot exceed 100 characters"
+      },
+      "roleName": {
+        "required": "Please enter role name",
+        "maxLength": "Role name cannot exceed 100 characters"
+      },
+      "roleDesc": {
+        "maxLength": "Role description cannot exceed 150 characters"
+      },
+      "status": {
+        "required": "Please select status"
+      }
+    }
   },
   "systemSetting": {
     "applyToFile": "Apply to File",

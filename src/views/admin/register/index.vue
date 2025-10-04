@@ -1,11 +1,6 @@
 <!--
  * @Author: 350296245@qq.com
  * @Date: 2025-08-29 14:54:02
- * @Description: 
--->
-<!--
- * @Author: 350296245@qq.com
- * @Date: 2025-08-29 14:54:02
  * @Description: 注册
 -->
 <template>
@@ -98,7 +93,7 @@
 import { ElMessage } from 'element-plus';
 
 // type
-import { EmailVerificationType } from '@/api/common/data.d';
+import { EmailVerificationType } from '@/api/common/types';
 
 const { goToPage } = useRouteUtil();
 const formRef = ref();

@@ -64,7 +64,7 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus';
 
-import { EmailVerificationType } from '@/api/common/data.d';
+import { EmailVerificationType } from '@/api/common/types';
 
 import type { FormInstance } from 'element-plus';
 // type

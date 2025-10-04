@@ -6,7 +6,7 @@
 
 import alovaInstance from '@/utils/instance';
 
-import type { AccountInfo, AccountMenu, EditPasswordProps, EditProfileProps } from './data.d';
+import type { AccountInfo, AccountMenu, EditPasswordProps, EditProfileProps } from './types';
 
 export default {
   // 修改密码

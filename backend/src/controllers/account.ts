@@ -22,10 +22,6 @@ export class AccountController {
   static async register(req: Request, res: Response) {
     try {
       const { username, email, phone, password, confirm_password, code } = req.body;
-      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.registerFormRule);
-      if (!isValid) {
-        return res.responseBuilder.error(messageKey, 400);
-      }
 
       if (password !== confirm_password) {
         return res.responseBuilder.error('user.passwordNotMatch');
@@ -68,11 +64,6 @@ export class AccountController {
   static async login(req: Request, res: Response) {
     try {
       const { username, password } = req.body;
-
-      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.loginFormRule);
-      if (!isValid) {
-        return res.responseBuilder.error(messageKey, 400);
-      }
 
       const isEmail = onPattern(username, RegexPatterns.email);
       const user = await User.findOne({
@@ -117,11 +108,6 @@ export class AccountController {
     try {
       const { email, code, new_password } = req.body;
 
-      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.forgotPasswordFormRule);
-      if (!isValid) {
-        return res.responseBuilder.error(messageKey, 400);
-      }
-
       const verifyResult = emailService.verifyCode(
         email,
         code,
@@ -149,10 +135,6 @@ export class AccountController {
   static async resetPassword(req: Request, res: Response) {
     try {
       const { email } = req.body;
-      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.forgotPasswordFormRule);
-      if (!isValid) {
-        return res.responseBuilder.error(messageKey, 400);
-      }
 
       const user = await User.findOne({ where: { email } });
       if (!user) {
@@ -170,11 +152,6 @@ export class AccountController {
     try {
       const { uuid } = req?.accountInfo || {};
       const { email, code, current_password, password, confirm_password } = req.body;
-
-      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.editPasswordFormRule);
-      if (!isValid) {
-        return res.responseBuilder.error(messageKey, 400);
-      }
 
       if (password !== confirm_password) {
         return res.responseBuilder.error('user.passwordNotMatch');
@@ -212,11 +189,6 @@ export class AccountController {
     try {
       const { uuid } = req?.accountInfo || {};
       const { username, email, code } = req.body;
-
-      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.editProfileFormRule);
-      if (!isValid) {
-        return res.responseBuilder.error(messageKey, 400);
-      }
 
       // 验证邮箱验证码
       const verifyResult = emailService.verifyCode(email, code, EmailVerificationType.EDIT_PROFILE);

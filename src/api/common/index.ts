@@ -6,7 +6,7 @@
 
 import alovaInstance from '@/utils/instance';
 
-import { EmailVerificationType } from './data.d';
+import { EmailVerificationType } from './types';
 
 export default {
   // 发送邮箱验证码

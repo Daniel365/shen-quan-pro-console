@@ -5,7 +5,7 @@
  */
 import alovaInstance from '@/utils/instance';
 
-import type { OperationLogListParams } from './data.d';
+import type { OperationLogListParams } from './types';
 
 export default {
   // 获取操作日志列表

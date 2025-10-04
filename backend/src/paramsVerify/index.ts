@@ -7,14 +7,11 @@
 import { validateByDataType } from '../utils/dataJudge';
 import { onPattern } from '../utils/regexPatterns';
 // rule
-import { loginFormRule, registerFormRule, forgotPasswordFormRule } from './user/index';
-import { editPasswordFormRule, editProfileFormRule } from './account/index';
 import { sendEmailFormRule } from './email/index';
-import { updateUserRule, batchUpdateUserRule } from './user/appUser';
-import { createRoleRule, updateRoleRule, deleteRoleRule, detailRoleRule } from './user/appRole';
+import { account, user } from './system';
 // type
-import { RegisterReqData } from './user/type';
 import { ReqParamsVerifyRule } from '../types/interfaceRequest';
+import { RegisterReqData } from './system/user/type';
 
 /** 请求参数 - 类型声明 */
 export type ReqDataType = {
@@ -23,18 +20,9 @@ export type ReqDataType = {
 
 /** 校验规则 */
 export const verifyRule = {
-  registerFormRule,
-  loginFormRule,
-  forgotPasswordFormRule,
-  editPasswordFormRule,
-  editProfileFormRule,
   sendEmailFormRule,
-  updateUserRule,
-  batchUpdateUserRule,
-  createRoleRule,
-  updateRoleRule,
-  deleteRoleRule,
-  detailRoleRule,
+  ...user,
+  ...account,
 };
 
 /** 参数校验 */

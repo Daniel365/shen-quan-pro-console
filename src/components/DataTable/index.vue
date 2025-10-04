@@ -78,6 +78,8 @@ export interface TableColumn {
   showOverflowTooltip?: boolean;
   /** 是否固定列 */
   fixed?: string | boolean;
+  /** 点击事件 */
+  click?: (row: any, index: number) => void;
 }
 
 /**

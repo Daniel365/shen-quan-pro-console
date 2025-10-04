@@ -20,6 +20,22 @@
       :columns="columns"
     >
       <template #bodyCell="{ column, record }">
+        <!-- 邀请码渲染 -->
+        <template v-if="column.key === 'inviteCode'">
+          <el-link
+            v-if="record.inviteCode"
+            type="primary"
+            :underline="false"
+            @click="handleInviteCodeClick(record)"
+          >
+            {{ record.inviteCode }}
+          </el-link>
+          <span v-else>--</span>
+        </template>
+        <!-- 性别列渲染 -->
+        <template v-if="column.key === 'gender'">
+          <StatusText :options="genderOptions" :value="record.gender" />
+        </template>
         <!-- 状态列渲染 -->
         <template v-if="column.key === 'status'">
           <StatusText :options="enabledStatusOptions" :value="record.status" />
@@ -31,19 +47,31 @@
       </template>
     </DataTable>
 
-    <!-- 编辑用户抽屉 -->
-    <UserForm v-model:visible="editVisible" :user-data="currentUser" @success="handleRefresh" />
+    <!-- 用户表单弹窗 -->
+    <FormGroup
+      v-model:visible="editVisible"
+      :action-type="actionType"
+      :form-fields="userFormFields"
+      :form-rules="userFormRules"
+      :edit-api="appUserManageApi.onEdit"
+      :details-data="currentUser"
+      @success="handleRefresh"
+    />
+
+    <!-- 下级用户弹窗 -->
+    <ChildrenUserDialog
+      v-model:visible="childrenDialogVisible"
+      :current-row-data="currentRowData"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElMessageBox, ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
-// type
-import type { UserListItem, UserListParams } from '@/api/app/userManage/data.d';
 // utils
-import { enabledStatusOptions } from '@/utils/options';
-// type
+import type { UserListItem, UserListParams } from '@/api/app/userManage/types';
+import { enabledStatusOptions, genderOptions } from '@/utils/options';
 
 /**
  * 表格组件引用
@@ -71,9 +99,32 @@ const editVisible = ref(false);
 const currentUser = ref<UserListItem>();
 
 /**
+ * 下级用户弹窗显示状态
+ */
+const childrenDialogVisible = ref(false);
+
+/**
+ * 当前选中的邀请码
+ */
+const currentRowData = ref<any>({
+  inviteCode: '',
+  nickname: '',
+  uuid: '',
+});
+
+/**
+ * 操作类型
+ */
+const actionType = computed(() =>
+  currentUser.value?.uuid ? ActionTypeEnum.EDIT : ActionTypeEnum.CREATE
+);
+
+/**
  * 搜索参数
  */
 const searchParams = reactive<UserListParams>({
+  gender: undefined,
+  inviteCode: '',
   nickname: '',
   phone: '',
   status: undefined,
@@ -90,10 +141,23 @@ const searchFields = computed(() => [
     type: FormTypeEnum.INPUT,
   },
   {
-    key: 'email',
-    label: i18nText('form.email'),
-    placeholder: i18nText('form.enterEmail'),
+    key: 'phone',
+    label: i18nText('form.phone'),
+    placeholder: i18nText('form.enterPhone'),
     type: FormTypeEnum.INPUT,
+  },
+  {
+    key: 'inviteCode',
+    label: i18nText('form.inviteCode'),
+    placeholder: i18nText('form.enterInviteCode'),
+    type: FormTypeEnum.INPUT,
+  },
+  {
+    key: 'gender',
+    label: i18nText('form.gender'),
+    options: genderOptions,
+    placeholder: i18nText('form.selectGender'),
+    type: FormTypeEnum.SELECT,
   },
   {
     key: 'status',
@@ -126,12 +190,61 @@ const tableButtonGroup: ButtonGroupOptions[] = [
   },
 ];
 
+/** 用户表单字段配置 */
+const userFormFields = [
+  {
+    key: 'nickname',
+    label: i18nText('form.nickname'),
+    placeholder: i18nText('form.enterNickname'),
+    required: true,
+    type: FormTypeEnum.INPUT,
+  },
+  {
+    api: appRoleManageApi.getList,
+    key: 'roleUuids',
+    label: i18nText('form.role'),
+    labelField: 'name',
+    multiple: true,
+    placeholder: i18nText('form.selectRole'),
+    required: true,
+    type: FormTypeEnum.SELECT_API,
+    valueField: 'uuid',
+  },
+  {
+    key: 'status',
+    label: i18nText('form.status'),
+    options: enabledStatusOptions,
+    type: FormTypeEnum.RADIO_GROUP,
+  },
+];
+
+/** 用户表单验证规则 */
+const userFormRules = {
+  nickname: [
+    {
+      message: i18nText('form.enterNickname'),
+      required: true,
+      trigger: 'blur',
+    },
+  ],
+  roleUuids: [
+    {
+      message: i18nText('form.selectRole'),
+      required: true,
+      trigger: 'submit',
+    },
+  ],
+};
+
 /**
  * 表格列配置
  */
 const columns = [
   { key: 'nickname', titleKey: 'form.nickname' },
   { key: 'phone', titleKey: 'form.phone' },
+  { key: 'inviteCode', titleKey: 'form.inviteCode' },
+  { key: 'gender', titleKey: 'form.gender' },
+  { key: 'lastLoginAt', titleKey: 'form.lastLoginTime' },
   { key: 'status', titleKey: 'form.status' },
   { key: 'roleName', titleKey: 'form.roleName' },
   { key: 'createdAt', titleKey: 'form.createTime' },
@@ -147,14 +260,6 @@ const handleRefresh = () => {
 };
 
 /**
- * 处理新增用户操作
- */
-const handleAdd = () => {
-  currentUser.value = undefined;
-  editVisible.value = true;
-};
-
-/**
  * 处理编辑用户操作
  * @param record 用户数据
  */
@@ -164,24 +269,41 @@ const handleEdit = (record: UserListItem) => {
 };
 
 /**
+ * 处理邀请码点击操作
+ * @param record 用户数据
+ */
+const handleInviteCodeClick = (record: UserListItem) => {
+  if (record.inviteCode) {
+    currentRowData.value = record;
+    childrenDialogVisible.value = true;
+  }
+};
+
+/**
+ * 处理子用户弹窗中的邀请码点击（递归查询下级）
+ * @param record 用户数据
+ */
+const handleChildrenInviteCodeClick = (record: UserListItem) => {
+  if (record.inviteCode) {
+    currentInviteCode.value = record.inviteCode;
+    currentUserNickname.value = record.nickname;
+  }
+};
+
+/**
  * 处理删除用户操作
  * @param record 用户数据
  */
 const handleDelete = (record: UserListItem) => {
   ElMessageBox.confirm(
     i18nText('userManage.deleteConfirm', {
-      username: record.username,
+      nickname: record.nickname,
     }),
-    i18nText('action.confirmDelete'),
-    {
-      cancelButtonText: '取消',
-      confirmButtonText: '确定',
-      type: 'warning',
-    }
+    i18nText('action.confirmDelete')
   )
     .then(async () => {
       try {
-        await userManageApi.onDelete({ uuid: record.uuid });
+        await appUserManageApi.onDelete({ uuid: record.uuid });
         ElMessage.success(i18nText('action.deleteSuccess'));
         tableRef.value?.refresh();
       } catch (error) {

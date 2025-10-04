@@ -6,6 +6,8 @@
 import { Router } from "express";
 import { AccountController } from "@/controllers/account";
 import { requireAuth } from "@/middleware/auth";
+import { validateForm } from "@/middleware/formValidation";
+import { verifyRule } from "@/paramsVerify";
 
 
 const router = Router();
@@ -13,11 +15,13 @@ const router = Router();
 router.put(
   "/edit-password",
   requireAuth(),
+  validateForm(verifyRule.editPasswordFormRule),
   AccountController.editPassword
 );
 router.put(
   "/edit-profile",
   requireAuth(),
+  validateForm(verifyRule.editProfileFormRule),
   AccountController.editProfile
 );
 router.get(

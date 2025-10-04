@@ -6,17 +6,11 @@
 import { Request, Response } from 'express';
 import { emailService } from '@/config/email';
 import { EmailVerificationType } from '@/types/email';
-import { onParamsVerify, verifyRule } from '@/paramsVerify';
 
 // 发送验证码
 export const sendVerificationCode = async (req: Request, res: Response) => {
   try {
     const { email, type } = req.body;
-
-    const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.sendEmailFormRule);
-    if (!isValid) {
-      return res.responseBuilder.error(messageKey, 400);
-    }
 
     const result = await emailService.sendVerificationCode(
       email,
@@ -39,11 +33,6 @@ export const sendVerificationCode = async (req: Request, res: Response) => {
 export const verifyCode = async (req: Request, res: Response) => {
   try {
     const { email, code, type = 'forgot-password' } = req.body;
-
-    const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.sendEmailFormRule);
-    if (!isValid) {
-      return res.responseBuilder.error(messageKey, 400);
-    }
 
     const result = emailService.verifyCode(email, code, type);
 

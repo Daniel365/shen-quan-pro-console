@@ -6,13 +6,15 @@
 
 import { Router } from "express";
 import { AccountController } from "@/controllers/account";
+import { validateForm } from "@/middleware/formValidation";
+import { verifyRule } from "@/paramsVerify";
 
 const router = Router();
 
 // 注册
-router.post("/register", AccountController.register);
+router.post("/register", validateForm(verifyRule.registerFormRule), AccountController.register);
 // 登录
-router.post("/login", AccountController.login);
+router.post("/login", validateForm(verifyRule.loginFormRule), AccountController.login);
 // 退出登录
 router.post("/logout", AccountController.logout);
 // 重置密码

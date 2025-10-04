@@ -3,15 +3,15 @@
  * @Date: 2025-08-31 11:08:45
  * @Description:
  */
-import { AccountInfo } from "@/api/accountManage/data.d";
-import { store } from "@/store";
+import { AccountInfo } from '@/api/accountManage/types';
+import { store } from '@/store';
 // utils
-import { Storage } from "@/utils/storage";
+import { Storage } from '@/utils/storage';
 // type
 
-export const useAccountStore = defineStore("account", () => {
+export const useAccountStore = defineStore('account', () => {
   const accessToken = ref(Storage.get(StorageKeyEnum.ACCESS_TOKEN));
-  const accountInfo = useStorage<AccountInfo>("accountInfo", {} as AccountInfo);
+  const accountInfo = useStorage<AccountInfo>('accountInfo', {} as AccountInfo);
 
   /** 设置token */
   function setToken(token: string) {

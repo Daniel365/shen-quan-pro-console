@@ -4,12 +4,12 @@
  * @Description: 通知管理相关数据类型定义
  */
 
-import { UserListItem } from "../userManage/data.d";
+import { UserListItem } from '../userManage/types';
 
 /**
  * 通知类型枚举
  */
-export type NotificationType = "info" | "warning" | "error" | "success";
+export type NotificationType = 'info' | 'warning' | 'error' | 'success';
 
 /**
  * 通知列表项
@@ -96,7 +96,7 @@ export interface NotificationOnlineStatusResponse {
  */
 export interface SSEMessageData {
   /** 消息类型 */
-  type: "notification" | "connected" | "heartbeat";
+  type: 'notification' | 'connected' | 'heartbeat';
   /** 消息数据 */
   data?: {
     uuid: string;

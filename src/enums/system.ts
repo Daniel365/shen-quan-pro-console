@@ -44,10 +44,30 @@ export enum MenuTypeEnum {
   EXTERNAL = 5,
 }
 
+/** 启用状态枚举 */
+export enum EnabledStatusEnum {
+  /** 禁用 */
+  DISABLED = 0,
+  /** 启用 */
+  ENABLED = 1,
+}
+
 /** 菜单显示状态枚举 */
 export enum MenuVisibleStatusEnum {
+  /** 隐藏 */
   HIDE = 0,
+  /** 展示 */
   SHOW = 1,
+}
+
+/** 性别枚举 */
+export enum GenderEnum {
+  /** 未知 */
+  UNKNOWN = 0,
+  /** 男 */
+  MALE = 1,
+  /** 女 */
+  FEMALE = 2,
 }
 
 /** 路由路径枚举 */
@@ -128,13 +148,6 @@ export enum RequestPath {
   /** 删除用户 */
   USER_DELETE = '/user/delete',
 
-  /** App用户列表 */
-  APP_USER_LIST = '/app/user/list',
-  /** 更新App用户信息 */
-  APP_USER_UPDATE = '/app/user/update',
-  /** 批量更新App用户 */
-  APP_USER_DELETE = '/app/user/delete',
-
   /** 操作日志列表 */
   OPERATION_LOG_LIST = '/operation-log/list',
 
@@ -154,4 +167,24 @@ export enum RequestPath {
   NOTIFICATION_ONLINE_STATUS = '/notification/online-user-list',
   /** SSE连接 */
   NOTIFICATION_CONNECT = '/notification/connect',
+
+  /** App用户列表 */
+  APP_USER_LIST = '/app/user/list',
+  /** 更新App用户信息 */
+  APP_USER_UPDATE = '/app/user/update',
+  /** 批量更新App用户 */
+  APP_USER_DELETE = '/app/user/delete',
+  /** 下级用户列表 */
+  APP_USER_CHILDREN_LIST = '/app/user/children-list',
+
+  /** 角色列表 */
+  APP_ROLE_LIST = '/app/role/list',
+  /** 新增角色 */
+  APP_ROLE_CREATE = '/app/role/create',
+  /** 编辑角色 */
+  APP_ROLE_UPDATE = '/app/role/update',
+  /** 删除角色 */
+  APP_ROLE_DELETE = '/app/role/delete',
+  /** 分配权限 */
+  APP_ROLE_ASSIGN_PERM = '/app/role/assign-perm',
 }

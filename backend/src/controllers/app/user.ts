@@ -6,13 +6,50 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 // models
-import { User, Role } from '@/models/app';
+import { Role, User, UserInvite } from '@/models/app';
 // utils
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
-import { onParamsVerify, verifyRule } from '@/paramsVerify';
+// decorators
+import { IgnoreLog } from '@/decorators/autoLog';
+import { GenderEnum, StatusEnum } from '@/types/database';
 
 export class UserController {
+  /**
+   * 根据角色UUID数组查询角色名称
+   * @param roleUuids 角色UUID数组
+   * @returns 角色名称字符串
+   */
+  private static async getRoleNames(roleUuids: string[]): Promise<string> {
+    if (!roleUuids || roleUuids.length === 0) {
+      return '';
+    }
+
+    const roles = await Role.findAll({
+      where: { uuid: { [Op.in]: roleUuids } },
+      attributes: ['name'],
+    });
+
+    return roles.map((role) => role.name).join(', ');
+  }
+
+  /**
+   * 处理用户数据，添加角色名称等信息
+   * @param userData 用户数据
+   * @returns 处理后的用户数据
+   */
+  private static async processUserWithRoles(userData: any) {
+    const roleUuids = userData.role_uuids || [];
+    const roleNames = await this.getRoleNames(roleUuids);
+
+    return {
+      ...userData,
+      role_uuids: roleUuids,
+      role_name: roleNames,
+    };
+  }
+
   // 获取用户列表
+  @IgnoreLog()
   static async list(req: Request, res: Response) {
     try {
       const reqBody = req.body;
@@ -20,6 +57,7 @@ export class UserController {
         { field: 'nickname' },
         { field: 'phone' },
         { field: 'status' },
+        { field: 'gender' },
         { field: 'invite_code' },
       ]);
 
@@ -31,23 +69,7 @@ export class UserController {
       // 处理角色数据，根据role_uuids数组查询对应的角色信息
       const processedRows = await Promise.all(
         rows.map(async (user) => {
-          const userData = user.toJSON();
-          const roleUuids = userData.role_uuids || [];
-
-          let roleNames = '';
-          if (roleUuids.length > 0) {
-            const roles = await Role.findAll({
-              where: { uuid: { [Op.in]: roleUuids } },
-              attributes: ['name'],
-            });
-            roleNames = roles.map((role) => role.name).join(', ');
-          }
-
-          return {
-            ...userData,
-            role_uuids: roleUuids.join(','),
-            role_name: roleNames,
-          };
+          return await UserController.processUserWithRoles(user.toJSON());
         })
       );
 
@@ -65,121 +87,159 @@ export class UserController {
       return res.responseBuilder.error('user.listFailed', 500);
     }
   }
-
-  // 更新用户信息（角色、状态、邀请码）
+  // 更新用户
   static async update(req: Request, res: Response) {
     try {
-      const { uuid, role_uuids, status, invite_code } = req.body;
+      const { uuid, nickname, role_uuids, status, gender } = req.body;
 
-      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.updateUserRule);
-      if (!isValid) {
-        return res.responseBuilder.error(messageKey, 400);
-      }
-
-      // 验证角色是否存在
-      if (role_uuids && role_uuids.length > 0) {
-        const roles = await Role.findAll({
-          where: { uuid: { [Op.in]: role_uuids } }
-        });
-        if (roles.length !== role_uuids.length) {
-          return res.responseBuilder.error('role.notFound', 400);
-        }
-      }
-
-      // 验证邀请码是否已存在
-      if (invite_code) {
-        const existingUser = await User.findOne({ 
-          where: { invite_code } 
-        });
-        if (existingUser && existingUser.uuid !== uuid) {
-          return res.responseBuilder.error('user.inviteCodeUsed', 400);
-        }
-      }
-
-      const updateData: any = {};
-      if (role_uuids !== undefined) updateData.role_uuids = role_uuids;
-      if (status !== undefined) updateData.status = status;
-      if (invite_code !== undefined) updateData.invite_code = invite_code;
+      // 处理undefined值，使用默认值
+      const updateData: any = {
+        nickname,
+        role_uuids: role_uuids || [],
+        status: status !== undefined ? status : StatusEnum.ENABLE, // 默认启用状态
+        gender: gender !== undefined ? gender : GenderEnum.UNKNOWN, // 默认性别未知
+      };
 
       await User.update(updateData, { where: { uuid } });
 
-      return res.responseBuilder.success({
-        uuid,
-        ...updateData,
-      }, 'user.updateSuccess');
+      return res.responseBuilder.success({ uuid }, 'user.updateSuccess');
     } catch (error) {
       return res.responseBuilder.error('user.updateFailed', 500);
     }
   }
 
-  // 批量更新用户信息
-  static async batchUpdate(req: Request, res: Response) {
+  // 删除用户
+  static async delete(req: Request, res: Response) {
     try {
-      const { user_list } = req.body;
+      const { uuid } = req.body;
+      await User.destroy({ where: { uuid } });
+      return res.responseBuilder.success({ uuid }, 'user.deleteSuccess');
+    } catch (error) {
+      return res.responseBuilder.error('user.deleteFailed', 500);
+    }
+  }
 
-      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.batchUpdateUserRule);
-      if (!isValid) {
-        return res.responseBuilder.error(messageKey, 400);
+  /**
+   * 通过用户UUID获取下级用户列表
+   * @param req 请求对象
+   * @param res 响应对象
+   */
+  @IgnoreLog()
+  static async getChildrenByInviteCode(req: Request, res: Response) {
+    try {
+      const reqBody = req.body;
+      const { inviter_uuid, level } = reqBody;
+
+      // 验证必填参数
+      if (!inviter_uuid) {
+        return res.responseBuilder.error('user.uuidRequired', 400);
       }
 
-      // 验证所有角色
-      const allRoleUuids = user_list
-        .map((user: any) => user.role_uuids || [])
-        .flat()
-        .filter(Boolean);
-      
-      if (allRoleUuids.length > 0) {
-        const roles = await Role.findAll({
-          where: { uuid: { [Op.in]: allRoleUuids } }
+      // 查询下级用户邀请记录
+      const { inviteRows, count } = await UserController.queryChildrenInviteRecords(
+        inviter_uuid,
+        level,
+        reqBody
+      );
+
+      // 如果查询结果为空，直接返回空列表
+      if (count === 0) {
+        return res.responseBuilder.success({
+          list: [],
+          pageInfo: getPageInfoConfig({ count: 0, ...reqBody }),
         });
-        const existingRoleUuids = roles.map(role => role.uuid);
-        const missingRoleUuids = allRoleUuids.filter((uuid: string) => !existingRoleUuids.includes(uuid));
-        
-        if (missingRoleUuids.length > 0) {
-          return res.responseBuilder.error('role.batchNotFound', 400);
-        }
       }
 
-      // 验证所有邀请码
-      const inviteCodes = user_list
-        .map((user: any) => user.invite_code)
-        .filter(Boolean);
-      
-      if (inviteCodes.length > 0) {
-        const existingUsers = await User.findAll({
-          where: { invite_code: { [Op.in]: inviteCodes } }
-        });
-        
-        const existingCodes = existingUsers.map(user => user.invite_code);
-        const conflictCodes = inviteCodes.filter((code: string) => existingCodes.includes(code));
-        
-        if (conflictCodes.length > 0) {
-          return res.responseBuilder.error('user.batchInviteCodeUsed', 400);
-        }
-      }
+      // 处理用户数据，添加角色名称等信息
+      const processedRows = await UserController.processUserData(inviteRows);
 
-      const updatePromises = user_list.map(async (user: any) => {
-        const { uuid, role_uuids, status, invite_code } = user;
-        
-        const updateData: any = {};
-        if (role_uuids !== undefined) updateData.role_uuids = role_uuids;
-        if (status !== undefined) updateData.status = status;
-        if (invite_code !== undefined) updateData.invite_code = invite_code;
+      // 过滤掉 null 值
+      const filteredRows = processedRows.filter((row) => row !== null);
 
-        if (Object.keys(updateData).length > 0) {
-          await User.update(updateData, { where: { uuid } });
-        }
-        
-        return { uuid, ...updateData };
+      const pageInfo = getPageInfoConfig({
+        count,
+        ...reqBody,
       });
 
-      const results = await Promise.all(updatePromises);
-
       return res.responseBuilder.success({
-        updated_users: results,
-      }, 'user.batchUpdateSuccess');
+        list: filteredRows,
+        pageInfo,
+      });
     } catch (error) {
-      return res.responseBuilder.error('user.batchUpdateFailed', 500);
+      return res.responseBuilder.error('user.childrenListFailed', 500);
     }
+  }
+
+  /**
+   * 查询下级用户邀请记录
+   * @param userUuid 用户UUID
+   * @param level 层级筛选
+   * @param reqBody 请求参数
+   * @returns 查询结果
+   */
+  private static async queryChildrenInviteRecords(
+    inviterUuid: string,
+    level: number | undefined,
+    reqBody: any
+  ) {
+    // 构建查询条件：查询该用户作为邀请人的下级用户
+    const where: any = { inviter_uuid: inviterUuid };
+
+    // 如果指定了层级，则按层级查询
+    if (level) {
+      where.level = level;
+    }
+
+    // 查询下级邀请记录
+    const result = await UserInvite.findAndCountAll({
+      where,
+      ...defaultListQuery(reqBody),
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: [
+            'uuid',
+            'nickname',
+            'phone',
+            'gender',
+            'status',
+            'last_login_at',
+            'created_at',
+            'updated_at',
+            'role_uuids',
+          ],
+        },
+      ],
+    });
+
+    return {
+      inviteRows: result.rows,
+      count: result.count,
+    };
+  }
+
+  /**
+   * 处理用户数据，添加角色名称等信息
+   * @param inviteRows 邀请记录数组
+   * @returns 处理后的用户数据数组
+   */
+  private static async processUserData(inviteRows: any[]) {
+    return await Promise.all(
+      inviteRows.map(async (invite) => {
+        const userData = invite.user?.toJSON();
+        if (!userData) {
+          return null;
+        }
+
+        // 使用封装的公共方法处理角色信息
+        const processedUser = await UserController.processUserWithRoles(userData);
+
+        return {
+          ...processedUser,
+          level: invite.level,
+        };
+      })
+    );
   }
 }

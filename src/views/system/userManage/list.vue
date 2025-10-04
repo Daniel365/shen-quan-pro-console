@@ -31,16 +31,24 @@
       </template>
     </DataTable>
 
-    <!-- 编辑用户抽屉 -->
-    <UserForm v-model:visible="editVisible" :user-data="currentUser" @success="handleRefresh" />
+    <!-- 用户表单弹窗 -->
+    <FormGroup
+      v-model:visible="editVisible"
+      :action-type="actionType"
+      :form-fields="userFormFields"
+      :form-rules="userFormRules"
+      :edit-api="userManageApi.onEdit"
+      :details-data="currentUser"
+      @success="handleRefresh"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ElMessageBox, ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 // utils
-import type { UserListItem } from '@/api/system/userManage/data.d';
+import type { UserListItem } from '@/api/system/userManage/types';
 import { enabledStatusOptions } from '@/utils/options';
 // type
 
@@ -68,6 +76,13 @@ const editVisible = ref(false);
  * 当前编辑的用户数据
  */
 const currentUser = ref<UserListItem>();
+
+/**
+ * 操作类型
+ */
+const actionType = computed(() =>
+  currentUser.value?.uuid ? ActionTypeEnum.EDIT : ActionTypeEnum.CREATE
+);
 
 /**
  * 搜索参数接口
@@ -137,6 +152,52 @@ const tableButtonGroup: ButtonGroupOptions[] = [
   },
 ];
 
+/** 用户表单字段配置 */
+const userFormFields = [
+  {
+    key: 'username',
+    label: i18nText('form.username'),
+    placeholder: i18nText('form.enterUsername'),
+    required: true,
+    type: FormTypeEnum.INPUT,
+  },
+  {
+    api: roleManageApi.getList,
+    key: 'roleUuids',
+    label: i18nText('form.role'),
+    labelField: 'name',
+    multiple: true,
+    placeholder: i18nText('form.selectRole'),
+    required: true,
+    type: FormTypeEnum.SELECT_API,
+    valueField: 'uuid',
+  },
+  {
+    key: 'status',
+    label: i18nText('form.status'),
+    options: enabledStatusOptions,
+    type: FormTypeEnum.RADIO_GROUP,
+  },
+];
+
+/** 用户表单验证规则 */
+const userFormRules = {
+  roleUuids: [
+    {
+      message: i18nText('form.selectRole'),
+      required: true,
+      trigger: 'submit',
+    },
+  ],
+  username: [
+    {
+      message: i18nText('form.enterUsername'),
+      required: true,
+      trigger: 'blur',
+    },
+  ],
+};
+
 /**
  * 表格列配置
  */
@@ -158,14 +219,6 @@ const handleRefresh = () => {
 };
 
 /**
- * 处理新增用户操作
- */
-const handleAdd = () => {
-  currentUser.value = undefined;
-  editVisible.value = true;
-};
-
-/**
  * 处理编辑用户操作
  * @param record 用户数据
  */
@@ -183,12 +236,7 @@ const handleDelete = (record: UserListItem) => {
     i18nText('userManage.deleteConfirm', {
       username: record.username,
     }),
-    i18nText('action.confirmDelete'),
-    {
-      cancelButtonText: '取消',
-      confirmButtonText: '确定',
-      type: 'warning',
-    }
+    i18nText('action.confirmDelete')
   )
     .then(async () => {
       try {
