@@ -36,6 +36,7 @@ declare global {
   const accountManageApi: typeof import('../api/index')['accountManageApi']
   const adminManageApi: typeof import('../api/index')['adminManageApi']
   const apiVersionUrl: typeof import('../api/requestUtils')['apiVersionUrl']
+  const appUserManageApi: typeof import('../api/index')['appUserManageApi']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const commonApi: typeof import('../api/index')['commonApi']
@@ -237,7 +238,6 @@ declare global {
   const useGamepad: typeof import('@vueuse/core')['useGamepad']
   const useGeolocation: typeof import('@vueuse/core')['useGeolocation']
   const useI18n: typeof import('vue-i18n')['useI18n']
-  const useI18nUtil: typeof import('../hooks/i18ns')['useI18nUtil']
   const useId: typeof import('vue')['useId']
   const useIdle: typeof import('@vueuse/core')['useIdle']
   const useImage: typeof import('@vueuse/core')['useImage']
@@ -415,6 +415,7 @@ declare module 'vue' {
     readonly accountManageApi: UnwrapRef<typeof import('../api/index')['accountManageApi']>
     readonly adminManageApi: UnwrapRef<typeof import('../api/index')['adminManageApi']>
     readonly apiVersionUrl: UnwrapRef<typeof import('../api/requestUtils')['apiVersionUrl']>
+    readonly appUserManageApi: UnwrapRef<typeof import('../api/index')['appUserManageApi']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly commonApi: UnwrapRef<typeof import('../api/index')['commonApi']>

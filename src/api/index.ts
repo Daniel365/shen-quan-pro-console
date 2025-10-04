@@ -5,15 +5,21 @@
  */
 import accountManageApi from './accountManage';
 import adminManageApi from './adminManage';
+import {
+  appUserManageApi
+} from './app'
 import commonApi from './common';
-import menuManageApi from './system/menuManage';
-import notificationManageApi from './system/notificationManage';
-import operationLogApi from './system/operationLog';
-import roleManageApi from './system/roleManage';
-import userManageApi from './system/userManage';
+import {
+  menuManageApi,
+  operationLogApi,
+  roleManageApi,
+  userManageApi,
+  notificationManageApi,
+} from './system'
 import uploadManageApi from './uploadManage';
 
 export {
+  appUserManageApi,
   accountManageApi,
   adminManageApi,
   commonApi,

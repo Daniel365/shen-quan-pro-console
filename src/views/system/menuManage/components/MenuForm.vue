@@ -20,25 +20,22 @@
             v-model:model-value="(formState as any)[item.key]"
             :placeholder="$t('form.selectParentMenu')"
           />
-          <!-- 树形选择器 -->
-          <el-select
+          <!-- 选择器 -->
+          <Select
             v-else-if="item.type === FormTypeEnum.SELECT"
-            v-model="(formState as any)[item.key]"
-            filterable
-            :placeholder="$t('form.pleaseSelect')"
-          >
-            <el-option
-              v-for="option in item?.options || []"
-              :key="option.value"
-              :label="option.label"
-              :value="option.value"
-            />
-          </el-select>
+            v-model:model-value="(formState as any)[item.key]"
+            :options="(item?.options || []) as any"
+          />
+          <GroupSelect
+            v-else-if="item.type === FormTypeEnum.SELECT_GROUP"
+            v-model:model-value="(formState as any)[item.key]"
+            :options="(item?.options || []) as any"
+          />
           <!-- 单选组 -->
           <RadioGroup
             v-else-if="item.type === FormTypeEnum.RADIO_GROUP"
             v-model:model-value="(formState as any)[item.key]"
-            :options="item?.options || []"
+            :options="(item?.options || []) as any"
           />
           <!-- 数字输入 -->
           <el-input-number
@@ -89,8 +86,6 @@ import { MenuFormProps, MenuListItem } from '@/api/system/menuManage/data.d';
 import { defaultFormData, getFormFields } from '../utils/const';
 
 import type { FormInstance } from 'element-plus';
-// utils
-// type
 
 interface Props {
   visible: boolean;

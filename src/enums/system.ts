@@ -128,6 +128,13 @@ export enum RequestPath {
   /** 删除用户 */
   USER_DELETE = '/user/delete',
 
+  /** App用户列表 */
+  APP_USER_LIST = '/app/user/list',
+  /** 更新App用户信息 */
+  APP_USER_UPDATE = '/app/user/update',
+  /** 批量更新App用户 */
+  APP_USER_DELETE = '/app/user/delete',
+
   /** 操作日志列表 */
   OPERATION_LOG_LIST = '/operation-log/list',
 

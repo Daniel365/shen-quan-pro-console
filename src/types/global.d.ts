@@ -58,9 +58,9 @@ declare global {
    */
   interface PageQuery {
     /** 当前页码 */
-    page: number;
+    page?: number;
     /** 每页条数 */
-    pageSize: number;
+    pageSize?: number;
   }
 
   /** 接口返回的分页信息 */
@@ -123,7 +123,8 @@ declare global {
     /** 占位符 */
     placeholder?: string;
     /** 选项数据（适用于select、radio等） */
-    options?: OptionsItemType[];
+    options?: OptionsItemType[] | { label: string; options: OptionsItemType[] }[];
+    groupOptions?: { label: string; options: OptionsItemType[] }[];
     /** 是否必填 */
     required?: boolean;
     /** 验证规则 */

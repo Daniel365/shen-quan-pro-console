@@ -55,6 +55,7 @@ declare module 'vue' {
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElMenuItemGroup: typeof import('element-plus/es')['ElMenuItemGroup']
     ElOption: typeof import('element-plus/es')['ElOption']
+    ElOptionGroup: typeof import('element-plus/es')['ElOptionGroup']
     ElPagination: typeof import('element-plus/es')['ElPagination']
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElRadio: typeof import('element-plus/es')['ElRadio']
@@ -74,6 +75,7 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
     Footer: typeof import('./../layouts/components/Footer/index.vue')['default']
+    GroupSelect: typeof import('./../components/GroupSelect/index.vue')['default']
     Header: typeof import('./../layouts/components/Header/index.vue')['default']
     IconFont: typeof import('./../components/IconFont/index.vue')['default']
     IconPicker: typeof import('./../components/IconPicker/index.vue')['default']
@@ -96,6 +98,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchForm: typeof import('./../components/SearchForm/index.vue')['default']
+    Select: typeof import('./../components/Select/index.vue')['default']
     Send: typeof import('./../views/system/notificationManage/components/send.vue')['default']
     SendDialog: typeof import('./../components/layout/Notification/SendDialog.vue')['default']
     StatusText: typeof import('./../components/StatusText/index.vue')['default']
@@ -105,7 +108,7 @@ declare module 'vue' {
     TreeSelect: typeof import('./../components/TreeSelect/index.vue')['default']
     UsageExample: typeof import('./../components/ButtonGroup/usage-example.vue')['default']
     UserAgentInfo: typeof import('./../views/system/operationLog/components/UserAgentInfo.vue')['default']
-    UserForm: typeof import('./../views/system/userManage/components/UserForm.vue')['default']
+    UserForm: typeof import('./../views/app/userManage/components/UserForm.vue')['default']
   }
   export interface GlobalDirectives {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

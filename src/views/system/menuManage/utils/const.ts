@@ -77,6 +77,15 @@ export const formFieldsConfig: Record<any, FormFieldConfig[]> = {
       type: FormTypeEnum.INPUT,
     },
     {
+      inputAppend: ".vue",
+      inputPrepend: "src/views/",
+      key: "component",
+      labelKey: "form.component",
+      order: 6,
+      required: true,
+      type: FormTypeEnum.INPUT,
+    },
+    {
       key: "icon",
       labelKey: "form.icon",
       order: 10,
@@ -129,7 +138,7 @@ export const formFieldsConfig: Record<any, FormFieldConfig[]> = {
       options: buttonPermissionOptions,
       order: 4,
       required: true,
-      type: FormTypeEnum.SELECT,
+      type: FormTypeEnum.SELECT_GROUP,
     },
   ],
 
@@ -141,7 +150,7 @@ export const formFieldsConfig: Record<any, FormFieldConfig[]> = {
       options: buttonPermissionOptions,
       order: 4,
       required: true,
-      type: FormTypeEnum.SELECT,
+      type: FormTypeEnum.SELECT_GROUP,
     },
   ],
 

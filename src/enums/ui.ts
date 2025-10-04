@@ -63,6 +63,7 @@ export enum FormTypeEnum {
   INPUT_NUMBER = "inputNumber",
   TEXT_AREA = "textArea",
   SELECT = "select",
+  SELECT_GROUP = "selectGroup",
   TREE_SELECT = "TreeSelect",
   RADIO_GROUP = "radioGroup",
   CHECKBOX_GROUP = "checkboxGroup",
