@@ -4,19 +4,15 @@
  * @Description:
  */
 // utils
-import { validateByDataType } from "../utils/dataJudge";
-import { onPattern } from "../utils/regexPatterns";
+import { validateByDataType } from '../utils/dataJudge';
+import { onPattern } from '../utils/regexPatterns';
 // rule
-import {
-  loginFormRule,
-  registerFormRule,
-  forgotPasswordFormRule,
-} from "./user/index";
-import { editPasswordFormRule } from "./account/index";
-import { sendEmailFormRule } from "./email/index";
+import { loginFormRule, registerFormRule, forgotPasswordFormRule } from './user/index';
+import { editPasswordFormRule, editProfileFormRule } from './account/index';
+import { sendEmailFormRule } from './email/index';
 // type
-import { RegisterReqData } from "./user/type";
-import { ReqParamsVerifyRule } from "../types/interfaceRequest";
+import { RegisterReqData } from './user/type';
+import { ReqParamsVerifyRule } from '../types/interfaceRequest';
 
 /** 请求参数 - 类型声明 */
 export type ReqDataType = {
@@ -29,6 +25,7 @@ export const verifyRule = {
   loginFormRule,
   forgotPasswordFormRule,
   editPasswordFormRule,
+  editProfileFormRule,
   sendEmailFormRule,
 };
 
@@ -36,29 +33,29 @@ export const verifyRule = {
 export const onParamsVerify = (data: any, ruleData: ReqParamsVerifyRule[]) => {
   const res = {
     isValid: true,
-    message: "",
+    messageKey: '',
   };
   for (const item of ruleData) {
     const val = data[item.filed];
     const rule = item?.rule || [];
     let flag = true;
-    // 规则叫Y按
+    // 规则校验
     for (const ruleItem of rule) {
       const { required, regex } = ruleItem;
       // 必填
       if (required) {
-        const { isValid, message } = validateByDataType(val, item.dataType);
+        const { isValid, messageKey } = validateByDataType(val, item.dataType);
 
         if (!isValid) {
           res.isValid = false;
-          res.message = ruleItem.message || message;
+          res.messageKey = ruleItem.messageKey || messageKey || 'common.validationError';
           flag = false;
         }
       }
       // 正则
       if (regex && !onPattern(val, regex)) {
         res.isValid = false;
-        res.message = ruleItem.message;
+        res.messageKey = ruleItem.messageKey || 'validation.regexFailed';
         flag = false;
       }
     }

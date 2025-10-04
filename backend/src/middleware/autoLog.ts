@@ -4,7 +4,7 @@
  * @Description:  自动创建日志 - 中间件
  */
 import { Request, Response, NextFunction } from 'express';
-import { OperationLogController } from '../controllers/operationLog';
+import { OperationLogController } from '../controllers/system';
 import {
   generateActionDescription,
   getSafeRequestParams,

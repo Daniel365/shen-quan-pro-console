@@ -10,4 +10,5 @@ export enum EmailVerificationType {
   REGISTER = "register",
   RESET_PASSWORD = "reset-password",
   EDIT_PASSWORD = "edit-password",
+  EDIT_PROFILE = "edit-profile",
 }

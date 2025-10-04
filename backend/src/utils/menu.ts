@@ -2,7 +2,7 @@
  * 菜单工具类
  * 提供菜单数据结构转换相关方法
  */
-import { MenuAttributes } from '../models/Menu';
+import { MenuAttributes } from '../models/system/Menu';
 interface MenuListItem extends MenuAttributes {
   children: MenuAttributes[];
 }

@@ -9,7 +9,7 @@ export const registerFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "密码不能为空",
+        messageKey: "validation.usernameRequired",
       },
     ],
   },
@@ -19,7 +19,7 @@ export const registerFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "邮箱不能为空",
+        messageKey: "validation.emailRequired",
       },
     ],
   },
@@ -29,7 +29,7 @@ export const registerFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: false,
-        message: "手机号不能为空",
+        messageKey: "validation.phoneRequired",
       },
     ],
   },
@@ -39,7 +39,7 @@ export const registerFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "密码不能为空",
+        messageKey: "validation.passwordRequired",
       },
     ],
   },
@@ -49,7 +49,7 @@ export const registerFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "确认密码不能为空",
+        messageKey: "validation.confirmPasswordRequired",
       },
     ],
   },
@@ -63,7 +63,7 @@ export const loginFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "用户名不能为空",
+        messageKey: "validation.usernameRequired",
       },
     ],
   },
@@ -73,7 +73,7 @@ export const loginFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "密码不能为空",
+        messageKey: "validation.passwordRequired",
       },
     ],
   },
@@ -87,7 +87,7 @@ export const forgotPasswordFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "邮箱不能为空",
+        messageKey: "validation.emailRequired",
       },
     ],
   },
@@ -97,7 +97,7 @@ export const forgotPasswordFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "验证码不能空",
+        messageKey: "validation.verificationCodeRequired",
       },
     ],
   },
@@ -107,7 +107,7 @@ export const forgotPasswordFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "新密码不能为空",
+        messageKey: "validation.newPasswordRequired",
       },
     ],
   },

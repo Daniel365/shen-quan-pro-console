@@ -4,23 +4,20 @@
  * @Description: 账号相关
  */
 import { Router } from "express";
-import { AccountController } from "../controllers/account";
-import { requireAuth } from "../middleware/auth";
-import { logOperation } from "../middleware/operationLog";
-import { OperationAction } from "../types/operationLog";
+import { AccountController } from "@/controllers/account";
+import { requireAuth } from "@/middleware/auth";
+
 
 const router = Router();
 
 router.put(
   "/edit-password",
   requireAuth(),
-  logOperation(OperationAction.ACCOUNT_EDIT_PASSWORD),
   AccountController.editPassword
 );
 router.put(
   "/edit-profile",
   requireAuth(),
-  logOperation(OperationAction.ACCOUNT_EDIT_PROFILE),
   AccountController.editProfile
 );
 router.get(

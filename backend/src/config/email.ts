@@ -3,7 +3,7 @@
  * @Date: 2025-09-03 21:27:23
  * @Description:
  */
-import { EmailService } from "../services/EmailService";
+import { EmailService } from "../services/emailServices";
 
 const EMAIL_PORT: number = parseInt(process.env.EMAIL_PORT || "465");
 // 邮件配置

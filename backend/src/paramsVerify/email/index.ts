@@ -10,11 +10,11 @@ export const sendEmailFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "邮箱不能为空",
+        messageKey: "validation.emailRequired",
       },
       {
         regex: RegexPatterns.email,
-        message: "邮箱格式不正确",
+        messageKey: "validation.emailInvalid",
       },
     ],
   },
@@ -24,7 +24,7 @@ export const sendEmailFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "验证类型不能空",
+        messageKey: "validation.typeRequired",
       },
     ],
   },
@@ -38,7 +38,7 @@ export const verifyEmailCodeFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "邮箱不能为空",
+        messageKey: "validation.emailRequired",
       },
     ],
   },
@@ -48,7 +48,7 @@ export const verifyEmailCodeFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "验证类型不能空",
+        messageKey: "validation.typeRequired",
       },
     ],
   },
@@ -58,7 +58,7 @@ export const verifyEmailCodeFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "验证码不能为空",
+        messageKey: "validation.verificationCodeRequired",
       },
     ],
   },

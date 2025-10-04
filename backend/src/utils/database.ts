@@ -4,13 +4,9 @@
  * @Description: 数据库相关方法封装
  */
 
-import { Op } from "sequelize";
-import { isDev } from "./dataJudge";
-import {
-  WhereQueryConfig,
-  MatchTypeEnum,
-  DataTypeEnum,
-} from "../types/database";
+import { Op } from 'sequelize';
+import { WhereQueryConfig, MatchTypeEnum, DataTypeEnum } from '../types/database';
+import { isDev } from '../config/process';
 
 /** 初始sequelize的配置 */
 export const sequelizeSyncConfig = () => {
@@ -27,14 +23,12 @@ export const getDbName = (name: string) => {
 };
 
 /** 默认查询列表配置 */
-export const defaultListQuery = (
-  data: { page: number; page_size: number } | any
-): any => {
+export const defaultListQuery = (data: { page: number; page_size: number } | any): any => {
   const { page = 1, page_size = 10 } = data;
   return {
     limit: Number(page_size),
     offset: (Number(page) - 1) * Number(page_size),
-    order: [["created_at", "DESC"]],
+    order: [['created_at', 'DESC']],
   };
 };
 
@@ -57,14 +51,11 @@ export const getPageInfoConfig = (
  * @tips 当查询条件都是like时，configs可传字符串数组 ['xxx','xxx']
  * @returns 查询条件对象
  */
-export const buildWhereCondition = (
-  data: any,
-  configs: WhereQueryConfig[] | string[]
-) => {
+export const buildWhereCondition = (data: any, configs: WhereQueryConfig[] | string[]) => {
   const where: any = {};
   // 做数据兼容
   const list: WhereQueryConfig[] = configs.map((item) => {
-    if (typeof item === "string") {
+    if (typeof item === 'string') {
       return {
         field: item,
       };
@@ -83,7 +74,7 @@ export const buildWhereCondition = (
     const value = queryValue || data[field];
 
     // 跳过空值
-    if (value === undefined || value === null || value === "") continue;
+    if (value === undefined || value === null || value === '') continue;
 
     // 根据数据类型转换值
     let processedValue = value;
@@ -106,9 +97,7 @@ export const buildWhereCondition = (
         break;
       case MatchTypeEnum.IN:
         where[field] = {
-          [Op.in]: Array.isArray(processedValue)
-            ? processedValue
-            : [processedValue],
+          [Op.in]: Array.isArray(processedValue) ? processedValue : [processedValue],
         };
         break;
       case MatchTypeEnum.RANGE:

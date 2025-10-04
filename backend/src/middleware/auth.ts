@@ -1,14 +1,13 @@
 /*
  * @Author: 350296245@qq.com
  * @Date: 2025-08-31 23:42:28
- * @Description: 判断是否有权限访问接口
+ * @Description: 判断是否有权限访问接口 - 中间件
  */
-import { Request, Response, NextFunction } from "express";
-import { JwtUtils } from "../utils/jwt";
-import jwt from "jsonwebtoken";
-import { onErrorResult } from "../utils/controllersResult";
-import { onParamsVerify } from "../paramsVerify";
-import { ReqParamsVerifyRule } from "../types/interfaceRequest";
+import { Request, Response, NextFunction } from 'express';
+import { JwtUtils } from '../utils/jwt';
+import jwt from 'jsonwebtoken';
+import { onParamsVerify } from '../paramsVerify';
+import { ReqParamsVerifyRule } from '../types/interfaceRequest';
 
 declare global {
   namespace Express {
@@ -28,27 +27,24 @@ export const requireAuth = ({ verifyRule }: RequireAuthParams = {}) => {
     try {
       const token = JwtUtils.extractToken(req);
       if (!token) {
-        return res.status(401).json(onErrorResult("访问令牌缺失"));
+        return res.responseBuilder.unauthorized('auth.missingToken');
       }
       const decoded = JwtUtils.verifyToken(token);
       req.accountInfo = { uuid: decoded.uuid };
 
       // 表单验证
       if (verifyRule && verifyRule.length) {
-        const { isValid, message } = onParamsVerify(req.body, verifyRule);
+        const { isValid, messageKey } = onParamsVerify(req.body, verifyRule);
         if (!isValid) {
-          return res.status(400).json(onErrorResult(message));
+          return res.responseBuilder.error(messageKey, 400);
         }
       }
       next();
     } catch (error) {
-      if (
-        error instanceof jwt.JsonWebTokenError ||
-        error instanceof jwt.TokenExpiredError
-      ) {
-        return res.status(401).json(onErrorResult("令牌无效或已过期"));
+      if (error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) {
+        return res.responseBuilder.unauthorized('auth.tokenInvalidOrExpired');
       }
-      return res.status(500).json({ code: 500, message: "认证失败" });
+      return res.responseBuilder.error('auth.authenticationFailed', 500);
     }
   };
 };

@@ -3,76 +3,82 @@
  * @Date: 2025-08-28 23:06:01
  * @Description:
  */
-import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
-
-// 加载环境变量
-dotenv.config({ path: ".env.development" });
-
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import process from 'node:process';
 // config
-import sequelize from "./database";
+import {LOCAL_UPLOAD_PATH, PORT, UPLOAD_STRATEGY } from './config/process';
+import { API_VERSION } from './config/default';
+// database
+import sequelize from './database';
+// 导入模型关联定义
+import './models/associations';
+// middleware
+import autoLogOperation from './middleware/autoLog';
+import i18nMiddleware from './middleware/i18n';
+import responseMiddleware from './middleware/response';
+import errorHandler from './middleware/errorHandler';
 // router
-import emailRoutes from "./routes/email";
-import adminRoutes from "./routes/admin";
-import accountRoutes from "./routes/account";
-import userRoutes from "./routes/user";
-import roleRoutes from "./routes/role";
-import menuRoutes from "./routes/menu";
-import operationLogRoutes from "./routes/operationLog";
+import emailRoutes from './routes/email';
+import adminRoutes from './routes/admin';
+import accountRoutes from './routes/account';
+import uploadRoutes from './routes/upload';
+import { userRoutes, roleRoutes, menuRoutes, operationLogRoutes, notificationRoutes } from './routes/system';
 // utils
-import { isDev } from "./utils/dataJudge";
-import { sequelizeSyncConfig } from "./utils/database";
+import { sequelizeSyncConfig } from './utils/database';
 
 // 初始化Express应用
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // 中间件
 app.use(
   cors({
-    exposedHeaders: ["Authorization"],
+    exposedHeaders: ['Authorization'],
   })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
+// 本地文件上传静态文件服务
+if (UPLOAD_STRATEGY === 'local') {
+  app.use(`${API_VERSION}/uploads`, express.static(LOCAL_UPLOAD_PATH));
+}
+
+// 国际化中间件
+app.use(i18nMiddleware());
+
+// 响应中间件（在路由前应用，确保所有路由都能使用统一的响应处理）
+app.use(responseMiddleware());
+
+// 自动操作日志中间件（在路由前应用，确保所有路由都能被记录）
+app.use(autoLogOperation());
 // 路由
-app.use("/api/v1.0/email", emailRoutes);
-app.use("/api/v1.0/admin", adminRoutes);
-app.use("/api/v1.0/account", accountRoutes);
-app.use("/api/v1.0/user", userRoutes);
-app.use("/api/v1.0/role", roleRoutes);
-app.use("/api/v1.0/menu", menuRoutes);
-app.use("/api/v1.0/operation-log", operationLogRoutes);
+app.use(`${API_VERSION}/email`, emailRoutes);
+app.use(`${API_VERSION}/admin`, adminRoutes);
+app.use(`${API_VERSION}/account`, accountRoutes);
+app.use(`${API_VERSION}/user`, userRoutes);
+app.use(`${API_VERSION}/role`, roleRoutes);
+app.use(`${API_VERSION}/menu`, menuRoutes);
+app.use(`${API_VERSION}/operation-log`, operationLogRoutes);
+app.use(`${API_VERSION}/notification`, notificationRoutes);
+app.use(`${API_VERSION}/upload`, uploadRoutes);
 
 // 根路由
-app.get("/", (req, res) => {
-  res.send("Authentication API is running");
+app.get('/', (req, res) => {
+  res.send('Authentication API is running');
 });
 
 // 错误处理中间件
-app.use(
-  (
-    err: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    console.error(err.stack);
-    res.status(500).json({
-      message: "服务器内部错误",
-      error: isDev ? err.message : undefined,
-    });
-  }
-);
+app.use(errorHandler());
 
 // 监听服务器
 const listenServer = () => {
   const server = app.listen(PORT, () => {
     console.log(`服务器运行在 ${PORT}`);
   });
-  process.on("SIGINT", () => {
+  process.on('SIGINT', () => {
     server.close(() => {
       console.log(`${PORT} 端口已关闭`);
       process.exit(0); // 退出进程
@@ -86,14 +92,14 @@ if (syncConfig) {
   sequelize
     .sync(syncConfig)
     .then(() => {
-      console.log("开启数据库同步成功");
+      console.log('开启数据库同步成功');
       listenServer();
     })
     .catch((err) => {
-      console.error("开启数据库同步失败:", err);
+      console.error('开启数据库同步失败:', err);
     });
 } else {
-  console.log("生产模式：跳过数据库同步");
+  console.log('生产模式：跳过数据库同步');
   listenServer();
 }
 

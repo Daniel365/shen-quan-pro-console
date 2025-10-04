@@ -5,28 +5,16 @@
  */
 
 import { Router } from "express";
-import { UserController } from "../controllers/user";
-import { requireAuth } from "../middleware/auth";
-import { logOperation } from "../middleware/operationLog";
-import { OperationAction } from "../types/operationLog";
+import { UserController } from "@/controllers/system";
 
 const router = Router();
 
 // 注册
 router.post("/register", UserController.register);
 // 登录
-router.post(
-  "/login",
-  logOperation(OperationAction.LOGIN),
-  UserController.login
-);
+router.post("/login", UserController.login);
 // 退出登录
-router.post(
-  "/logout",
-  requireAuth(),
-  logOperation(OperationAction.LOGOUT),
-  UserController.logout
-);
+router.post("/logout", UserController.logout);
 // 重置密码
 router.post("/reset-password", UserController.resetPassword);
 

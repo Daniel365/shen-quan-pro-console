@@ -61,11 +61,11 @@ export enum RouterPath {
   // 首页
   HOME = '/home',
   // 用户列表
-  // USER_MANAGE_LIST = '/system/userManage/list',
+  USER_MANAGE_LIST = '/system/userManage/list',
   // 角色
-  // ROLE_MANAGE_LIST = '/system/roleManage/list',
+  ROLE_MANAGE_LIST = '/system/roleManage/list',
   // 菜单
-  // MENU_MANAGE_LIST = '/system/menuManage/list',
+  MENU_MANAGE_LIST = '/system/menuManage/list',
   // 消息通知列表
   NOTIFICATION_LIST = '/system/notificationManage/list',
   // 个人中心

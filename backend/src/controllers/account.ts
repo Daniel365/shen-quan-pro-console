@@ -3,53 +3,42 @@
  * @Date: 2025-09-06 15:03:12
  * @Description: 通过token - 账号相关处理逻辑
  */
-import { Request, Response } from "express";
-import { Sequelize, Op } from "sequelize";
-import jwt from "jsonwebtoken";
-import { emailService } from "../config/email";
-// models
-import User from "../models/User";
-import Role from "../models/Role";
-import Menu, { MenuAttributes } from "../models/Menu";
-// utils
-import { onErrorResult, onSuccessResult } from "../utils/controllersResult";
-import { onParamsVerify, verifyRule } from "../paramsVerify";
-// type
-import { StatusEnum } from "../types/database";
-import { EmailVerificationType } from "../types/email";
-import { ResParamsTypeEnum } from "../types/interfaceResult";
+import { Request, Response } from 'express';
+import { Op } from 'sequelize';
+import jwt from 'jsonwebtoken';
+import { emailService } from '@/config/email';
 
-interface MenuListItem extends MenuAttributes {
-  children: MenuAttributes[];
-}
+import { User, Role, Menu } from '@/models/system';
+// utils
+import { buildRouterTree } from '@/utils/menu';
+import { onParamsVerify, verifyRule } from '@/paramsVerify';
+// type
+import { StatusEnum } from '@/types/database';
+import { EmailVerificationType } from '@/types/email';
 
 export class AccountController {
   // 设置新密码
   static async editPassword(req: Request, res: Response) {
     try {
       const { uuid } = req?.accountInfo || {};
-      const { email, code, current_password, password, confirm_password } =
-        req.body;
+      const { email, code, current_password, password, confirm_password } = req.body;
 
-      const { isValid, message } = onParamsVerify(
-        req.body,
-        verifyRule.editPasswordFormRule
-      );
+      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.editPasswordFormRule);
       if (!isValid) {
-        return res.status(400).json(onErrorResult(message));
+        return res.responseBuilder.error(messageKey, 400);
       }
 
       if (password !== confirm_password) {
-        return res.status(400).json(onErrorResult("两次输入的密码不一致"));
+        return res.responseBuilder.error('user.passwordNotMatch');
       }
 
       const user = await User.findByPk(uuid);
       if (!user) {
-        return res.status(400).json(onErrorResult("用户不存在"));
+        return res.responseBuilder.error('user.notFound');
       }
 
       if (!(await user.validatePassword(current_password))) {
-        return res.status(400).json(onErrorResult("当前密码不正确"));
+        return res.responseBuilder.error('auth.invalidCurrentPassword');
       }
 
       const verifyResult = emailService.verifyCode(
@@ -58,15 +47,15 @@ export class AccountController {
         EmailVerificationType.EDIT_PASSWORD
       );
       if (!verifyResult.verifyFlag) {
-        return res.status(400).json(onErrorResult(verifyResult.message));
+        return res.responseBuilder.error(verifyResult.messageKey, 400);
       }
 
       user.password = password;
       await user.save();
 
-      res.json(onSuccessResult({}, { message: "密码修改成功" }));
+      return res.responseBuilder.success({}, 'user.passwordChangeSuccess');
     } catch (error) {
-      res.status(500).json({ code: 500, message: "密码修改失败" });
+      return res.responseBuilder.error('user.passwordChangeFailed', 500);
     }
   }
 
@@ -74,46 +63,66 @@ export class AccountController {
   static async editProfile(req: Request, res: Response) {
     try {
       const { uuid } = req?.accountInfo || {};
-      const { username, email } = req.body;
+      const { username, email, code } = req.body;
+
+      const { isValid, messageKey } = onParamsVerify(req.body, verifyRule.editProfileFormRule);
+      if (!isValid) {
+        return res.responseBuilder.error(messageKey, 400);
+      }
+
+      // 验证邮箱验证码
+      const verifyResult = emailService.verifyCode(email, code, EmailVerificationType.EDIT_PROFILE);
+      if (!verifyResult.verifyFlag) {
+        return res.responseBuilder.error(verifyResult.messageKey, 400);
+      }
 
       await User.update({ username, email }, { where: { uuid } });
 
-      res.json(
-        onSuccessResult(
-          {
-            uuid,
-          },
-          { message: "更新成功" }
-        )
-      );
+      return res.responseBuilder.success({ uuid }, 'user.profileUpdateSuccess');
     } catch (error) {
-      res.status(500).json({ code: 500, message: "更新失败" });
+      return res.responseBuilder.error('user.profileUpdateFailed', 500);
     }
   }
 
   // 获取用户菜单按钮权限
   private static async getAccountRoleInfo(userModel: any) {
-    // 获取用户角色的菜单权限
-    const roleModel = userModel?.role;
-    const menu_ids = roleModel?.menu_ids || [];
+    // 获取用户的角色UUID数组
+    const roleUuids = userModel?.role_uuids || [];
+
+    // 查询角色信息
+    const roles = await Role.findAll({
+      where: { uuid: { [Op.in]: roleUuids } },
+    });
+
+    // 合并所有角色的菜单权限
+    let allMenuIds: number[] = [];
+    const roleNames: string[] = [];
+    const roleCodes: string[] = [];
+
+    for (const role of roles) {
+      const menuIds = role?.menu_ids || [];
+      allMenuIds = [...allMenuIds, ...menuIds];
+      roleNames.push(role?.name || '');
+      roleCodes.push(role?.code || '');
+    }
+
+    // 去重
+    allMenuIds = [...new Set(allMenuIds)];
 
     // 查询type等于3的菜单（按钮类型）
     const menu = await Menu.findAll({
       where: {
-        id: { [Op.in]: menu_ids },
+        id: { [Op.in]: allMenuIds },
         type: 3, // 按钮类型
       },
     });
     // 提取权限标识
-    const perms = menu
-      .map((menu) => menu.permission)
-      .filter((permission) => permission); // 过滤掉空值
+    const perms = menu.map((menu) => menu.permission).filter((permission) => permission); // 过滤掉空值
+
     return {
-      role_name: roleModel?.name,
-      role_code: roleModel?.code,
+      role_name: roleNames.join(','),
+      role_code: roleCodes,
       perms,
-      // 因为关联会查询这个字段，所以这里处理不展示这个对象
-      role: undefined,
     };
   }
   // 获取登录用户信息
@@ -121,24 +130,11 @@ export class AccountController {
     try {
       const { uuid } = req?.accountInfo || {};
       const user = await User.findByPk(uuid, {
-        attributes: [
-          ["uuid", "user_uuid"],
-          "username",
-          "email",
-          "role_uuid",
-          "status",
-        ],
-        include: [
-          {
-            model: Role,
-            as: "role",
-            attributes: ["name", "code", "menu_ids"],
-          },
-        ],
+        attributes: [['uuid', 'user_uuid'], 'username', 'email', 'role_uuids', 'status'],
       });
 
       if (!user || user.status === StatusEnum.DISABLE) {
-        return res.json(onErrorResult("用户不存在或已禁用"));
+        return res.responseBuilder.error('user.notFoundOrDisabled');
       }
 
       // 角色信息
@@ -149,49 +145,13 @@ export class AccountController {
         ...roleInfo,
       };
 
-      res.json(onSuccessResult(userInfo));
+      return res.responseBuilder.success(userInfo);
     } catch (error) {
-      if (
-        error instanceof jwt.JsonWebTokenError ||
-        error instanceof jwt.TokenExpiredError
-      ) {
-        return res.status(401).json({ code: 401, message: "令牌无效或已过期" });
+      if (error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) {
+        return res.responseBuilder.error('auth.tokenInvalidOrExpired', 401);
       }
-      res.status(500).json({ code: 500, message: "获取用户信息失败" });
+      return res.responseBuilder.error('user.getInfoFailed', 500);
     }
-  }
-  // 构建菜单树
-  private static buildTree(menus: any[]) {
-    const menuMap = new Map();
-    const rootMenus: any[] = [];
-
-    menus.forEach((menu) => {
-      menuMap.set(menu.id, { ...menu.toJSON(), children: [] });
-    });
-
-    menus.forEach((menu) => {
-      const menuItem: MenuListItem = menuMap.get(menu.id);
-      const newItem = {
-        name: menuItem.route_name,
-        path: menuItem.route_path,
-        component: menuItem.component,
-        meta: {
-          alwaysShow: false,
-          hidden: false,
-          icon: menuItem.icon,
-          params: null,
-          title: menuItem.name,
-        },
-        children: menuItem.children,
-      };
-      if (menu.parent_id && menuMap.has(menu.parent_id)) {
-        menuMap.get(menu.parent_id).children.push(newItem);
-      } else {
-        rootMenus.push(newItem);
-      }
-    });
-
-    return rootMenus;
   }
 
   // 获取用户菜单权限
@@ -200,28 +160,43 @@ export class AccountController {
       const { uuid } = req?.accountInfo || {};
 
       const user = await User.findByPk(uuid);
-      if (!user || !user.role_uuid) {
-        return res.status(400).json(onErrorResult("用户或角色不存在"));
+      if (!user) {
+        return res.responseBuilder.error('user.notFound');
       }
 
-      const role = await Role.findByPk(user.role_uuid);
+      // 获取用户的角色UUID数组
+      const roleUuids = user.role_uuids || [];
 
-      const menuIds = role?.menu_ids || [];
-      const menus = await Menu.findAll({
-        where: {
-          id: { [Op.in]: menuIds },
-          visible_status: 1,
-        } as any,
-        order: [["sort", "ASC"]],
+      // 查询角色信息
+      const roles = await Role.findAll({
+        where: { uuid: { [Op.in]: roleUuids } },
       });
 
-      res.json(
-        onSuccessResult(AccountController.buildTree(menus), {
-          resType: ResParamsTypeEnum.LIST,
-        })
-      );
+      // 合并所有角色的菜单权限
+      let allMenuIds: number[] = [];
+      for (const role of roles) {
+        const menuIds = role?.menu_ids || [];
+        allMenuIds = [...allMenuIds, ...menuIds];
+      }
+
+      // 去重
+      allMenuIds = [...new Set(allMenuIds)];
+      const menus = await Menu.findAll({
+        where: {
+          id: { [Op.in]: allMenuIds },
+          visible_status: 1,
+          type: {
+            [Op.notIn]: [3, 4],
+          },
+        } as any,
+        order: [['sort', 'ASC']],
+      });
+
+      return res.responseBuilder.success({
+        list: buildRouterTree(menus),
+      });
     } catch (error) {
-      res.status(500).json({ code: 500, message: "获取用户菜单权限失败" });
+      return res.responseBuilder.error('common.serverError', 500);
     }
   }
 }

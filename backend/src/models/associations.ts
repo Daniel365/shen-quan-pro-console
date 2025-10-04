@@ -3,46 +3,62 @@
  * @Date: 2025-08-31 19:34:49
  * @Description:
  */
-import User from "./User";
-import Role from "./Role";
-import Menu from "./Menu";
-import OperationLog from "./OperationLog";
+import { User, Role, Menu, OperationLog, Notification } from "./system/index";
 
-// 用户和角色的一对多关系
-User.belongsTo(Role, {
-  foreignKey: "role_uuid",
-  targetKey: "uuid",
-  as: "role",
-});
-
-Role.hasMany(User, {
-  foreignKey: "role_uuid",
-  sourceKey: "uuid",
-  as: "users",
-});
-
-// 菜单自关联（父子关系）
+// 菜单自关联（父子关系） - 建立菜单树形结构
+// 一个菜单可以有多个子菜单
 Menu.hasMany(Menu, {
-  foreignKey: "parent_id",
-  as: "children",
-});
+  as: 'children',
+  foreignKey: 'parent_id',
+})
 
+// 菜单属于一个父菜单
 Menu.belongsTo(Menu, {
-  foreignKey: "parent_id",
-  as: "parent",
-});
+  as: 'parent',
+  foreignKey: 'parent_id',
+})
 
 // 用户和操作日志的一对多关系
+// 一个用户可以创建多个操作日志记录
 User.hasMany(OperationLog, {
-  foreignKey: "user_uuid",
-  sourceKey: "uuid",
-  as: "operationLogs",
-});
+  as: 'operationLogs',
+  foreignKey: 'user_uuid',
+  sourceKey: 'uuid',
+})
 
+// 操作日志属于一个用户
 OperationLog.belongsTo(User, {
-  foreignKey: "user_uuid",
-  targetKey: "uuid",
-  as: "user",
-});
+  as: 'user',
+  foreignKey: 'user_uuid',
+  targetKey: 'uuid',
+})
 
-export { User, Role, Menu, OperationLog };
+// 用户和通知的双向关系
+// 用户作为发送者可以发送多个通知
+User.hasMany(Notification, {
+  as: 'sentNotifications',
+  foreignKey: 'sender_uuid',
+  sourceKey: 'uuid',
+})
+
+// 用户作为接收者可以接收多个通知
+User.hasMany(Notification, {
+  as: 'receivedNotifications',
+  foreignKey: 'receiver_uuid',
+  sourceKey: 'uuid',
+})
+
+// 通知属于发送者用户
+Notification.belongsTo(User, {
+  as: 'sender',
+  foreignKey: 'sender_uuid',
+  targetKey: 'uuid',
+})
+
+// 通知属于接收者用户
+Notification.belongsTo(User, {
+  as: 'receiver',
+  foreignKey: 'receiver_uuid',
+  targetKey: 'uuid',
+})
+

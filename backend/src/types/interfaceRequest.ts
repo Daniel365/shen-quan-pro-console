@@ -10,7 +10,9 @@ export type RuleConfigItem = {
   /** 正则 */
   regex?: RegExp;
   /** 提示 */
-  message: string;
+  message?: string;
+  /** 国际化消息键值 */
+  messageKey?: string;
 };
 /**
  * 请求参数验证规则格式

@@ -103,7 +103,7 @@
     <!-- 个人资料编辑弹窗 -->
     <el-dialog
       v-model="profileVisible"
-      :title="$t('account.profileEdit')"
+      :title="$t('action.edit')"
       width="500px"
       :before-close="handleCloseProfileForm"
     >

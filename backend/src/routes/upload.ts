@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { UploadController } from '../controllers/upload';
-import { getMulter } from '../utils/upload';
-import { validateSingleUpload, validateMultipleUpload } from '../middleware/upload';
+import { UploadController } from '@/controllers/upload';
+import { getMulter } from '@/utils/upload';
+import { validateSingleUpload, validateMultipleUpload } from '@/middleware/upload';
 
 const router = Router();
 

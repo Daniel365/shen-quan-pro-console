@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { uploadUtils } from '../utils/upload';
-import { UploadService } from '../services/uploadService';
+import { uploadUtils } from '@/utils/upload';
+import { UploadService } from '@/services/uploadService';
 
 /**
  * 文件上传控制器

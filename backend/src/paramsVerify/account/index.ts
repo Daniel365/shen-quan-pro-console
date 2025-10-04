@@ -9,7 +9,7 @@ export const editPasswordFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "旧密码不能为空",
+        messageKey: "validation.currentPasswordRequired",
       },
     ],
   },
@@ -19,7 +19,7 @@ export const editPasswordFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "邮箱不能为空",
+        messageKey: "validation.emailRequired",
       },
     ],
   },
@@ -29,7 +29,7 @@ export const editPasswordFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "验证码不能空",
+        messageKey: "validation.verificationCodeRequired",
       },
     ],
   },
@@ -39,7 +39,7 @@ export const editPasswordFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "新密码不能为空",
+        messageKey: "validation.newPasswordRequired",
       },
     ],
   },
@@ -49,7 +49,41 @@ export const editPasswordFormRule: ReqParamsVerifyRule[] = [
     rule: [
       {
         required: true,
-        message: "确认密码不能为空",
+        messageKey: "validation.confirmPasswordRequired",
+      },
+    ],
+  },
+];
+
+/** 编辑个人资料表单校验 */
+export const editProfileFormRule: ReqParamsVerifyRule[] = [
+  {
+    filed: "username",
+    dataType: DataTypes.STRING,
+    rule: [
+      {
+        required: true,
+        messageKey: "validation.usernameRequired",
+      },
+    ],
+  },
+  {
+    filed: "email",
+    dataType: DataTypes.STRING,
+    rule: [
+      {
+        required: true,
+        messageKey: "validation.emailRequired",
+      },
+    ],
+  },
+  {
+    filed: "code",
+    dataType: DataTypes.STRING,
+    rule: [
+      {
+        required: true,
+        messageKey: "validation.verificationCodeRequired",
       },
     ],
   },

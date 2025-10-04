@@ -20,6 +20,17 @@
       <el-input v-model="formState.email" type="email" :placeholder="getRequiredMessage('email')" />
     </el-form-item>
 
+    <el-form-item v-if="isRoot(accountInfo.roleCode)" :label="$t('form.role')" prop="roleUuids">
+      <ApiSelect
+        v-model="formState.roleUuids"
+        :api="roleManageApi.getList"
+        label-field="name"
+        value-field="uuid"
+        multiple
+        :placeholder="$t('form.selectRole')"
+      />
+    </el-form-item>
+
     <el-form-item :label="$t('account.verificationCode')" prop="code">
       <CodeInput
         v-model:model-value="formState.code"
@@ -46,14 +57,23 @@
 import { ElMessage, type FormInstance } from 'element-plus';
 
 import { EmailVerificationType } from '@/api/common/data.d';
+import { isRoot } from '@/constants';
 
 const { accountInfo, setAccountInfo } = useAccountStore();
 const formRef = ref<FormInstance>();
 const loading = ref<boolean>(false);
 
-const formState: { username: string; email: string; code?: string } = reactive({
+interface formDataProps {
+  username: string;
+  email: string;
+  roleUuids?: string[];
+  code?: string;
+}
+
+const formState = reactive<formDataProps>({
   code: '',
   email: '',
+  roleUuids: [],
   username: '',
 });
 
@@ -63,6 +83,7 @@ watch(
     if (newVal) {
       formState.username = newVal?.username;
       formState.email = newVal?.email;
+      formState.roleUuids = newVal?.roleUuids;
     }
   },
   { immediate: true }
