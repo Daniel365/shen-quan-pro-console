@@ -1,8 +1,7 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize, { sequelizeTimeConfig } from "@/database";
-import { getDbName } from "@/utils/database";
-import { publicOptions } from "@/database/common";
-
+import { DataTypes, Model } from "sequelize";
+import sequelize from "@/database";
+import { getDbName, sequelizeCommonFields, sequelizeCommonConfig } from "@/database/common";
+import { CreateAttributesWithId } from "@/types/database";
 export interface MenuAttributes {
   id: number;
   parent_id?: number;
@@ -22,15 +21,13 @@ export interface MenuAttributes {
   permission?: string;
   created_at: Date;
   updated_at: Date;
+  created_by_uuid?: string;
+  updated_by_uuid?: string;
 }
 
-interface MenuCreationAttributes
-  extends Optional<MenuAttributes, "id" | "created_at" | "updated_at"> {}
+interface MenuCreationAttributes extends CreateAttributesWithId<MenuAttributes> {}
 
-class Menu
-  extends Model<MenuAttributes, MenuCreationAttributes>
-  implements MenuAttributes
-{
+class Menu extends Model<MenuAttributes, MenuCreationAttributes> implements MenuAttributes {
   public id!: number;
   public parent_id?: number;
   public name!: string;
@@ -46,6 +43,8 @@ class Menu
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public created_by_uuid?: string;
+  public updated_by_uuid?: string;
 }
 
 Menu.init(
@@ -107,12 +106,12 @@ Menu.init(
       comment: "权限标识",
       type: DataTypes.STRING,
     },
-    ...publicOptions,
+    ...sequelizeCommonFields(),
   },
   {
     sequelize,
     tableName: getDbName("menu"),
-    ...sequelizeTimeConfig,
+    ...sequelizeCommonConfig(),
   }
 );
 

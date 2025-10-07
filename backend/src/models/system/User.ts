@@ -1,8 +1,8 @@
-import { DataTypes, Model, Optional, Op } from 'sequelize';
-import bcrypt from 'bcryptjs';
-import sequelize, { sequelizeTimeConfig } from '@/database';
-import { getDbName } from '@/utils/database';
-import { publicOptions } from '@/database/common';
+import { DataTypes, Model, Op } from "sequelize";
+import bcrypt from "bcryptjs";
+import sequelize from "@/database";
+import { getDbName, sequelizeCommonFields, sequelizeCommonConfig } from "@/database/common";
+import { CreateAttributes } from "@/types/database";
 
 // 定义用户属性接口
 interface UserAttributes {
@@ -17,11 +17,12 @@ interface UserAttributes {
   status: number;
   created_at: Date;
   updated_at: Date;
+  created_by_uuid?: string;
+  updated_by_uuid?: string;
 }
 
 // 定义创建用户时的可选属性
-interface UserCreationAttributes
-  extends Optional<UserAttributes, 'uuid' | 'created_at' | 'updated_at'> {}
+interface UserCreationAttributes extends CreateAttributes<UserAttributes> {}
 
 // 用户模型
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
@@ -37,6 +38,8 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public created_by_uuid?: string;
+  public updated_by_uuid?: string;
 
   // 密码加密
   public async setPassword(password: string): Promise<void> {
@@ -59,65 +62,65 @@ User.init(
       primaryKey: true,
     },
     username: {
-      comment: '用户名',
+      comment: "用户名",
       type: DataTypes.STRING,
       allowNull: false,
-      unique: 'unique_username',
+      unique: "unique_username",
     },
     email: {
-      comment: '邮箱',
+      comment: "邮箱",
       type: DataTypes.STRING,
       allowNull: false,
-      unique: 'unique_email',
+      unique: "unique_email",
       validate: {
         isEmail: true,
       },
     },
     phone: {
-      comment: '手机号',
+      comment: "手机号",
       type: DataTypes.STRING(11),
-      unique: 'unique_phone',
+      unique: "unique_phone",
       validate: {
         is: /^1[3-9]\d{9}$/,
       },
     },
     role_uuids: {
-      comment: '角色UUID数组',
+      comment: "角色UUID数组",
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
     },
     password: {
-      comment: '密码',
+      comment: "密码",
       type: DataTypes.STRING,
       allowNull: false,
     },
     password_reset_token: {
-      comment: '重置密码令牌',
+      comment: "重置密码令牌",
       type: DataTypes.STRING,
     },
     password_reset_expires: {
-      comment: '重置密码时间',
+      comment: "重置密码时间",
       type: DataTypes.DATE,
     },
     status: {
-      comment: '状态：1启用，0禁用',
+      comment: "状态：1启用，0禁用",
       type: DataTypes.TINYINT,
       allowNull: false,
       defaultValue: 1,
     },
-    ...publicOptions,
+    ...sequelizeCommonFields(),
   },
   {
     sequelize,
-    tableName: getDbName('user'),
-    ...sequelizeTimeConfig,
+    tableName: getDbName("user"),
+    ...sequelizeCommonConfig(),
   }
 );
 
 // 钩子：保存前处理密码
 User.beforeSave(async (user) => {
-  if (user.changed('password') || user.isNewRecord) {
+  if (user.changed("password") || user.isNewRecord) {
     await user.setPassword(user.password);
   }
 });

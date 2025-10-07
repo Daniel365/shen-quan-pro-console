@@ -17,3 +17,24 @@ export const setLocales = (value: LanguageEnum) => {
 export const i18nText = (key: string, params?: any) => {
   return i18n.global.t(key, params);
 };
+
+/** 获取操作类标题 */
+export const getActionTitle = (val: ActionTypeEnum) => {
+  const titleMap = {
+    [ActionTypeEnum.CREATE]: 'action.create',
+    [ActionTypeEnum.EDIT]: 'action.edit',
+    [ActionTypeEnum.COPY]: 'action.copy',
+    [ActionTypeEnum.DETAIL]: 'action.detail',
+  };
+  return i18nText(titleMap[val]);
+};
+
+/** 获取对应语言的对象 */
+export const getLanguageObj = (
+  data: any[],
+  locale: LanguageEnum = i18n.global.locale.value,
+  fieldKey: string = 'language'
+) => {
+  const obj = data.find((item) => item[fieldKey] === locale) || {};
+  return obj;
+};

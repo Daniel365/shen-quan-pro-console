@@ -26,6 +26,7 @@ interface Props {
   placeholder?: string;
   disabled?: boolean;
   multiple?: boolean;
+  dataHandler?: (data: any[]) => OptionsItemType[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -35,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   pageSize: 50,
   placeholder: '',
   valueField: 'value',
+  dataHandler: undefined,
 });
 
 const emit = defineEmits<{
@@ -70,17 +72,22 @@ const getDataList = async () => {
       .finally(() => {
         loading.value = false;
       });
-    handleReturnResults({
-      onSuccess: (res) => {
-        const { list = [] } = res.data || {};
-        // 数据处理
-        options.value = list?.map((item: any) => ({
-          label: item[props.labelField],
-          value: item[props.valueField],
-        }));
-      },
-      params: response,
-    });
+        handleReturnResults({
+          onSuccess: (res) => {
+            const { list = [] } = res.data || {};
+            // 数据处理：优先使用自定义处理器，否则使用默认行为
+            if (props.dataHandler) {
+              options.value = props.dataHandler(list);
+            } else {
+              // 默认数据处理逻辑
+              options.value = list?.map((item: any) => ({
+                label: item[props.labelField],
+                value: item[props.valueField],
+              }));
+            }
+          },
+          params: response,
+        });
   } catch (error) {
     loading.value = false;
     console.error('加载选项失败:', error);

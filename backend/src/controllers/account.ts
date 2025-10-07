@@ -3,16 +3,15 @@
  * @Date: 2025-09-06 15:03:12
  * @Description: 注册、登录、忘记密码， 账号相关处理逻辑
  */
-import { Request, Response } from 'express';
-import { Op } from 'sequelize';
-import jwt from 'jsonwebtoken';
 import { emailService } from '@/config/email';
-import { User, Role, Menu } from '@/models/system';
+import { Menu, Role, User } from '@/models/system';
+import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { Op } from 'sequelize';
 // utils
-import { buildRouterTree } from '@/utils/menu';
-import { onParamsVerify, verifyRule } from '@/paramsVerify';
-import { onPattern, RegexPatterns } from '@/utils/regexPatterns';
 import { JwtUtils } from '@/utils/jwt';
+import { buildRouterTree } from '@/utils/menu';
+import { onPattern, RegexPatterns } from '@/utils/regexPatterns';
 // type
 import { StatusEnum } from '@/types/database';
 import { EmailVerificationType } from '@/types/email';
@@ -88,11 +87,11 @@ export class AccountController {
       return res.responseBuilder.error('auth.loginFailed', 500);
     }
   }
-  
+
   // 退出登录
   static async logout(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
+      const { account_uuid } = req.accountInfo! || {};
 
       // 清除请求头中的token
       res.setHeader('Authorization', '');
@@ -150,14 +149,14 @@ export class AccountController {
   // 设置新密码
   static async editPassword(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
+      const { account_uuid } = req.accountInfo! || {};
       const { email, code, current_password, password, confirm_password } = req.body;
 
       if (password !== confirm_password) {
         return res.responseBuilder.error('user.passwordNotMatch');
       }
 
-      const user = await User.findByPk(uuid);
+      const user = await User.findByPk(account_uuid);
       if (!user) {
         return res.responseBuilder.error('user.notFound');
       }
@@ -187,7 +186,7 @@ export class AccountController {
   // 编辑个人资料
   static async editProfile(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
+      const { account_uuid: uuid } = req.accountInfo! || {};
       const { username, email, code } = req.body;
 
       // 验证邮箱验证码
@@ -248,8 +247,8 @@ export class AccountController {
   // 获取登录用户信息
   static async getAccountInfo(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
-      const user = await User.findByPk(uuid, {
+      const { account_uuid } = req.accountInfo! || {};
+      const user = await User.findByPk(account_uuid, {
         attributes: [['uuid', 'user_uuid'], 'username', 'email', 'role_uuids', 'status'],
       });
 
@@ -277,9 +276,9 @@ export class AccountController {
   // 获取用户菜单权限
   static async getAccountMenu(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
+      const { account_uuid } = req.accountInfo! || {};
 
-      const user = await User.findByPk(uuid);
+      const user = await User.findByPk(account_uuid);
       if (!user) {
         return res.responseBuilder.error('user.notFound');
       }

@@ -14,6 +14,7 @@ import { API_VERSION } from './config/default';
 import sequelize from './database';
 // 导入模型关联定义
 import './models/system/associations';
+import './models/app/associations';
 // middleware
 import autoLogOperation from './middleware/autoLog';
 import i18nMiddleware from './middleware/i18n';
@@ -25,7 +26,7 @@ import adminRoutes from './routes/admin';
 import accountRoutes from './routes/account';
 import uploadRoutes from './routes/upload';
 import { userRoutes, roleRoutes, menuRoutes, operationLogRoutes, notificationRoutes } from './routes/system';
-import { appUserRoutes, appRoleRoutes } from './routes/app';
+import { appUserRoutes, appRoleRoutes, appActivityRoutes, appOrderRoutes, appProfitRecordRoutes, appTagRoutes } from './routes/app';
 // utils
 import { sequelizeSyncConfig } from './utils/database';
 
@@ -69,6 +70,10 @@ app.use(`${API_VERSION}/notification`, notificationRoutes);
 // app
 app.use(`${API_VERSION}/app/user`, appUserRoutes);
 app.use(`${API_VERSION}/app/role`, appRoleRoutes);
+app.use(`${API_VERSION}/app/activity`, appActivityRoutes);
+app.use(`${API_VERSION}/app/order`, appOrderRoutes);
+app.use(`${API_VERSION}/app/profit-record`, appProfitRecordRoutes);
+app.use(`${API_VERSION}/app/tag`, appTagRoutes);
 
 // 根路由
 app.get('/', (req, res) => {

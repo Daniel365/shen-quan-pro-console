@@ -1,4 +1,4 @@
-import { useRouter, useRoute, LocationQuery, RouteLocationRaw } from "vue-router";
+import { LocationQuery, RouteLocationRaw, useRoute, useRouter } from 'vue-router';
 
 // 路由参数类型定义
 type RouteParams = Record<string, string | number | boolean>;
@@ -44,6 +44,13 @@ export function useRouteUtil() {
   const getParams = <T = RouteParams>() => {
     return route.params as unknown as T;
   };
+  /**
+   * 获取当前路由查询参数
+   * @returns 路由指定参数
+   */
+  const getParamsValue = <T = RouteParams>(key: string) => {
+    return getParams()[key] as T;
+  };
 
   /**
    * 获取当前路由查询参数
@@ -51,6 +58,13 @@ export function useRouteUtil() {
    */
   const getQuery = <T = RouteParams>() => {
     return route.query as unknown as T;
+  };
+  /**
+   * 获取当前路由查询参数
+   * @returns 查询指定参数
+   */
+  const getQueryValue = <T = RouteParams>(key: string) => {
+    return getQuery()[key] as T;
   };
 
   /**
@@ -70,7 +84,7 @@ export function useRouteUtil() {
    */
   const resolveRedirectTarget = (query: LocationQuery): RouteLocationRaw => {
     // 默认跳转路径
-    const defaultPath = "/";
+    const defaultPath = '/';
 
     // 获取原始重定向路径
     const rawRedirect = (query.redirect as string) || defaultPath;
@@ -90,7 +104,9 @@ export function useRouteUtil() {
 
   return {
     getParams,
+    getParamsValue,
     getQuery,
+    getQueryValue,
     goBack,
     goReplace,
     goToPage,

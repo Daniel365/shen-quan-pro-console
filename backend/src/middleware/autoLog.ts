@@ -3,7 +3,7 @@
  * @Date: 2025-09-27 18:20:18
  * @Description:  自动创建日志 - 中间件
  */
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { OperationLogController } from '../controllers/system';
 import {
   generateActionDescription,
@@ -33,7 +33,7 @@ export const autoLogOperation = () => {
         return originalSend.call(this, body);
       }
 
-      const { uuid: accountUuid } = req?.accountInfo || {};
+      const { account_uuid: accountUuid } = req.accountInfo! || {};
       if (accountUuid) {
         // 自动生成描述
         const description = generateActionDescription({ method, path });

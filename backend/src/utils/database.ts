@@ -5,8 +5,8 @@
  */
 
 import { Op } from 'sequelize';
-import { WhereQueryConfig, MatchTypeEnum, DataTypeEnum } from '../types/database';
 import { isDev } from '../config/process';
+import { DataTypeEnum, MatchTypeEnum, WhereQueryConfig } from '../types/database';
 
 /** 初始sequelize的配置 */
 export const sequelizeSyncConfig = () => {
@@ -17,14 +17,13 @@ export const sequelizeSyncConfig = () => {
   return false;
 };
 
-/** 获取管理端表名 */
-export const getDbName = (name: string) => {
-  return `console_${name}`;
-};
-/** 获取app端表名 */
-export const getAppDbName = (name: string) => {
-  return `app_${name}`;
-};
+/** 排除查询的字段 */
+export const defaultExcludeQueryFields = [
+  'created_at',
+  'updated_at',
+  'created_by_uuid',
+  'updated_by_uuid',
+];
 
 /** 默认查询列表配置 */
 export const defaultListQuery = (data: { page: number; page_size: number } | any): any => {

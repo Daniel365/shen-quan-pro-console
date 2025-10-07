@@ -3,13 +3,13 @@
  * @Date: 2025-09-27 18:20:18
  * @Description:  自动创建日志 - 装饰器
  */
-import { Request, Response } from "express";
-import { OperationLogController } from "../controllers/system";
+import { Request, Response } from 'express';
+import { OperationLogController } from '../controllers/system';
 import {
   generateActionDescription,
   getSafeRequestParams,
   getSafeResponseData,
-} from "../utils/operationLog";
+} from '../utils/operationLog';
 
 // 操作日志装饰器选项
 interface AutoLogOptions {
@@ -44,7 +44,7 @@ function createAutoLogDecorator(options: AutoLogOptions = {}): MethodDecorator {
       const originalSend = res.json;
 
       res.json = function (body: any) {
-        const { uuid: accountUuid } = req?.accountInfo || {};
+        const { account_uuid: accountUuid } = req.accountInfo! || {};
         if (accountUuid) {
           // 获取操作信息
           const method = req.method;
@@ -63,7 +63,7 @@ function createAutoLogDecorator(options: AutoLogOptions = {}): MethodDecorator {
           // 获取响应数据（排除敏感信息）
           const responseData = getSafeResponseData(body);
           // 操作类型
-          const operationType = options.operationType || "AUTO_OPERATION";
+          const operationType = options.operationType || 'AUTO_OPERATION';
 
           // 记录操作日志
           OperationLogController.createAutoLog(req, {

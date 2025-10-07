@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
 import { Menu } from '@/models/system';
+import { Request, Response } from 'express';
 
 import { buildWhereCondition } from '@/utils/database';
-import { buildMenuTree, buildMenuList } from '@/utils/menu';
+import { buildMenuList, buildMenuTree } from '@/utils/menu';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
 
@@ -11,7 +11,7 @@ export class MenuController {
   static async treeList(req: Request, res: Response) {
     try {
       const menus = await Menu.findAll({
-        where: { visible_status: 1 },
+        // where: { visible_status: 1 },
         order: [['sort', 'ASC']],
       });
 

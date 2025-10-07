@@ -6,7 +6,7 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 // models
-import { User, Role } from '@/models/system';
+import { Role, User } from '@/models/system';
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
@@ -19,13 +19,13 @@ export class UserController {
   static async list(req: Request, res: Response) {
     try {
       const reqBody = req.body;
-      const { uuid } = req?.accountInfo || {};
+      const { account_uuid } = req.accountInfo! || {};
       const where: any = buildWhereCondition(reqBody, [
         { field: 'username' },
         { field: 'email' },
         { field: 'username', matchType: MatchTypeEnum.NE, queryValue: 'admin' },
         // 排除当前登录用户
-        { field: 'uuid', matchType: MatchTypeEnum.NE, queryValue: uuid },
+        { field: 'uuid', matchType: MatchTypeEnum.NE, queryValue: account_uuid },
       ]);
 
       const { rows, count } = await User.findAndCountAll({

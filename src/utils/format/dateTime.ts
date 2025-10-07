@@ -6,9 +6,9 @@
 import {
   useDateFormat,
   useTimeAgo,
-  type UseTimeAgoOptions,
   type UseDateFormatOptions,
-} from "@vueuse/core";
+  type UseTimeAgoOptions,
+} from '@vueuse/core';
 
 /**
  * 严格检查ISO 8601日期字符串是否有效
@@ -17,7 +17,7 @@ import {
  * @returns 布尔值，表示日期是否有效且格式正确
  */
 export const isValidIsoDate = (isoDate: string): boolean => {
-  if (!isoDate || typeof isoDate !== "string") {
+  if (!isoDate || typeof isoDate !== 'string') {
     return false;
   }
 
@@ -42,27 +42,17 @@ export const isValidIsoDate = (isoDate: string): boolean => {
  * @param options - 格式化选项（如时区等）
  * @returns 格式化后的日期字符串
  */
-export const formatIsoDate = (
+export const formatDate = (
   isoDate: string,
-  format: string = "YYYY-MM-DD HH:mm:ss",
+  format: string = 'YYYY-MM-DD HH:mm:ss',
   options?: UseDateFormatOptions
 ): string => {
   if (!isValidIsoDate(isoDate)) {
-    console.warn("无效的ISO日期格式:", isoDate);
-    return "";
+    console.warn('无效的ISO日期格式:', isoDate);
+    return '';
   }
   // 直接获取格式化后的值，不使用响应式包装
   return useDateFormat(isoDate, format, options).value;
-};
-
-/**
- * 转换ISO日期为本地时间格式（YYYY年MM月DD日 HH:mm:ss）
- * @param isoDate - ISO格式日期字符串
- * @param options - 格式化选项
- * @returns 本地格式日期字符串
- */
-export const toLocalString = (isoDate: string, options?: UseDateFormatOptions): string => {
-  return formatIsoDate(isoDate, "YYYY年MM月DD日 HH:mm:ss", options);
 };
 
 /**
@@ -73,8 +63,8 @@ export const toLocalString = (isoDate: string, options?: UseDateFormatOptions): 
  */
 export const toRelativeTime = (isoDate: string, options?: UseTimeAgoOptions<any>): string => {
   if (!isValidIsoDate(isoDate)) {
-    console.warn("无效的ISO日期格式:", isoDate);
-    return "";
+    console.warn('无效的ISO日期格式:', isoDate);
+    return '';
   }
   return useTimeAgo(isoDate, options).value;
 };
@@ -86,7 +76,7 @@ export const toRelativeTime = (isoDate: string, options?: UseTimeAgoOptions<any>
  */
 export const toTimestamp = (isoDate: string): number => {
   if (!isValidIsoDate(isoDate)) {
-    console.warn("无效的ISO日期格式:", isoDate);
+    console.warn('无效的ISO日期格式:', isoDate);
     return 0;
   }
   return new Date(isoDate).getTime();

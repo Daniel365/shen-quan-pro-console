@@ -24,9 +24,10 @@ export function handleReturnResults<T = any>({
   params = {
     code: 1,
     data: undefined as T,
+    dateTime: '',
     message: '',
     success: true,
-    timestamp: '',
+    timestamp: 0,
   },
   isDefaultError = true,
   onSuccess,

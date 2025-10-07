@@ -3,10 +3,10 @@
  * @Date: 2025-09-24
  * @Description: 消息通知模型
  */
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import sequelize from "@/database";
-import { v4 as uuidv4 } from "uuid";
-import { getDbName } from "@/utils/database";
+import { getDbName, sequelizeCommonFields, sequelizeCommonConfig } from "@/database/common";
+import { CreateAttributes } from "@/types/database";
 
 export interface NotificationAttributes {
   uuid: string;
@@ -18,11 +18,12 @@ export interface NotificationAttributes {
   is_read: boolean;
   created_at: Date;
   updated_at: Date;
+  created_by_uuid?: string;
+  updated_by_uuid?: string;
 }
 
 interface NotificationCreationAttributes
-  extends Optional<NotificationAttributes, "uuid" | "is_read" | "created_at" | "updated_at"> {}
-
+  extends Omit<CreateAttributes<NotificationAttributes>, "is_read"> {}
 class Notification
   extends Model<NotificationAttributes, NotificationCreationAttributes>
   implements NotificationAttributes
@@ -36,6 +37,8 @@ class Notification
   public is_read!: boolean;
   public created_at!: Date;
   public updated_at!: Date;
+  public created_by_uuid?: string;
+  public updated_by_uuid?: string;
 }
 
 Notification.init(
@@ -44,7 +47,7 @@ Notification.init(
       type: DataTypes.UUID,
       primaryKey: true,
       allowNull: false,
-      defaultValue: () => uuidv4(),
+      defaultValue: DataTypes.UUIDV4,
     },
     title: {
       type: DataTypes.STRING(255),
@@ -78,22 +81,12 @@ Notification.init(
       defaultValue: false,
       comment: "是否已读",
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
+    ...sequelizeCommonFields(),
   },
   {
     sequelize,
     tableName: getDbName("notifications"),
-    timestamps: true,
-    underscored: true,
+    ...sequelizeCommonConfig(),
     indexes: [
       {
         fields: ["receiver_uuid"],

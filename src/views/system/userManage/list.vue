@@ -49,7 +49,6 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 
 // utils
 import type { UserListItem } from '@/api/system/userManage/types';
-import { enabledStatusOptions } from '@/utils/options';
 // type
 
 /**

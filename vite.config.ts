@@ -92,7 +92,15 @@ export default defineConfig(({ mode }: ConfigEnv) => {
       vue(),
       UnoCSS(),
       AutoImport({
-        dirs: ['src/store', 'src/api', 'src/hooks', 'src/utils/tool.ts', 'src/enums'],
+        dirs: [
+          'src/store',
+          'src/api',
+          'src/hooks',
+          'src/utils/tool.ts',
+          'src/utils/options.ts',
+          'src/utils/format',
+          'src/enums',
+        ],
         // 导入函数类型声明文件路径 (false:关闭自动生成)
         // dts: false,
         dts: 'src/types/auto-imports.d.ts',

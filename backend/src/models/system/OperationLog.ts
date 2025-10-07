@@ -1,7 +1,7 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize, { sequelizeTimeConfig } from "@/database";
-import { getDbName } from "@/utils/database";
-import { publicOptions } from "@/database/common";
+import { DataTypes, Model } from "sequelize";
+import sequelize from "@/database";
+import { getDbName, sequelizeCommonFields, sequelizeCommonConfig } from "@/database/common";
+import { CreateAttributes } from "@/types/database";
 
 interface OperationLogAttributes {
   uuid: string;
@@ -16,10 +16,11 @@ interface OperationLogAttributes {
   response_data?: string;
   created_at: Date;
   updated_at: Date;
+  created_by_uuid?: string;
+  updated_by_uuid?: string;
 }
 
-interface OperationLogCreationAttributes
-  extends Optional<OperationLogAttributes, "uuid" | "created_at" | "updated_at"> {}
+interface OperationLogCreationAttributes extends CreateAttributes<OperationLogAttributes> {}
 
 class OperationLog
   extends Model<OperationLogAttributes, OperationLogCreationAttributes>
@@ -38,6 +39,8 @@ class OperationLog
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public created_by_uuid?: string;
+  public updated_by_uuid?: string;
 }
 
 OperationLog.init(
@@ -86,12 +89,12 @@ OperationLog.init(
       comment: "返回数据",
       type: DataTypes.TEXT,
     },
-    ...publicOptions,
+    ...sequelizeCommonFields(),
   },
   {
     sequelize,
     tableName: getDbName("operation_log"),
-    ...sequelizeTimeConfig,
+    ...sequelizeCommonConfig(),
   }
 );
 

@@ -90,6 +90,9 @@ export enum RouterPath {
   NOTIFICATION_LIST = '/system/notificationManage/list',
   // 个人中心
   ACCOUNT_PROFILE = '/account/profile',
+
+  // 活动管理 - 表单
+  ACTIVITY_FORM = '/app/activityManage/form',
 }
 
 /** 接口 */
@@ -187,4 +190,50 @@ export enum RequestPath {
   APP_ROLE_DELETE = '/app/role/delete',
   /** 分配权限 */
   APP_ROLE_ASSIGN_PERM = '/app/role/assign-perm',
+
+  /** 活动列表 */
+  APP_ACTIVITY_LIST = '/app/activity/list',
+  /** 新增活动 */
+  APP_ACTIVITY_CREATE = '/app/activity/create',
+  /** 编辑活动 */
+  APP_ACTIVITY_UPDATE = '/app/activity/update',
+  /** 删除活动 */
+  APP_ACTIVITY_DELETE = '/app/activity/delete',
+  /** 活动详情 */
+  APP_ACTIVITY_DETAILS = '/app/activity/details',
+
+  /** 收益列表 */
+  APP_PROFIT_LIST = '/app/profit/list',
+  /** 收益详情 */
+  APP_PROFIT_DETAIL = '/app/profit/detail',
+  /** 结算收益 */
+  APP_PROFIT_SETTLE = '/app/profit/settle',
+  /** 取消收益 */
+  APP_PROFIT_CANCEL = '/app/profit/cancel',
+  /** 收益统计 */
+  APP_PROFIT_STATS = '/app/profit/stats',
+  /** 导出收益数据 */
+  APP_PROFIT_EXPORT = '/app/profit/export',
+
+  /** 订单列表 */
+  APP_ORDER_LIST = '/app/order/list',
+  /** 订单详情 */
+  APP_ORDER_DETAIL = '/app/order/detail',
+  /** 订单退款 */
+  APP_ORDER_REFUND = '/app/order/refund',
+  /** 导出订单数据 */
+  APP_ORDER_EXPORT = '/app/order/export',
+  /** 订单统计 */
+  APP_ORDER_STATS = '/app/order/stats',
+
+  /** 标签列表 */
+  APP_TAG_LIST = '/app/tag/list',
+  /** 新增标签 */
+  APP_TAG_CREATE = '/app/tag/create',
+  /** 编辑标签 */
+  APP_TAG_UPDATE = '/app/tag/update',
+  /** 删除标签 */
+  APP_TAG_DELETE = '/app/tag/delete',
+  /** 标签详情 */
+  APP_TAG_DETAILS = '/app/tag/details',
 }

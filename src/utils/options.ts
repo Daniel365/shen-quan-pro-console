@@ -14,6 +14,20 @@ export const enabledStatusOptions: OptionsItemType[] = [
   },
 ];
 
+/** 语言选项 */
+export const languageOptions: OptionsItemType[] = [
+  {
+    label: '中文',
+    labelKey: 'common.zh',
+    value: LanguageEnum.ZH,
+  },
+  {
+    label: '英文',
+    labelKey: 'common.en',
+    value: LanguageEnum.EN,
+  },
+];
+
 /** 性别选项 */
 export const genderOptions: OptionsItemType[] = [
   {

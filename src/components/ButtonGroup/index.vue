@@ -24,6 +24,9 @@
 
 <script setup lang="ts">
 import { ButtonProps } from 'element-plus';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 interface Props {
   options: ButtonGroupOptions[];
@@ -39,7 +42,29 @@ const props = withDefaults(defineProps<Props>(), {
   size: undefined,
 });
 
+// 处理路由跳转点击
 const handleClick = (item: ButtonGroupOptions, record: any) => {
+  // 先执行自定义的handler（如果有）
   item.handler?.(record);
+
+  if (item.to) {
+    // 构建路由参数
+    const route = {
+      path: item.to,
+      query: {},
+    };
+
+    // 处理query参数
+    if (item.query) {
+      if (typeof item.query === 'function') {
+        route.query = item.query(record) || {};
+      } else {
+        route.query = { ...item.query };
+      }
+    }
+
+    // 使用路由跳转
+    router.push(route);
+  }
 };
 </script>

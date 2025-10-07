@@ -3,7 +3,18 @@
  * @Date: 2025-10-04 00:00:00
  * @Description: App routes index
  */
-import appUserRoutes from './user';
-import appRoleRoutes from './role';
+import appActivityRoutes from './Activity';
+import appOrderRoutes from './Order';
+import appProfitRecordRoutes from './ProfitRecord';
+import appRoleRoutes from './Roles';
+import appTagRoutes from './Tag';
+import appUserRoutes from './Users';
 
-export { appUserRoutes, appRoleRoutes };
+export {
+  appActivityRoutes,
+  appOrderRoutes,
+  appProfitRecordRoutes,
+  appRoleRoutes,
+  appTagRoutes,
+  appUserRoutes,
+};

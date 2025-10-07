@@ -24,7 +24,7 @@
 
       <div class="detail-item">
         <label>{{ $t('form.createTime') }}：</label>
-        <span>{{ formatIsoDate(notification.createdAt) }}</span>
+        <span>{{ formatDate(notification.createdAt) }}</span>
       </div>
 
       <div class="detail-item">
@@ -60,7 +60,7 @@ import { ElMessage } from 'element-plus';
 
 // utils
 import type { NotificationListItem } from '@/api/system/notificationManage/types';
-import { formatIsoDate } from '@/utils/format/dateTime';
+import { formatDate } from '@/utils/format/dateTime';
 
 import { notificationReadStatusOptions, notificationTypeOptions } from './utils/options';
 // type

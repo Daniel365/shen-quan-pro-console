@@ -184,6 +184,11 @@ const columns = computed(() => [
     titleKey: 'form.component',
   },
   {
+    dataIndex: 'permission',
+    key: 'permission',
+    titleKey: 'form.permission',
+  },
+  {
     dataIndex: 'sort',
     key: 'sort',
     titleKey: 'form.sort',
@@ -274,11 +279,13 @@ const handleEdit = (record: MenuListItem) => {
 
 // 处理删除菜单
 const handleDelete = (record: MenuListItem) => {
-  ElMessageBox.confirm('确认删除该菜单吗？', '提示', {
-    cancelButtonText: '取消',
-    confirmButtonText: '确定',
-    type: 'warning',
-  })
+  ElMessageBox.confirm(
+    i18nText('menuManage.deleteConfirm', { name: record.name }),
+    i18nText('action.confirmDelete'),
+    {
+      type: 'warning',
+    }
+  )
     .then(async () => {
       try {
         const response = await menuManageApi.onDelete({ id: record.id });

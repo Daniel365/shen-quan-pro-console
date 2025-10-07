@@ -14,8 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { getParseUA } from '@/utils/format/common';
-
 const props = defineProps({
   userAgent: {
     type: String,

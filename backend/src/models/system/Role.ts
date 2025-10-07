@@ -3,10 +3,10 @@
  * @Date: 2025-08-31 19:34:25
  * @Description:
  */
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize, { sequelizeTimeConfig } from "@/database";
-import { getDbName } from "@/utils/database";
-import { publicOptions } from "@/database/common";
+import { DataTypes, Model } from "sequelize";
+import sequelize from "@/database";
+import { getDbName, sequelizeCommonConfig, sequelizeCommonFields } from "@/database/common";
+import { CreateAttributes } from "@/types/database";
 
 interface RoleAttributes {
   uuid: string;
@@ -17,15 +17,13 @@ interface RoleAttributes {
   status?: number;
   created_at: Date;
   updated_at: Date;
+  created_by_uuid?: string;
+  updated_by_uuid?: string;
 }
 
-interface RoleCreationAttributes
-  extends Optional<RoleAttributes, "uuid" | "created_at" | "updated_at"> {}
+interface RoleCreationAttributes extends CreateAttributes<RoleAttributes> {}
 
-class Role
-  extends Model<RoleAttributes, RoleCreationAttributes>
-  implements RoleAttributes
-{
+class Role extends Model<RoleAttributes, RoleCreationAttributes> implements RoleAttributes {
   public uuid!: string;
   public name!: string;
   public code!: string;
@@ -35,6 +33,8 @@ class Role
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public created_by_uuid?: string;
+  public updated_by_uuid?: string;
 }
 
 Role.init(
@@ -71,12 +71,12 @@ Role.init(
       allowNull: false,
       defaultValue: 1,
     },
-    ...publicOptions,
+    ...sequelizeCommonFields(),
   },
   {
     sequelize,
     tableName: getDbName("role"),
-    ...sequelizeTimeConfig,
+    ...sequelizeCommonConfig(),
   }
 );
 

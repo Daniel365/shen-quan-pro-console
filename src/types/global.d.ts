@@ -9,7 +9,7 @@
  */
 import { ButtonProps } from 'element-plus';
 
-import type { LayoutMode, ThemeMode, SidebarColor } from '@/enums';
+import type { LayoutMode, SidebarColor, ThemeMode } from '@/enums';
 declare global {
   /**
    * 系统设置
@@ -50,7 +50,8 @@ declare global {
     data: T;
     success: boolean;
     message: string;
-    timestamp: string;
+    dateTime: string;
+    timestamp: number;
   }
 
   /**
@@ -108,6 +109,9 @@ declare global {
     icon?: string; // iconFont图标名称
     isShow?: (record: any) => void;
     handler?: (record: any) => void;
+    // 路由跳转相关
+    to?: string; // 路由路径
+    query?: Record<string, any>; // 路由参数
   }
 
   /**

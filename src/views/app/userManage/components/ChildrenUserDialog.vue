@@ -23,11 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-
-import { appUserManageApi } from '@/api/app';
 import type { UserListItem } from '@/api/app/userManage/types';
-import { enabledStatusOptions, genderOptions } from '@/utils/options';
 
 interface Props {
   visible: boolean;

@@ -1,8 +1,8 @@
-import sequelize, { sequelizeTimeConfig } from '@/database';
-import { publicOptions } from '@/database/common';
-import { getAppDbName } from '@/utils/database';
+import sequelize from '@/database';
+import { getAppDbName, sequelizeCommonFields, sequelizeCommonConfig } from '@/database/common';
+import { CreateAttributes } from '@/types/database';
 import bcrypt from 'bcryptjs';
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 
 // 定义App用户属性接口
 interface AppUserAttributes {
@@ -21,8 +21,7 @@ interface AppUserAttributes {
 }
 
 // 定义创建App用户时的可选属性
-interface AppUserCreationAttributes
-  extends Optional<AppUserAttributes, 'uuid' | 'created_at' | 'updated_at'> {}
+interface AppUserCreationAttributes extends CreateAttributes<AppUserAttributes> {}
 
 // App用户模型
 class AppUser
@@ -108,12 +107,12 @@ AppUser.init(
       comment: '最后登录时间',
       type: DataTypes.DATE,
     },
-    ...publicOptions,
+    ...sequelizeCommonFields(),
   },
   {
     sequelize,
     tableName: getAppDbName('user'),
-    ...sequelizeTimeConfig,
+    ...sequelizeCommonConfig(),
   }
 );
 

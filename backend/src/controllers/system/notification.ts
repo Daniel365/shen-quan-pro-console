@@ -3,26 +3,25 @@
  * @Date: 2025-09-24
  * @Description: 消息通知控制器
  */
-import { Request, Response } from 'express';
-import { Op, Sequelize } from 'sequelize';
-import { Notification, User, Role } from '@/models/system';
+import { Notification, Role, User } from '@/models/system';
 import { sseService } from '@/services/sseService';
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
+import { Request, Response } from 'express';
+import { Op, Sequelize } from 'sequelize';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-
 
 export class NotificationController {
   // SSE连接端点 - 用户接收消息
   static async connect(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
-      if (!uuid) {
+      const { account_uuid } = req.accountInfo! || {};
+      if (!account_uuid) {
         return res.responseBuilder.unauthorized('auth.unauthorized');
       }
 
       // 建立SSE连接
-      sseService.addClient(uuid, res);
+      sseService.addClient(account_uuid, res);
     } catch (error) {
       console.error('SSE连接错误:', error);
       return res.responseBuilder.error('notification.connectFailed', 500);
@@ -33,7 +32,7 @@ export class NotificationController {
   static async send(req: Request, res: Response) {
     try {
       const { title, content, type = 'info', receiver_uuid } = req.body;
-      const { uuid: sender_uuid } = req?.accountInfo || {};
+      const { account_uuid: sender_uuid } = req.accountInfo! || {};
 
       // 参数验证
       if (!title || !content) {
@@ -120,7 +119,7 @@ export class NotificationController {
   @IgnoreLog()
   static async list(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
+      const { account_uuid: receiver_uuid } = req.accountInfo! || {};
       const reqBody = req.body;
 
       const where: any = buildWhereCondition(reqBody, [
@@ -130,7 +129,7 @@ export class NotificationController {
       ]);
 
       // 添加接收者条件：接收者是当前用户或者是全体通知
-      where[Op.or] = [{ receiver_uuid: uuid }, { receiver_uuid: null }];
+      where[Op.or] = [{ receiver_uuid }, { receiver_uuid: null }];
 
       const { rows, count } = await Notification.findAndCountAll({
         where,
@@ -173,7 +172,7 @@ export class NotificationController {
   static async markAsRead(req: Request, res: Response) {
     try {
       const { uuid: notification_uuid } = req.body;
-      const { uuid: user_uuid } = req?.accountInfo || {};
+      const { account_uuid: receiver_uuid } = req.accountInfo! || {};
 
       if (!notification_uuid) {
         return res.responseBuilder.error('notification.idRequired');
@@ -183,7 +182,7 @@ export class NotificationController {
       const notification = await Notification.findOne({
         where: {
           uuid: notification_uuid,
-          [Op.or]: [{ receiver_uuid: user_uuid }],
+          [Op.or]: [{ receiver_uuid }],
         },
       });
 
@@ -207,13 +206,13 @@ export class NotificationController {
   // 批量标记为已读
   static async markAllAsRead(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
+      const { account_uuid: receiver_uuid } = req.accountInfo! || {};
 
       const updateCount = await Notification.update(
         { is_read: true },
         {
           where: {
-            [Op.or]: [{ receiver_uuid: uuid }],
+            [Op.or]: [{ receiver_uuid }],
             is_read: false,
           },
         }
@@ -232,11 +231,11 @@ export class NotificationController {
   // 获取未读通知数量
   static async getUnreadCount(req: Request, res: Response) {
     try {
-      const { uuid } = req?.accountInfo || {};
+      const { account_uuid: receiver_uuid } = req.accountInfo! || {};
 
       const count = await Notification.count({
         where: {
-          [Op.or]: [{ receiver_uuid: uuid }],
+          [Op.or]: [{ receiver_uuid }],
           is_read: false,
         },
       });

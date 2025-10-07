@@ -4,8 +4,19 @@
  * @Description: App端控制器统一导出
  */
 
-import { UserController } from './user';
-import { RoleController } from './role';
+import { ActivityController } from './Activity';
+import { OrderController } from './OrderManage';
+import { ProfitRecordController } from './ProfitRecord';
+import { RoleController } from './Roles';
+import { TagController } from './Tag';
+import { UserController } from './Users';
 
 // 统一导出控制器
-export { UserController, RoleController };
+export {
+  ActivityController,
+  OrderController,
+  ProfitRecordController,
+  RoleController,
+  TagController,
+  UserController,
+};

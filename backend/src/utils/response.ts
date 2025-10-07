@@ -5,6 +5,7 @@
  */
 import { defaultLocale } from '@/config/default';
 import { Response } from 'express';
+import { nowDateTime, nowTimestamp } from './format/time';
 import { i18nText } from './i18n';
 
 export interface ApiResponse<T = any> {
@@ -12,7 +13,8 @@ export interface ApiResponse<T = any> {
   message: string;
   data?: T;
   code?: number;
-  timestamp: string;
+  dateTime: string;
+  timestamp: number;
 }
 
 export class ResponseBuilder {
@@ -34,7 +36,8 @@ export class ResponseBuilder {
       success: true,
       message,
       data,
-      timestamp: new Date().toISOString(),
+      dateTime: nowDateTime(),
+      timestamp: nowTimestamp(),
     };
 
     return this.res.status(200).json(response);
@@ -55,7 +58,8 @@ export class ResponseBuilder {
       success: false,
       message,
       code,
-      timestamp: new Date().toISOString(),
+      dateTime: nowDateTime(),
+      timestamp: nowTimestamp(),
     };
 
     return this.res.status(statusCode).json(response);
@@ -71,7 +75,8 @@ export class ResponseBuilder {
       success: true,
       message,
       data,
-      timestamp: new Date().toISOString(),
+      dateTime: nowDateTime(),
+      timestamp: nowTimestamp(),
     };
 
     return this.res.status(201).json(response);
@@ -86,7 +91,8 @@ export class ResponseBuilder {
     const response: ApiResponse = {
       success: false,
       message,
-      timestamp: new Date().toISOString(),
+      dateTime: nowDateTime(),
+      timestamp: nowTimestamp(),
     };
 
     return this.res.status(404).json(response);
@@ -101,7 +107,8 @@ export class ResponseBuilder {
     const response: ApiResponse = {
       success: false,
       message,
-      timestamp: new Date().toISOString(),
+      dateTime: nowDateTime(),
+      timestamp: nowTimestamp(),
     };
 
     return this.res.status(401).json(response);
@@ -116,7 +123,8 @@ export class ResponseBuilder {
     const response: ApiResponse = {
       success: false,
       message,
-      timestamp: new Date().toISOString(),
+      dateTime: nowDateTime(),
+      timestamp: nowTimestamp(),
     };
 
     return this.res.status(403).json(response);
@@ -132,7 +140,8 @@ export class ResponseBuilder {
       success: false,
       message,
       data: errors,
-      timestamp: new Date().toISOString(),
+      dateTime: nowDateTime(),
+      timestamp: nowTimestamp(),
     };
 
     return this.res.status(422).json(response);
@@ -165,7 +174,8 @@ export class ResponseBuilder {
       message: finalMessage,
       data,
       code,
-      timestamp: new Date().toISOString(),
+      dateTime: nowDateTime(),
+      timestamp: nowTimestamp(),
     };
 
     return this.res.status(statusCode).json(response);

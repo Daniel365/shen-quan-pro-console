@@ -71,7 +71,6 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 
 // utils
 import type { UserListItem, UserListParams } from '@/api/app/userManage/types';
-import { enabledStatusOptions, genderOptions } from '@/utils/options';
 
 /**
  * 表格组件引用

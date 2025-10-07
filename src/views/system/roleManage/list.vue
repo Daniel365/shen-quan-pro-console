@@ -62,7 +62,6 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 
 // utils
 import type { RoleListItem, RoleListParams } from '@/api/system/roleManage/types';
-import { enabledStatusOptions } from '@/utils/options';
 
 // 表格引用
 const tableRef = ref();

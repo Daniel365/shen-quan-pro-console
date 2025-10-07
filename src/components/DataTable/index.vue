@@ -8,7 +8,16 @@
       </div>
     </template>
     <!-- 表格主体 -->
-    <el-table v-loading="loading" :row-key="rowKey" :data="dataList" :height="height">
+    <el-table
+      v-loading="loading"
+      :row-key="rowKey"
+      :data="dataList"
+      :height="height"
+      @selection-change="handleSelectionChange"
+    >
+      <!-- 选择列 -->
+      <el-table-column v-if="selectable" type="selection" width="55" />
+      
       <!-- 展开列 -->
       <template v-if="$slots.expand">
         <el-table-column type="expand" width="50">
@@ -56,7 +65,7 @@
 
 <script setup lang="ts">
 // utils
-import { formatIsoDate, isValidIsoDate } from '@/utils/format/dateTime';
+import { formatDate, isValidIsoDate } from '@/utils/format/dateTime';
 
 /**
  * 表格列配置接口
@@ -100,6 +109,10 @@ interface Props<T = any> {
   columns: TableColumn[];
   /** 表格数据 */
   dataList?: T[];
+  /** 是否启用选择功能 */
+  selectable?: boolean;
+  /** 选中的行数据 */
+  selectedRows?: T[];
 }
 
 /**
@@ -111,6 +124,8 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   rowKey: 'uuid',
   searchParams: () => ({}),
+  selectable: false,
+  selectedRows: () => [],
 });
 
 /**
@@ -132,6 +147,8 @@ const emit = defineEmits<{
   'update:dataList': [value: any[]];
   /** 更新加载状态 */
   'update:loading': [value: boolean];
+  /** 更新选中的行数据 */
+  'update:selectedRows': [value: any[]];
   /** 获取数据成功回调 */
   onSuccess: [data: any[]];
 }>();
@@ -154,9 +171,17 @@ const pagination = reactive<PageInfo>({
 const handleText = (row: any, item: TableColumn) => {
   const val = row[item.dataIndex || item.key];
   if (isValidIsoDate(val)) {
-    return formatIsoDate(val);
+    return formatDate(val);
   }
   return val || '-';
+};
+
+/**
+ * 处理行选择变化
+ * @param selection 选中的行数据
+ */
+const handleSelectionChange = (selection: any[]) => {
+  emit('update:selectedRows', selection);
 };
 
 /**

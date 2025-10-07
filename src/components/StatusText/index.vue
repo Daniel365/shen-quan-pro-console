@@ -32,6 +32,9 @@ const props = withDefaults(defineProps<Props>(), {
  */
 const currentOption = computed(() => props.options.find((option) => option.value === props.value));
 
-const label = computed(() => currentOption.value?.label);
+const label = computed(() => {
+  const { label, labelKey } = currentOption.value || {};
+  return labelKey ? i18nText(labelKey) : label;
+});
 const theme: any = computed(() => currentOption.value?.theme || 'info');
 </script>

@@ -11,7 +11,7 @@ import { JwtUtils } from '../utils/jwt';
 declare global {
   namespace Express {
     interface Request {
-      accountInfo?: { uuid: string };
+      accountInfo?: { account_uuid: string };
     }
   }
 }
@@ -32,7 +32,7 @@ export const requireAuth = () => {
       if (!decoded) {
         return res.responseBuilder.unauthorized('auth.tokenInvalidOrExpired');
       }
-      req.accountInfo = { uuid: decoded.uuid };
+      req.accountInfo = { account_uuid: decoded.uuid };
 
       next();
     } catch (error) {

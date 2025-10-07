@@ -76,7 +76,8 @@
     "unbound": "Not Bound",
     "updateFail": "Update failed",
     "updateSuccess": "Updated successfully",
-    "view": "View"
+    "view": "View",
+    "addLanguage": "Add language"
   },
   "admin": {
     "agree": "I have read and agree to",
@@ -370,5 +371,103 @@
     "deleteConfirm": "Are you sure you want to delete user {username}?",
     "editUser": "Edit User",
     "childrenUserDialogTitle": "List of subordinate users for {nickname}"
+  },
+  "activityManage": {
+    "published": "Published",
+    "ended": "Ended",
+    "cancelled": "Cancelled",
+    "titleLabel": "Activity Title",
+    "titlePlaceholder": "Please enter activity title",
+    "coverLabel": "Activity Cover",
+    "priceLabel": "Price Settings",
+    "basePrice": "Base Price",
+    "malePrice": "Male Price",
+    "femalePrice": "Female Price",
+    "locationLabel": "Activity Location",
+    "locationPlaceholder": "Please enter activity location",
+    "timeLabel": "Activity Time",
+    "timePlaceholder": "Please select activity time",
+    "quotaLabel": "Registration Quota",
+    "tagsLabel": "Activity Tags",
+    "tagsPlaceholder": "Please select activity tags",
+    "descriptionLabel": "Activity Description",
+    "descriptionPlaceholder": "Please enter activity description",
+    "coverImage": "Cover Image",
+    "title": "Activity Title",
+    "location": "Location",
+    "startTime": "Start Time",
+    "regCount": "Registered Count",
+    "status": "Status",
+    "basePrice": "Base Price",
+    "createdAt": "Created At",
+    "statusLabel": "Activity Status",
+    "statusPlaceholder": "Please select activity status",
+    "deleteConfirmSingle": "Are you sure you want to delete this activity?",
+    "deleteConfirmMultiple": "Are you sure you want to delete these {count} activities?",
+    "message": {
+      "basePrice": {
+        "required": "Please enter base price"
+      },
+      "coverImage": {
+        "required": "Please upload activity cover image"
+      },
+      "femalePrice": {
+        "required": "Please enter female price"
+      },
+      "location": {
+        "required": "Please enter activity location"
+      },
+      "malePrice": {
+        "required": "Please enter male price"
+      },
+      "regLimit": {
+        "required": "Please enter registration quota"
+      },
+      "startTime": {
+        "required": "Please select activity time"
+      },
+      "title": {
+        "required": "Please enter activity title",
+        "maxLength": "Title length cannot exceed 100 characters"
+      },
+      "description": {
+        "maxLength": "Description length cannot exceed 500 characters"
+      }
+    }
+  },
+  "tagManage": {
+    "nameLabel": "Tag Name",
+    "namePlaceholder": "Please enter tag name",
+    "typeLabel": "Tag Type",
+    "typePlaceholder": "Please select tag type",
+    "descriptionLabel": "Tag Description",
+    "descriptionPlaceholder": "Please enter tag description",
+    "name": "Tag Name",
+    "type": "Tag Type",
+    "description": "Tag Description",
+    "createdAt": "Created At",
+    "statusLabel": "Tag Status",
+    "statusPlaceholder": "Please select tag status",
+    "deleteConfirmSingle": "Are you sure you want to delete this tag?",
+    "deleteConfirmMultiple": "Are you sure you want to delete these {count} tags?",
+    "deleteLanguageConfirm": "Are you sure you want to delete {lang} language? Data for this language will be lost after deletion.",
+    "deleteLanguageSuccess": "{lang} language has been deleted",
+    "tagActivity": "Activity Tag",
+    "tagUser": "User Tag",
+    "message": {
+      "name": {
+        "required": "Please enter tag name",
+        "maxLength": "Tag name cannot exceed 50 characters"
+      },
+      "type": {
+        "required": "Please select tag type"
+      },
+      "status": {
+        "required": "Please select status"
+      },
+      "description": {
+        "maxLength": "Tag description cannot exceed 200 characters"
+      }
+    }
   }
 }

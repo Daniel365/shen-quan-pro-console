@@ -1,7 +1,7 @@
-import sequelize, { sequelizeTimeConfig } from '@/database';
-import { publicOptions } from '@/database/common';
-import { getAppDbName } from '@/utils/database';
-import { DataTypes, Model, Optional, type Association } from 'sequelize';
+import sequelize from '@/database';
+import { getAppDbName, sequelizeCommonFields, sequelizeCommonConfig } from '@/database/common';
+import { CreateAttributes } from '@/types/database';
+import { Association, DataTypes, Model } from 'sequelize';
 import User from './User';
 
 // 定义用户邀请关系属性接口
@@ -16,8 +16,7 @@ interface UserInviteAttributes {
 }
 
 // 定义创建用户邀请关系时的可选属性
-interface UserInviteCreationAttributes
-  extends Optional<UserInviteAttributes, 'uuid' | 'created_at' | 'updated_at'> {}
+interface UserInviteCreationAttributes extends CreateAttributes<UserInviteAttributes> {}
 
 // 用户邀请关系模型
 class UserInvite
@@ -73,26 +72,13 @@ UserInvite.init(
       allowNull: false,
       defaultValue: 1,
     },
-    ...publicOptions,
+    ...sequelizeCommonFields(),
   },
   {
     sequelize,
     tableName: getAppDbName('user_invite'),
-    ...sequelizeTimeConfig,
+    ...sequelizeCommonConfig(),
   }
 );
-
-// 定义关联关系
-UserInvite.belongsTo(User, {
-  foreignKey: 'user_uuid',
-  targetKey: 'uuid',
-  as: 'user',
-});
-
-UserInvite.belongsTo(User, {
-  foreignKey: 'inviter_uuid',
-  targetKey: 'uuid',
-  as: 'inviter',
-});
 
 export default UserInvite;
