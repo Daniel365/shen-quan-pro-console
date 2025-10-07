@@ -6,7 +6,7 @@
 
 import alovaInstance from '@/utils/instance';
 
-import { RoleAddParams, RoleEditParams, RoleListParams } from './types';
+import { RoleFormData, RoleListParams } from './types';
 
 export default {
   // 获取角色列表
@@ -18,7 +18,7 @@ export default {
     return alovaInstance.Put(RequestPath.APP_ROLE_ASSIGN_PERM, data);
   },
   // 新增角色
-  onCreate(data: RoleAddParams): Promise<InterfaceResult> {
+  onCreate(data: RoleFormData): Promise<InterfaceResult> {
     return alovaInstance.Post(RequestPath.APP_ROLE_CREATE, data);
   },
   // 删除角色
@@ -26,7 +26,7 @@ export default {
     return alovaInstance.Delete(RequestPath.APP_ROLE_DELETE, data);
   },
   // 编辑角色
-  onEdit(data: RoleEditParams): Promise<InterfaceResult> {
+  onEdit(data: RoleFormData): Promise<InterfaceResult> {
     return alovaInstance.Put(RequestPath.APP_ROLE_UPDATE, data);
   },
 };

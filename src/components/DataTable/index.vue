@@ -17,7 +17,7 @@
     >
       <!-- 选择列 -->
       <el-table-column v-if="selectable" type="selection" width="55" />
-      
+
       <!-- 展开列 -->
       <template v-if="$slots.expand">
         <el-table-column type="expand" width="50">
@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 // utils
-import { formatDate, isValidIsoDate } from '@/utils/format/dateTime';
+import { formatDateTime, isValidIsoDate } from '@/utils/format/dateTime';
 
 /**
  * 表格列配置接口
@@ -171,7 +171,7 @@ const pagination = reactive<PageInfo>({
 const handleText = (row: any, item: TableColumn) => {
   const val = row[item.dataIndex || item.key];
   if (isValidIsoDate(val)) {
-    return formatDate(val);
+    return formatDateTime(val);
   }
   return val || '-';
 };

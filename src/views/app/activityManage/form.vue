@@ -202,6 +202,7 @@ import { ElMessage, ElMessageBox, type FormInstance } from 'element-plus';
 
 import { ActivityFormData, ActivityTranslationItem } from '@/api/app/activityManage/types';
 import { TagListItem } from '@/api/app/tagManage/types';
+import { isHasArrayData } from '@/utils/dataJudgment';
 
 import LanguageForm from './components/LanguageForm.vue';
 
@@ -347,7 +348,6 @@ const disabledDate = (time: Date) => {
 // 时间范围变化处理
 const handleTimeRangeChange = (value: [string, string] | null) => {
   if (value && value.length === 2) {
-    console.log(`output->`, value[0], value[1]);
     formData.startTime = value[0];
     formData.endTime = value[1];
   } else {
@@ -490,13 +490,23 @@ const getDetails = async (uuid: string) => {
 const processFormData = (formData: ActivityFormData) => {
   const processedData = { ...formData };
 
-  // 转换时间字段为ISO8601格式
-  if (processedData.startTime && !isValidIsoDate(processedData.startTime as any)) {
-    processedData.startTime = new Date(processedData.startTime).toISOString();
-  }
+  // 循环processedData的键进行switch处理
+  for (const key in processedData) {
+    if (Object.prototype.hasOwnProperty.call(processedData, key)) {
+      const value = processedData[key as keyof ActivityFormData];
 
-  if (processedData.endTime && !isValidIsoDate(processedData.endTime as any)) {
-    processedData.endTime = new Date(processedData.endTime).toISOString();
+      switch (key) {
+        case 'startTime':
+        case 'endTime':
+          if (value && !isValidIsoDate(value as any)) {
+            processedData[key] = formatIso86DateTime(value as string);
+          }
+          break;
+        default:
+          // 其他字段不做处理
+          break;
+      }
+    }
   }
 
   return processedData;
@@ -505,39 +515,50 @@ const processFormData = (formData: ActivityFormData) => {
 // 提交表单
 const handleSubmit = async () => {
   // 验证所有语言表单
-  const allLanguageFormsValid = await validateAllLanguageForms();
-  if (!allLanguageFormsValid) {
-    return;
-  }
+  // const allLanguageFormsValid = await validateAllLanguageForms();
+  // if (!allLanguageFormsValid) {
+  //   return;
+  // }
   // 验证主表单
-  if (!mainFormRef.value) return;
-  await mainFormRef.value.validate();
+  // if (!mainFormRef.value) return;
+  // await mainFormRef.value.validate();
 
   loading.value = true;
 
   // 准备提交数据
   const submitData = processFormData(formData);
+  console.log(`submitData->`, submitData);
+  loading.value = false;
 
-  let result: any;
-  if (actionType.value === ActionTypeEnum.EDIT) {
-    result = await activityManageApi.onEdit(submitData).finally(() => {
-      loading.value = false;
-    });
-  } else {
-    result = await activityManageApi.onCreate(submitData).finally(() => {
-      loading.value = false;
-    });
-  }
+  // let result: any;
+  // let messageKey: string;
 
-  handleReturnResults({
-    onSuccess: (res) => {
-      const messageKey =
-        actionType.value === ActionTypeEnum.EDIT ? 'action.updateSuccess' : 'action.createSuccess';
-      ElMessage.success(i18nText(messageKey));
-      goBack();
-    },
-    params: result,
-  });
+  // switch (actionType.value) {
+  //   case ActionTypeEnum.EDIT:
+  //     result = await activityManageApi.onEdit(submitData).finally(() => {
+  //       loading.value = false;
+  //     });
+  //     messageKey = 'action.updateSuccess';
+  //     break;
+  //   case ActionTypeEnum.CREATE:
+  //   case ActionTypeEnum.COPY:
+  //     result = await activityManageApi.onCreate(submitData).finally(() => {
+  //       loading.value = false;
+  //     });
+  //     messageKey = 'action.createSuccess';
+  //     break;
+  //   default:
+  //     loading.value = false;
+  //     return;
+  // }
+
+  // handleReturnResults({
+  //   onSuccess: (res) => {
+  //     ElMessage.success(i18nText(messageKey));
+  //     goBack();
+  //   },
+  //   params: result,
+  // });
 };
 
 // 组件挂载时加载数据

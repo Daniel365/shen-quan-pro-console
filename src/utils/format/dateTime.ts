@@ -42,7 +42,7 @@ export const isValidIsoDate = (isoDate: string): boolean => {
  * @param options - 格式化选项（如时区等）
  * @returns 格式化后的日期字符串
  */
-export const formatDate = (
+export const formatDateTime = (
   isoDate: string,
   format: string = 'YYYY-MM-DD HH:mm:ss',
   options?: UseDateFormatOptions
@@ -80,4 +80,65 @@ export const toTimestamp = (isoDate: string): number => {
     return 0;
   }
   return new Date(isoDate).getTime();
+};
+
+import { format, isValid } from 'date-fns';
+
+/**
+ * 格式化时间为ISO8601格式（带时区偏移）
+ * @param date - 需要格式化的时间，可以是Date对象、时间戳或字符串
+ * @returns ISO8601格式的日期字符串（带时区偏移如+08:00），无效日期返回空字符串
+ */
+export const formatIso86DateTime = (
+  date: Date | number | string
+): string => {
+  if (!date) {
+    console.warn('无效的日期:', date);
+    return '';
+  }
+
+  try {
+    const dateObj = new Date(date);
+    
+    if (!isValid(dateObj)) {
+      console.warn('无效的日期:', date);
+      return '';
+    }
+
+    // 使用date-fns格式化，生成带时区偏移的ISO8601格式
+    return format(dateObj, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
+  } catch (error) {
+    console.warn('日期格式化失败:', error);
+    return '';
+  }
+};
+
+/**
+ * 格式化时间为ISO8601格式（指定时区）
+ * @param date - 需要格式化的时间，可以是Date对象、时间戳或字符串
+ * @param timezone - 时区名称，如'Asia/Shanghai'、'America/New_York'
+ * @returns ISO8601格式的日期字符串（指定时区），无效日期返回空字符串
+ */
+export const toISO8601WithCustomTimezone = (
+  date: Date | number | string,
+  options?: UseDateFormatOptions
+): string => {
+  if (!date) {
+    console.warn('无效的日期:', date);
+    return '';
+  }
+
+  try {
+    const dateObj = new Date(date);
+
+    if (isNaN(dateObj.getTime())) {
+      console.warn('无效的日期:', date);
+      return '';
+    }
+
+    return useDateFormat(dateObj, 'YYYY-MM-DDTHH:mm:ss.SSSZ', options).value;
+  } catch (error) {
+    console.warn('日期格式化失败:', error);
+    return '';
+  }
 };

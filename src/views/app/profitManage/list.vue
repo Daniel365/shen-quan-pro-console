@@ -55,7 +55,7 @@
       <el-col :span="6">
         <el-card class="stat-card">
           <div class="stat-item">
-            <div class="stat-icon" style="color: #409eff;">
+            <div class="stat-icon" style="color: #409eff">
               <el-icon><Money /></el-icon>
             </div>
             <div class="stat-content">
@@ -68,7 +68,7 @@
       <el-col :span="6">
         <el-card class="stat-card">
           <div class="stat-item">
-            <div class="stat-icon" style="color: #67c23a;">
+            <div class="stat-icon" style="color: #67c23a">
               <el-icon><CreditCard /></el-icon>
             </div>
             <div class="stat-content">
@@ -81,7 +81,7 @@
       <el-col :span="6">
         <el-card class="stat-card">
           <div class="stat-item">
-            <div class="stat-icon" style="color: #e6a23c;">
+            <div class="stat-icon" style="color: #e6a23c">
               <el-icon><Timer /></el-icon>
             </div>
             <div class="stat-content">
@@ -94,7 +94,7 @@
       <el-col :span="6">
         <el-card class="stat-card">
           <div class="stat-item">
-            <div class="stat-icon" style="color: #f56c6c;">
+            <div class="stat-icon" style="color: #f56c6c">
               <el-icon><CloseBold /></el-icon>
             </div>
             <div class="stat-content">
@@ -109,17 +109,9 @@
     <!-- 收益明细列表 -->
     <el-card class="list-card">
       <el-table :data="profitList" v-loading="loading" stripe>
-        <el-table-column
-          :label="$t('profit.activity')"
-          prop="activityTitle"
-          min-width="200"
-        />
+        <el-table-column :label="$t('profit.activity')" prop="activityTitle" min-width="200" />
 
-        <el-table-column
-          :label="$t('profit.order')"
-          prop="orderUuid"
-          width="200"
-        >
+        <el-table-column :label="$t('profit.order')" prop="orderUuid" width="200">
           <template #default="{ row }">
             <el-link type="primary" @click="handleViewOrder(row)">
               {{ row.orderUuid }}
@@ -127,11 +119,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('profit.user')"
-          prop="userNickname"
-          width="120"
-        />
+        <el-table-column :label="$t('profit.user')" prop="userNickname" width="120" />
 
         <el-table-column
           :label="$t('profit.totalAmount')"
@@ -155,27 +143,20 @@
           <template #default="{ row }">
             <div class="role-profit">
               <div class="profit-amount">¥{{ getRoleProfitAmount(row, role.roleUuid) }}</div>
-              <div class="profit-percentage">{{ getRoleProfitPercentage(row, role.roleUuid) }}%</div>
+              <div class="profit-percentage">
+                {{ getRoleProfitPercentage(row, role.roleUuid) }}%
+              </div>
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('profit.remainingAmount')"
-          width="140"
-          align="right"
-        >
+        <el-table-column :label="$t('profit.remainingAmount')" width="140" align="right">
           <template #default="{ row }">
             <span class="remaining-amount">¥{{ row.remainingAmount }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('profit.status')"
-          prop="status"
-          width="100"
-          align="center"
-        >
+        <el-table-column :label="$t('profit.status')" prop="status" width="100" align="center">
           <template #default="{ row }">
             <el-tag :type="getStatusType(row.status)">
               {{ getStatusText(row.status) }}
@@ -183,38 +164,21 @@
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('profit.createTime')"
-          prop="createdAt"
-          width="180"
-        >
+        <el-table-column :label="$t('profit.createTime')" prop="createdAt" width="180">
           <template #default="{ row }">
-            {{ formatDate(row.createdAt) }}
+            {{ formatDateTime(row.createdAt) }}
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('profit.settleTime')"
-          prop="settledAt"
-          width="180"
-        >
+        <el-table-column :label="$t('profit.settleTime')" prop="settledAt" width="180">
           <template #default="{ row }">
-            {{ formatDate(row.settledAt) }}
+            {{ formatDateTime(row.settledAt) }}
           </template>
         </el-table-column>
 
-        <el-table-column
-          :label="$t('form.action')"
-          fixed="right"
-          width="120"
-          align="center"
-        >
+        <el-table-column :label="$t('form.action')" fixed="right" width="120" align="center">
           <template #default="{ row }">
-            <el-button
-              size="small"
-              type="primary"
-              @click="handleViewDetail(row)"
-            >
+            <el-button size="small" type="primary" @click="handleViewDetail(row)">
               {{ $t('action.view') }}
             </el-button>
           </template>
@@ -236,11 +200,7 @@
     </el-card>
 
     <!-- 收益详情弹窗 -->
-    <el-dialog
-      v-model="detailVisible"
-      :title="$t('profit.detail')"
-      width="900px"
-    >
+    <el-dialog v-model="detailVisible" :title="$t('profit.detail')" width="900px">
       <ProfitDetail
         v-if="detailVisible && currentProfit"
         :profit="currentProfit"
@@ -251,9 +211,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { CloseBold, CreditCard, Money, Timer } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
-import { Money, CreditCard, Timer, CloseBold } from '@element-plus/icons-vue';
+import { onMounted, reactive, ref } from 'vue';
 
 // API
 import profitManageApi from '@/api/app/profitManage';
@@ -319,7 +279,7 @@ const stats = reactive<Stats>({
 });
 
 // 角色列配置
-const roleColumns = ref<Array<{roleUuid: string; roleName: string}>>([]);
+const roleColumns = ref<Array<{ roleUuid: string; roleName: string }>>([]);
 
 // 状态选项
 const statusOptions = [
@@ -333,7 +293,7 @@ const getStatusType = (status: number) => {
   const types = {
     1: 'warning', // 冻结中
     2: 'success', // 已结算
-    3: 'info',    // 已取消
+    3: 'info', // 已取消
   };
   return types[status as keyof typeof types] || 'info';
 };
@@ -350,18 +310,18 @@ const getStatusText = (status: number) => {
 
 // 获取角色分润金额
 const getRoleProfitAmount = (record: ProfitRecord, roleUuid: string) => {
-  const distribution = record.profitDistribution.find(d => d.roleUuid === roleUuid);
+  const distribution = record.profitDistribution.find((d) => d.roleUuid === roleUuid);
   return distribution ? distribution.amount : 0;
 };
 
 // 获取角色分润比例
 const getRoleProfitPercentage = (record: ProfitRecord, roleUuid: string) => {
-  const distribution = record.profitDistribution.find(d => d.roleUuid === roleUuid);
+  const distribution = record.profitDistribution.find((d) => d.roleUuid === roleUuid);
   return distribution ? distribution.percentage : 0;
 };
 
 // 格式化日期
-const formatDate = (dateString: string) => {
+const formatDateTime = (dateString: string) => {
   if (!dateString) return '-';
   return new Date(dateString).toLocaleString('zh-CN');
 };
@@ -371,14 +331,14 @@ const loadProfitList = async () => {
   try {
     loading.value = true;
     const result = await profitManageApi.getList(filterParams);
-    
+
     if (result.code === 200) {
       profitList.value = result.data.list;
       total.value = result.data.total;
-      
+
       // 更新统计信息
       Object.assign(stats, result.data.stats || {});
-      
+
       // 更新角色列配置
       if (result.data.roleColumns) {
         roleColumns.value = result.data.roleColumns;
@@ -460,17 +420,17 @@ onMounted(() => {
     align-items: center;
     gap: 15px;
   }
-  
+
   .stat-icon {
     font-size: 40px;
   }
-  
+
   .stat-value {
     font-size: 24px;
     font-weight: bold;
     color: #333;
   }
-  
+
   .stat-label {
     font-size: 14px;
     color: #666;

@@ -79,6 +79,8 @@ declare global {
   const enabledStatusOptions: typeof import('../utils/options')['enabledStatusOptions']
   const extendRef: typeof import('@vueuse/core')['extendRef']
   const formatDate: typeof import('../utils/format/dateTime')['formatDate']
+  const formatDateTime: typeof import('../utils/format/dateTime')['formatDateTime']
+  const formatIso86DateTime: typeof import('../utils/format/dateTime')['formatIso86DateTime']
   const genderOptions: typeof import('../utils/options')['genderOptions']
   const getActionTitle: typeof import('../utils/tool')['getActionTitle']
   const getActivePinia: typeof import('pinia')['getActivePinia']
@@ -134,6 +136,7 @@ declare global {
   const onUpdated: typeof import('vue')['onUpdated']
   const onWatcherCleanup: typeof import('vue')['onWatcherCleanup']
   const operationLogApi: typeof import('../api/index')['operationLogApi']
+  const orderManageApi: typeof import('../api/index')['orderManageApi']
   const pausableWatch: typeof import('@vueuse/core')['pausableWatch']
   const profitManageApi: typeof import('../api/index')['profitManageApi']
   const provide: typeof import('vue')['provide']
@@ -172,6 +175,9 @@ declare global {
   const templateRef: typeof import('@vueuse/core')['templateRef']
   const throttledRef: typeof import('@vueuse/core')['throttledRef']
   const throttledWatch: typeof import('@vueuse/core')['throttledWatch']
+  const toISO8601: typeof import('../utils/format/dateTime')['toISO8601']
+  const toISO8601WithCustomTimezone: typeof import('../utils/format/dateTime')['toISO8601WithCustomTimezone']
+  const toISO8601WithTimezone: typeof import('../utils/format/dateTime')['toISO8601WithTimezone']
   const toRaw: typeof import('vue')['toRaw']
   const toReactive: typeof import('@vueuse/core')['toReactive']
   const toRef: typeof import('vue')['toRef']
@@ -477,7 +483,8 @@ declare module 'vue' {
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly enabledStatusOptions: UnwrapRef<typeof import('../utils/options')['enabledStatusOptions']>
     readonly extendRef: UnwrapRef<typeof import('@vueuse/core')['extendRef']>
-    readonly formatDate: UnwrapRef<typeof import('../utils/format/dateTime')['formatDate']>
+    readonly formatDateTime: UnwrapRef<typeof import('../utils/format/dateTime')['formatDateTime']>
+    readonly formatIso86DateTime: UnwrapRef<typeof import('../utils/format/dateTime')['formatIso86DateTime']>
     readonly genderOptions: UnwrapRef<typeof import('../utils/options')['genderOptions']>
     readonly getActionTitle: UnwrapRef<typeof import('../utils/tool')['getActionTitle']>
     readonly getActivePinia: UnwrapRef<typeof import('pinia')['getActivePinia']>
@@ -533,6 +540,7 @@ declare module 'vue' {
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly operationLogApi: UnwrapRef<typeof import('../api/index')['operationLogApi']>
+    readonly orderManageApi: UnwrapRef<typeof import('../api/index')['orderManageApi']>
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>
     readonly profitManageApi: UnwrapRef<typeof import('../api/index')['profitManageApi']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
@@ -569,6 +577,7 @@ declare module 'vue' {
     readonly templateRef: UnwrapRef<typeof import('@vueuse/core')['templateRef']>
     readonly throttledRef: UnwrapRef<typeof import('@vueuse/core')['throttledRef']>
     readonly throttledWatch: UnwrapRef<typeof import('@vueuse/core')['throttledWatch']>
+    readonly toISO8601WithCustomTimezone: UnwrapRef<typeof import('../utils/format/dateTime')['toISO8601WithCustomTimezone']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toReactive: UnwrapRef<typeof import('@vueuse/core')['toReactive']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>

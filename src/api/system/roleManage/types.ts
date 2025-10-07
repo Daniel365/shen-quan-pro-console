@@ -39,7 +39,8 @@ export interface RoleListItem {
 /**
  * 角色创建参数接口
  */
-export interface RoleAddParams {
+export interface RoleFormData {
+  uuid?: string;
   /** 角色名称 */
   name: string;
   /** 角色代码（唯一） */
@@ -50,30 +51,4 @@ export interface RoleAddParams {
   status?: number;
   /** 关联的菜单ID列表 */
   menuIds?: string[];
-}
-
-/**
- * 角色编辑参数接口
- */
-export interface RoleEditParams extends RoleAddParams {
-  /** 角色UUID（编辑时必填） */
-  uuid: string;
-}
-
-/**
- * 角色删除参数接口
- */
-export interface RoleDeleteParams {
-  /** 角色UUID */
-  uuid: string;
-}
-
-/**
- * 角色权限配置参数接口
- */
-export interface RolePermissionParams {
-  /** 角色UUID */
-  uuid: string;
-  /** 关联的菜单ID列表 */
-  menuIds: string[];
 }

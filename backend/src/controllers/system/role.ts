@@ -3,12 +3,12 @@
  * @Date: 2025-08-31 22:21:06
  * @Description:
  */
+import { Role } from '@/models/system';
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
-import { Role } from '@/models/system';
 
-import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 import { DataTypeEnum, MatchTypeEnum } from '@/types/database';
+import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
 
@@ -42,6 +42,7 @@ export class RoleController {
         pageInfo,
       });
     } catch (error) {
+      console.log(`role-list->`, error);
       return res.responseBuilder.error('common.serverError', 500);
     }
   }

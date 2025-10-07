@@ -9,6 +9,7 @@ export {
   activityManageApi,
   appRoleManageApi,
   appUserManageApi,
+  orderManageApi,
   profitManageApi,
   tagManageApi,
 } from './app';

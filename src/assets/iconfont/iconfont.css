@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 5021379 */
-  src: url('iconfont.woff2?t=1758685593605') format('woff2'),
-       url('iconfont.woff?t=1758685593605') format('woff'),
-       url('iconfont.ttf?t=1758685593605') format('truetype');
+  src: url('iconfont.woff2?t=1759826051678') format('woff2'),
+       url('iconfont.woff?t=1759826051678') format('woff'),
+       url('iconfont.ttf?t=1759826051678') format('truetype');
 }
 
 .iconfont {
@@ -325,10 +325,6 @@
   content: "\e78d";
 }
 
-.icon-download1:before {
-  content: "\e78e";
-}
-
 .icon-document-remove:before {
   content: "\e78f";
 }
@@ -371,10 +367,6 @@
 
 .icon-discount:before {
   content: "\e799";
-}
-
-.icon-document1:before {
-  content: "\e79a";
 }
 
 .icon-data-line:before {
@@ -603,18 +595,6 @@
 
 .icon-map-location:before {
   content: "\e743";
-}
-
-.icon-monitor1:before {
-  content: "\e744";
-}
-
-.icon-menu1:before {
-  content: "\e745";
-}
-
-.icon-message1:before {
-  content: "\e746";
 }
 
 .icon-message-box:before {
@@ -1251,10 +1231,6 @@
 
 .icon-table:before {
   content: "\e6af";
-}
-
-.icon-system1:before {
-  content: "\e6b0";
 }
 
 .icon-xml:before {

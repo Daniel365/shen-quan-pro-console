@@ -106,13 +106,16 @@ const parseDynamicRoutes = (rawRoutes: AccountMenu[]): RouteRecordRaw[] => {
   rawRoutes.forEach((route) => {
     const meta = route?.meta;
     const normalizedRoute = { ...route, label: meta?.title } as RouteRecordRaw;
-
+    /**
+     * 组件路径
+     * @return /system/menuManage/list
+     */
+    const componentSrc = normalizedRoute.component;
     // 处理组件路径
     normalizedRoute.component =
-      normalizedRoute.component?.toString() === 'Layout'
+      componentSrc?.toString() === 'Layout'
         ? Layout
-        : modules[`../../views/${normalizedRoute.component}.vue`] ||
-          modules['../../views/errorPage/404.vue'];
+        : modules[`../../views${componentSrc}.vue`] || modules['../../views/errorPage/404.vue'];
 
     // 递归解析子路由
     if (isHasArrayData(normalizedRoute.children)) {

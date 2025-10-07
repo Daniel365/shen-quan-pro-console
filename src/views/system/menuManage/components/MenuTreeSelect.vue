@@ -4,7 +4,7 @@
  * @Description: 树形菜单选择
 -->
 <template>
-  <ElTreeSelect
+  <el-tree-select
     v-model="selectedValue"
     :data="treeData"
     :placeholder="placeholder"
@@ -16,8 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { ElTreeSelect } from 'element-plus';
-
 interface TreeNode {
   label: string;
   value: number;
@@ -27,7 +25,7 @@ interface TreeNode {
 interface Props {
   modelValue?: any;
   placeholder?: string;
-  isRefresh?: boolean;
+  isRefresh?: number;
   disabled?: boolean;
   multiple?: boolean;
   fieldNames?: { label: string; value: string; children: string };
@@ -36,7 +34,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   fieldNames: () => ({ children: 'children', label: 'label', value: 'value' }),
-  isRefresh: false,
+  isRefresh: 0,
   multiple: false,
   placeholder: '',
 });
@@ -71,9 +69,10 @@ const getDataList = async () => {
     handleReturnResults({
       onSuccess: (res) => {
         const { list } = res.data || [];
+        // 强制更新treeData
         treeData.value = [
           {
-            children: list,
+            children: [...list],
             label: '顶级菜单',
             value: 0,
           },
@@ -86,6 +85,16 @@ const getDataList = async () => {
     console.error('加载菜单数据失败:', error);
   }
 };
+
+watch(
+  () => props.isRefresh,
+  (isRefresh) => {
+    if (isRefresh) {
+      treeData.value = [];
+      getDataList();
+    }
+  }
+);
 
 onMounted(() => {
   getDataList();

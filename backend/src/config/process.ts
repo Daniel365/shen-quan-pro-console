@@ -1,5 +1,5 @@
-import process from 'node:process';
 import dotenv from 'dotenv';
+import process from 'node:process';
 
 // 加载环境变量
 dotenv.config({ path: '.env.development' });
@@ -10,7 +10,7 @@ export const isDev = NODE_ENV === 'development';
 /** 服务端口 */
 export const PORT = process.env.PORT || 3000;
 /** 服务接口 */
-export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
+export const BASE_URL = `${process.env.BASE_URL || 'http://localhost'}:${PORT}`;
 
 /** JWT - 密钥 */
 export const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';

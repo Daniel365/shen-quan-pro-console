@@ -12,9 +12,9 @@ import appUserManageApi from './userManage';
 
 export {
   activityManageApi,
-  orderManageApi,
   appRoleManageApi,
   appUserManageApi,
+  orderManageApi,
   profitManageApi,
   tagManageApi,
 };

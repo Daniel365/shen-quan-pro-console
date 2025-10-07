@@ -208,6 +208,16 @@ export class AccountController {
     // 获取用户的角色UUID数组
     const roleUuids = userModel?.role_uuids || [];
 
+    if (!roleUuids.length) {
+      return {
+        data: {
+          role_name: '',
+          role_code: [],
+          perms: [],
+        },
+        success: true,
+      };
+    }
     // 查询角色信息
     const roles = await Role.findAll({
       where: { uuid: { [Op.in]: roleUuids } },
@@ -239,9 +249,13 @@ export class AccountController {
     const perms = menu.map((menu) => menu.permission).filter((permission) => permission); // 过滤掉空值
 
     return {
-      role_name: roleNames.join(','),
-      role_code: roleCodes,
-      perms,
+      data: {
+        role_name: roleNames.join(','),
+        role_code: roleCodes,
+        perms,
+      },
+      success: true,
+      messageKey: 'common.success',
     };
   }
   // 获取登录用户信息
@@ -257,15 +271,16 @@ export class AccountController {
       }
 
       // 角色信息
-      const roleInfo = await AccountController.getAccountRoleInfo(user);
+      const roleRes = await AccountController.getAccountRoleInfo(user);
 
       const userInfo = {
         ...user.toJSON(),
-        ...roleInfo,
+        ...roleRes.data,
       };
 
       return res.responseBuilder.success(userInfo);
     } catch (error) {
+      console.log(`getAccountInfo->`, error);
       if (error instanceof jwt.JsonWebTokenError || error instanceof jwt.TokenExpiredError) {
         return res.responseBuilder.error('auth.tokenInvalidOrExpired', 401);
       }
@@ -285,7 +300,11 @@ export class AccountController {
 
       // 获取用户的角色UUID数组
       const roleUuids = user.role_uuids || [];
-
+      if (!roleUuids.length) {
+        return res.responseBuilder.success({
+          list: [],
+        });
+      }
       // 查询角色信息
       const roles = await Role.findAll({
         where: { uuid: { [Op.in]: roleUuids } },
@@ -315,6 +334,7 @@ export class AccountController {
         list: buildRouterTree(menus),
       });
     } catch (error) {
+      console.log(`getAccountMenu->`, error);
       return res.responseBuilder.error('common.serverError', 500);
     }
   }

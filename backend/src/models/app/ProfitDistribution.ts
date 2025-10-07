@@ -5,7 +5,7 @@
  */
 
 import sequelize from '@/database';
-import { getDbName, sequelizeCommonFields, sequelizeCommonConfig } from '@/database/common';
+import { getAppDbName, sequelizeCommonConfig, sequelizeCommonFields } from '@/database/common';
 import { CreateAttributes } from '@/types/database';
 import { DataTypes, Model } from 'sequelize';
 
@@ -123,7 +123,7 @@ ProfitDistribution.init(
   },
   {
     sequelize,
-    tableName: getDbName('app_profit_distribution'),
+    tableName: getAppDbName('profit_distribution'),
     ...sequelizeCommonConfig(),
     hooks: {
       beforeSave: async (distribution: ProfitDistribution) => {

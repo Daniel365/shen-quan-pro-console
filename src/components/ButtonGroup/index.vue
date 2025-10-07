@@ -8,7 +8,6 @@
     <template v-for="item in options" :key="item.value">
       <el-button
         v-if="item.isShow ? item.isShow(record) : true"
-        v-hasPerm="item.permission"
         :type="item.type"
         :link="link"
         :size="size"

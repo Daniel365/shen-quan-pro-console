@@ -60,7 +60,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   filterable: false,
   multiple: false,
-  placeholder: i18nText("form.pleaseSelect"),
+  placeholder: i18nText('form.pleaseSelect'),
   width: '240px',
 });
 

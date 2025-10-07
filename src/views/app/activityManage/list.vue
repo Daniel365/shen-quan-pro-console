@@ -38,7 +38,7 @@
 
         <!-- 开始时间列渲染 -->
         <template v-else-if="column.key === 'startTime'">
-          {{ formatDate(record.startTime) }}
+          {{ formatDateTime(record.startTime) }}
         </template>
 
         <!-- 报名人数列渲染 -->
@@ -56,7 +56,7 @@
 
         <!-- 创建时间列渲染 -->
         <template v-else-if="column.key === 'createdAt'">
-          {{ formatDate(record.createdAt) }}
+          {{ formatDateTime(record.createdAt) }}
         </template>
 
         <!-- 操作列渲染 -->
@@ -73,8 +73,6 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 
 // type
 import type { ActivityListItem, ActivityListParams } from '@/api/app/activityManage/types';
-// utils
-import { formatDate } from '@/utils/format/dateTime';
 
 import { activityStatusOptions } from './utils/options';
 

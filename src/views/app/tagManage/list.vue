@@ -43,7 +43,7 @@
 
         <!-- 创建时间列渲染 -->
         <template v-else-if="column.key === 'createdAt'">
-          {{ formatDate(record.createdAt) }}
+          {{ formatDateTime(record.createdAt) }}
         </template>
 
         <!-- 操作列渲染 -->

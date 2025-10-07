@@ -5,7 +5,7 @@
  */
 
 import sequelize from '@/database';
-import { getAppDbName, sequelizeCommonFields, sequelizeCommonConfig } from '@/database/common';
+import { getAppDbName, sequelizeCommonConfig, sequelizeCommonFields } from '@/database/common';
 import { CreateAttributes } from '@/types/database';
 import { DataTypes, Model } from 'sequelize';
 

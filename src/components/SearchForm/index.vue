@@ -1,57 +1,39 @@
 <template>
-  <el-form :model="formData" inline class="search-form">
-    <template v-for="field in fields" :key="field.key">
-      <el-form-item :label="field.label">
-        <el-input
-          v-if="field.type === 'input'"
-          v-model="formData[field.key]"
-          :placeholder="field.placeholder"
-        />
-        <el-select
-          v-else-if="field.type === 'select'"
-          v-model="formData[field.key]"
-          :placeholder="field.placeholder"
-          :style="{ width: field.width || '120px' }"
-        >
-          <el-option
-            v-for="item in field.options"
-            :key="item.value"
-            :value="item.value"
-            :label="item.labelKey ? $t(item.labelKey) : item.label"
-          />
-        </el-select>
-      </el-form-item>
-    </template>
-    <el-form-item>
-      <el-button type="primary" :loading="loading" @click="handleSearch">
-        {{ $t('action.search') }}
-      </el-button>
-      <el-button :loading="loading" @click="handleReset">
-        {{ $t('action.reset') }}
-      </el-button>
-    </el-form-item>
-  </el-form>
+  <div class="search-form">
+    <!-- 使用 FormGroup 组件渲染表单字段 -->
+    <FormGroup
+      ref="formGroupRef"
+      :form-fields="formFields"
+      :model-value="formData"
+      :inline="true"
+      :clearable="true"
+      :item-class="'search-form-item'"
+      @update:model-value="handleFormUpdate"
+    >
+      <!-- 搜索和重置按钮 -->
+      <template #default>
+        <div class="search-footer-action">
+          <el-button type="primary" :loading="loading" @click="handleSearch">
+            {{ $t('action.search') }}
+          </el-button>
+          <el-button :loading="loading" @click="handleReset">
+            {{ $t('action.reset') }}
+          </el-button>
+        </div>
+      </template>
+    </FormGroup>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { FormTypeEnum } from '@/enums';
+import type { FormGroup, FormGroupFieldConfig } from '@/components/FormGroup';
 
 /**
  * 搜索表单字段配置接口
  */
-export interface SearchField {
-  /** 字段key */
-  key: string;
-  /** 字段标签 */
-  label: string;
-  /** 字段类型 */
-  type: FormTypeEnum;
-  /** 占位符文本 */
-  placeholder?: string;
+export interface SearchField extends FormGroupFieldConfig {
   /** 字段宽度 */
   width?: string;
-  /** 选项数据（适用于select等） */
-  options?: OptionsItemType[];
 }
 
 /**
@@ -85,10 +67,23 @@ const emit = defineEmits<{
   reset: [];
 }>();
 
+const formGroupRef = ref<InstanceType<typeof FormGroup>>();
+
 /**
  * 表单数据
  */
 const formData = reactive({ ...props.modelValue });
+
+/**
+ * 将搜索字段配置转换为 FormGroup 字段配置
+ */
+const formFields = computed(() => {
+  return props.fields.map((field) => ({
+    ...field,
+    // 将宽度等样式配置转换为 FormGroup 支持的格式
+    ...(field.width && { style: { width: field.width } }),
+  }));
+});
 
 /**
  * 监听父组件传入的modelValue变化
@@ -102,15 +97,12 @@ watch(
 );
 
 /**
- * 监听表单数据变化，同步给父组件
+ * 处理表单数据更新
  */
-watch(
-  formData,
-  (newVal) => {
-    emit('update:modelValue', { ...newVal });
-  },
-  { deep: true }
-);
+const handleFormUpdate = (value: Record<string, any>) => {
+  Object.assign(formData, value);
+  emit('update:modelValue', { ...value });
+};
 
 /**
  * 处理搜索操作
@@ -123,19 +115,24 @@ const handleSearch = () => {
  * 处理重置操作
  */
 const handleReset = () => {
-  const resetData = props.fields.reduce((acc: any, field: any) => {
-    acc[field.key] = field.type === 'select' ? undefined : '';
-    return acc;
-  }, {} as Record<string, any>);
-  Object.assign(formData, resetData);
+  formGroupRef.value?.resetFields();
   emit('reset');
 };
+
+/**
+ * 暴露方法给父组件
+ */
+defineExpose({
+  clearValidate: () => formGroupRef.value?.clearValidate(),
+  resetFields: () => formGroupRef.value?.resetFields(),
+  validate: () => formGroupRef.value?.validate(),
+});
 </script>
 
 <style scoped>
 .search-form {
-  padding: 16px 16px 0;
-  background: var(--el-bg-color-page);
-  border-radius: 6px;
+}
+.search-footer-action {
+  text-align: right;
 }
 </style>

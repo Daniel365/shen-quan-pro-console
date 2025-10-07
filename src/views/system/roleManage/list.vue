@@ -36,7 +36,7 @@
     </DataTable>
 
     <!-- 角色表单弹窗 -->
-    <FormGroup
+    <FormGroupDialog
       v-model:visible="editVisible"
       :action-type="actionType"
       :form-fields="roleFormFields"
@@ -61,7 +61,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 // utils
-import type { RoleListItem, RoleListParams } from '@/api/system/roleManage/types';
+import type { RoleFormData, RoleListItem, RoleListParams } from '@/api/system/roleManage/types';
 
 // 表格引用
 const tableRef = ref();
@@ -72,7 +72,7 @@ const tableData = ref<RoleListItem[]>([]);
 // 编辑抽屉显示状态
 const editVisible = ref(false);
 // 当前编辑角色
-const currentRole = ref<RoleListItem>();
+const currentRole = ref<RoleFormData>();
 // 操作类型
 const actionType = computed(() =>
   currentRole.value?.uuid ? ActionTypeEnum.EDIT : ActionTypeEnum.CREATE
@@ -220,7 +220,13 @@ const handleRefresh = () => {
 
 // 处理新增角色
 const handleAdd = () => {
-  currentRole.value = undefined;
+  currentRole.value = {
+    code: '',
+    description: '',
+    menuIds: [],
+    name: '',
+    status: EnabledStatusEnum.ENABLED,
+  };
   editVisible.value = true;
 };
 
@@ -242,12 +248,20 @@ const handlePermissionConfirm = async (menuIds: (string | number)[]) => {
   if (!currentRole.value) return;
 
   try {
-    await roleManageApi.onAssignPerm({
-      menuIds,
-      uuid: currentRole.value.uuid,
-    });
-    ElMessage.success(i18nText('roleManage.assignSuccess'));
-    tableRef.value?.refresh();
+    const uuid = currentRole.value.uuid;
+    if (uuid) {
+      const response = await roleManageApi.onAssignPerm({
+        menuIds,
+        uuid,
+      });
+      handleReturnResults({
+        onSuccess: () => {
+          ElMessage.success(i18nText('roleManage.assignSuccess'));
+          tableRef.value?.refresh();
+        },
+        params: response,
+      });
+    }
   } catch (error) {
     ElMessage.error(i18nText('action.failed'));
   }

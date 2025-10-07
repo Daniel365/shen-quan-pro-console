@@ -78,7 +78,7 @@ export const formFieldsConfig: Record<any, FormFieldConfig[]> = {
     },
     {
       inputAppend: '.vue',
-      inputPrepend: 'src/views/',
+      inputPrepend: 'src/views',
       key: 'component',
       labelKey: 'form.component',
       order: 6,
@@ -97,7 +97,7 @@ export const formFieldsConfig: Record<any, FormFieldConfig[]> = {
   // 菜单特有字段
   [MenuTypeEnum.MENU]: [
     {
-      helpTips: 'UserMange || UserMangeList',
+      helpTips: 'MenuManage || MenuManageList',
       key: 'routeName',
       labelKey: 'form.routeName',
       order: 4,
@@ -105,7 +105,7 @@ export const formFieldsConfig: Record<any, FormFieldConfig[]> = {
       type: FormTypeEnum.INPUT,
     },
     {
-      helpTips: '/system/userManage/list',
+      helpTips: '/system/menuManage/list',
       key: 'routePath',
       labelKey: 'form.routePath',
       order: 5,
@@ -113,8 +113,9 @@ export const formFieldsConfig: Record<any, FormFieldConfig[]> = {
       type: FormTypeEnum.INPUT,
     },
     {
+      helpTips: '/system/menuManage/list',
       inputAppend: '.vue',
-      inputPrepend: 'src/views/',
+      inputPrepend: 'src/views',
       key: 'component',
       labelKey: 'form.component',
       order: 6,

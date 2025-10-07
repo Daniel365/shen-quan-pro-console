@@ -22,11 +22,11 @@
         </div>
         <div class="info-item">
           <span class="info-label">创建时间:</span>
-          <span class="info-value">{{ formatDate(profit.createdAt) }}</span>
+          <span class="info-value">{{ formatDateTime(profit.createdAt) }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">结算时间:</span>
-          <span class="info-value">{{ formatDate(profit.settledAt) }}</span>
+          <span class="info-value">{{ formatDateTime(profit.settledAt) }}</span>
         </div>
         <div class="info-item">
           <span class="info-label">收益状态:</span>
@@ -50,9 +50,7 @@
       <el-table :data="profit.profitDistribution" stripe>
         <el-table-column label="角色" prop="roleName" width="120" />
         <el-table-column label="分润比例" width="100" align="center">
-          <template #default="{ row }">
-            {{ row.percentage }}%
-          </template>
+          <template #default="{ row }"> {{ row.percentage }}% </template>
         </el-table-column>
         <el-table-column label="分润金额" width="120" align="right">
           <template #default="{ row }">
@@ -68,7 +66,7 @@
         </el-table-column>
         <el-table-column label="结算时间" width="180">
           <template #default="{ row }">
-            {{ formatDate(row.settledAt) }}
+            {{ formatDateTime(row.settledAt) }}
           </template>
         </el-table-column>
         <el-table-column label="备注" prop="remark" />
@@ -154,7 +152,7 @@ const getStatusType = (status: number) => {
   const types = {
     1: 'warning', // 冻结中
     2: 'success', // 已结算
-    3: 'info',    // 已取消
+    3: 'info', // 已取消
   };
   return types[status as keyof typeof types] || 'info';
 };
@@ -170,7 +168,7 @@ const getStatusText = (status: number) => {
 };
 
 // 格式化日期
-const formatDate = (dateString: string) => {
+const formatDateTime = (dateString: string) => {
   if (!dateString) return '-';
   return new Date(dateString).toLocaleString('zh-CN');
 };

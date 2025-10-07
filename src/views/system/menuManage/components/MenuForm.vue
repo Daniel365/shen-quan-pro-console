@@ -10,7 +10,7 @@
     :size="500"
     @close="handleClose"
   >
-    <el-form ref="formRef" :model="formState" :rules="rules" label-width="80px">
+    <el-form ref="formRef" :model="formState" :rules="formRules" label-width="80px">
       <!-- 动态渲染表单字段 -->
       <template v-for="item in currentFields" :key="item.key">
         <el-form-item :label="$t(item.labelKey)" :prop="item.key">
@@ -18,6 +18,7 @@
           <MenuTreeSelect
             v-if="item.type === FormTypeEnum.TREE_SELECT"
             v-model:model-value="(formState as any)[item.key]"
+            :is-refresh="isRefresh"
             :placeholder="$t('form.selectParentMenu')"
           />
           <!-- 选择器 -->
@@ -102,6 +103,7 @@ const emit = defineEmits<{
 
 const formRef = ref<FormInstance>();
 const loading = ref(false);
+const isRefresh = ref(0);
 
 const visible = computed({
   get: () => props.visible,
@@ -127,7 +129,9 @@ const getPlaceholder = (key: string) => {
   };
   return i18nText(placeholderMap[key] || 'form.pleaseSelect');
 };
-const rules = {
+
+// 表单规则
+const formRules = {
   name: [{ message: i18nText('form.enterMenuName'), required: true }],
   sort: [{ message: i18nText('form.enterSort'), required: true }],
   type: [{ message: i18nText('form.selectType'), required: true }],
@@ -191,6 +195,7 @@ const handleSubmit = async () => {
 
     handleReturnResults({
       onSuccess: () => {
+        isRefresh.value++;
         ElMessage.success(i18nText(isEdit.value ? 'action.updateSuccess' : 'action.createSuccess'));
         onSubmitSuccess();
       },

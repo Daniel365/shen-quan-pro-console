@@ -3,10 +3,10 @@
  * @Date: 2025-08-31 19:34:25
  * @Description:
  */
-import { DataTypes, Model } from "sequelize";
-import sequelize from "@/database";
-import { getDbName, sequelizeCommonConfig, sequelizeCommonFields } from "@/database/common";
-import { CreateAttributes } from "@/types/database";
+import sequelize from '@/database';
+import { getDbName, sequelizeCommonConfig, sequelizeCommonFields } from '@/database/common';
+import { CreateAttributes } from '@/types/database';
+import { DataTypes, Model } from 'sequelize';
 
 interface RoleAttributes {
   uuid: string;
@@ -45,28 +45,28 @@ Role.init(
       primaryKey: true,
     },
     name: {
-      comment: "角色名称",
+      comment: '角色名称',
       type: DataTypes.STRING,
       allowNull: false,
     },
     code: {
-      comment: "角色编码",
+      comment: '角色编码',
       type: DataTypes.STRING,
       allowNull: false,
-      unique: "unique_code",
+      unique: 'unique_code',
     },
     description: {
-      comment: "角色描述",
+      comment: '角色描述',
       type: DataTypes.TEXT,
     },
     menu_ids: {
-      comment: "菜单ID数组",
+      comment: '菜单ID数组',
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
     },
     status: {
-      comment: "状态 1:启用 0:禁用",
+      comment: '状态 1:启用 0:禁用',
       type: DataTypes.TINYINT,
       allowNull: false,
       defaultValue: 1,
@@ -75,7 +75,8 @@ Role.init(
   },
   {
     sequelize,
-    tableName: getDbName("role"),
+    freezeTableName: true,
+    tableName: getDbName('role'),
     ...sequelizeCommonConfig(),
   }
 );

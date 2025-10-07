@@ -552,13 +552,6 @@
       "unicode_decimal": 59277
     },
     {
-      "icon_id": "45605015",
-      "name": "download",
-      "font_class": "download1",
-      "unicode": "e78e",
-      "unicode_decimal": 59278
-    },
-    {
       "icon_id": "45605016",
       "name": "document-remove",
       "font_class": "document-remove",
@@ -634,13 +627,6 @@
       "font_class": "discount",
       "unicode": "e799",
       "unicode_decimal": 59289
-    },
-    {
-      "icon_id": "45605009",
-      "name": "document",
-      "font_class": "document1",
-      "unicode": "e79a",
-      "unicode_decimal": 59290
     },
     {
       "icon_id": "45605004",
@@ -1040,27 +1026,6 @@
       "font_class": "map-location",
       "unicode": "e743",
       "unicode_decimal": 59203
-    },
-    {
-      "icon_id": "45605094",
-      "name": "monitor",
-      "font_class": "monitor1",
-      "unicode": "e744",
-      "unicode_decimal": 59204
-    },
-    {
-      "icon_id": "45605093",
-      "name": "menu",
-      "font_class": "menu1",
-      "unicode": "e745",
-      "unicode_decimal": 59205
-    },
-    {
-      "icon_id": "45605091",
-      "name": "message",
-      "font_class": "message1",
-      "unicode": "e746",
-      "unicode_decimal": 59206
     },
     {
       "icon_id": "45605082",
@@ -2174,13 +2139,6 @@
       "font_class": "table",
       "unicode": "e6af",
       "unicode_decimal": 59055
-    },
-    {
-      "icon_id": "45604920",
-      "name": "system",
-      "font_class": "system1",
-      "unicode": "e6b0",
-      "unicode_decimal": 59056
     },
     {
       "icon_id": "45604922",

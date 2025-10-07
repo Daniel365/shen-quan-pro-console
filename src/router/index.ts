@@ -11,6 +11,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { RouterPath } from '@/enums';
 
 import admin from './admin';
+import system from './system';
 
 export const constantRoutes: RouteRecordRaw[] = [
   {
@@ -20,41 +21,12 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: '首页',
         path: RouterPath.HOME,
       },
-      // {
-      //   path: RouterPath.USER_MANAGE_LIST,
-      //   name: '用户管理',
-      //   component: () => import('@/views/system/userManage/list.vue'),
-      // },
-      // {
-      //   path: RouterPath.ROLE_MANAGE_LIST,
-      //   name: '角色管理',
-      //   component: () => import('@/views/system/roleManage/list.vue'),
-      // },
-      // {
-      //   path: RouterPath.MENU_MANAGE_LIST,
-      //   name: "菜单管理",
-      //   component: () => import("@/views/system/menuManage/list.vue"),
-      // },
       {
         component: () => import('@/views/errorPage/404.vue'),
         meta: { hidden: true },
         path: '/404',
       },
-      {
-        component: () => import('@/views/system/notificationManage/list.vue'),
-        name: '消息通知列表',
-        path: RouterPath.NOTIFICATION_LIST,
-      },
-      {
-        component: () => import('@/views/account/profile.vue'),
-        name: '个人中心',
-        path: RouterPath.ACCOUNT_PROFILE,
-      },
-      {
-        component: () => import('@/views/app/activityManage/form.vue'),
-        name: '活动表单',
-        path: RouterPath.ACTIVITY_FORM,
-      },
+      ...system,
     ],
     component: import('@/layouts/index.vue'),
     name: 'layout',

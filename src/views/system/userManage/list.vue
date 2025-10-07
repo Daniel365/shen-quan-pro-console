@@ -32,7 +32,7 @@
     </DataTable>
 
     <!-- 用户表单弹窗 -->
-    <FormGroup
+    <FormGroupDialog
       v-model:visible="editVisible"
       :action-type="actionType"
       :form-fields="userFormFields"
