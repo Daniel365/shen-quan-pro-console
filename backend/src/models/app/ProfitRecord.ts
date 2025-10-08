@@ -14,11 +14,9 @@ interface ProfitRecordAttributes {
   uuid: string;
   order_uuid: string;
   activity_uuid?: string; // 活动UUID（可为空，用于会员卡收益）
-  membership_card_uuid?: string; // 会员卡UUID（可为空，用于活动收益）
   user_uuid: string; // 参与用户UUID
   inviter_uuid?: string; // 上级用户UUID（邀请人）
   total_amount: number;
-  order_type: string; // 订单类型：'activity' | 'membership_card'
   status: number;
   created_at: Date;
   settled_at?: Date;
