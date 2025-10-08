@@ -193,6 +193,28 @@
     "langAndNameRequired": "语言和名称不能为空",
     "translationsRequired": "翻译数据不能为空"
   },
+  "membershipCard": {
+    "createSuccess": "会员卡创建成功",
+    "updateSuccess": "会员卡更新成功",
+    "deleteSuccess": "会员卡删除成功",
+    "toggleStatusSuccess": "会员卡状态更新成功",
+    "sortUpdateSuccess": "会员卡排序更新成功",
+    "createFailed": "会员卡创建失败",
+    "updateFailed": "会员卡更新失败",
+    "deleteFailed": "会员卡删除失败",
+    "nameExists": "会员卡名称已存在",
+    "codeExists": "会员卡编码已存在",
+    "notFound": "会员卡不存在",
+    "roleNotFound": "关联角色不存在",
+    "invalidStatus": "状态值无效",
+    "validationError": "数据验证失败",
+    "listFailed": "获取会员卡列表失败",
+    "detailFailed": "获取会员卡详情失败",
+    "translationsRequired": "翻译数据不能为空",
+    "nameRequired": "会员卡名称不能为空",
+    "uuidRequired": "会员卡UUID不能为空",
+    "languageRequired": "语言代码不能为空"
+  },
   "upload": {
     "uploadSuccess": "文件上传成功",
     "batchUploadSuccess": "批量文件上传成功",

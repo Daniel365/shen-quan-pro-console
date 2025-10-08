@@ -19,7 +19,7 @@ import {
 } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-import { DataTypeEnum, MatchTypeEnum, TagTypeEnum } from '@/types/database';
+import { DataTypeEnum, MatchTypeEnum, TagTypeEnum } from '@/enum';
 
 export class TagController {
   /**

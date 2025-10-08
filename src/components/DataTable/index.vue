@@ -82,11 +82,13 @@ export interface TableColumn {
   /** 列宽度 */
   width?: number | string;
   /** 列对齐方式 */
-  align?: 'left' | 'center' | 'right';
+  align?: 'left' | 'center' | 'right' | string;
   /** 截断展示 */
   showOverflowTooltip?: boolean;
   /** 是否固定列 */
   fixed?: string | boolean;
+  /** 多语言数组key */
+  multilingualKey?: string;
   /** 点击事件 */
   click?: (row: any, index: number) => void;
 }
@@ -169,9 +171,15 @@ const pagination = reactive<PageInfo>({
  * @returns 单元格显示值
  */
 const handleText = (row: any, item: TableColumn) => {
-  const val = row[item.dataIndex || item.key];
+  const key = item.dataIndex || item.key;
+  const val = row[key];
+  /** 时间格式化 */
   if (isValidIsoDate(val)) {
     return formatDateTime(val);
+  }
+  /** 获取多语言key */
+  if (item.multilingualKey) {
+    return getLanguageObj(row[item.multilingualKey])[key] || '-';
   }
   return val || '-';
 };

@@ -48,11 +48,12 @@
             :form-data="getTranslationByLanguage(item.value)"
             :action-type="actionType"
             :language="item.value"
+            :disabled="isReadonly"
           />
         </el-tab-pane>
 
         <!-- 添加语言选择器 -->
-        <el-tab-pane name="add" :disabled="true">
+        <el-tab-pane v-if="!isReadonly" name="add" :disabled="true">
           <template #label>
             <el-dropdown trigger="click" :disabled="!canAddLanguage" @command="handleAddLanguage">
               <el-button type="text" size="small" :disabled="!canAddLanguage">
@@ -84,6 +85,7 @@
         label-width="120px"
         label-position="top"
         class="common-form-section"
+        :disabled="isReadonly"
       >
         <!-- 地点设置 -->
         <el-row :gutter="20">
@@ -205,6 +207,7 @@ import { TagListItem } from '@/api/app/tagManage/types';
 import { isHasArrayData } from '@/utils/dataJudgment';
 
 import LanguageForm from './components/LanguageForm.vue';
+import { defaultFormData } from './utils/const';
 
 const { goBack, getQueryValue } = useRouteUtil();
 const loading = ref(false);
@@ -229,24 +232,7 @@ const isReadonly = computed(() => actionType.value === ActionTypeEnum.DETAIL);
 const timeRange = ref<[string, string] | null>(null);
 
 // 表单数据
-const formData = reactive<ActivityFormData>({
-  basePrice: 0,
-  endTime: null,
-  femalePrice: 0,
-  location: '',
-  malePrice: 0,
-  regLimit: 50,
-  startTime: null,
-  tags: [],
-  translations: [
-    {
-      coverImages: [{ type: 'main', url: 'https://dummyimage.com/200x200' }],
-      description: '',
-      language: LanguageEnum.ZH,
-      title: '',
-    },
-  ],
-});
+const formData = reactive<ActivityFormData>({ ...defaultFormData });
 
 // 启用的语言列表（支持动态添加）
 const enabledLanguages = ref<OptionsItemType[]>([
@@ -455,7 +441,7 @@ const validateAllLanguageForms = async () => {
 // 加载活动详情
 const getDetails = async (uuid: string) => {
   loading.value = true;
-  const response = await activityManageApi.getDetail({ uuid }).finally(() => {
+  const response = await activityManageApi.getDetails({ uuid }).finally(() => {
     loading.value = false;
   });
   handleReturnResults({
@@ -515,50 +501,50 @@ const processFormData = (formData: ActivityFormData) => {
 // 提交表单
 const handleSubmit = async () => {
   // 验证所有语言表单
-  // const allLanguageFormsValid = await validateAllLanguageForms();
-  // if (!allLanguageFormsValid) {
-  //   return;
-  // }
+  const allLanguageFormsValid = await validateAllLanguageForms();
+  if (!allLanguageFormsValid) {
+    return;
+  }
   // 验证主表单
-  // if (!mainFormRef.value) return;
-  // await mainFormRef.value.validate();
+  if (!mainFormRef.value) return;
+  await mainFormRef.value.validate();
 
   loading.value = true;
 
   // 准备提交数据
   const submitData = processFormData(formData);
-  console.log(`submitData->`, submitData);
-  loading.value = false;
+  // console.log(`submitData->`, submitData);
+  // loading.value = false;
 
-  // let result: any;
-  // let messageKey: string;
+  let result: any;
+  let messageKey: string;
 
-  // switch (actionType.value) {
-  //   case ActionTypeEnum.EDIT:
-  //     result = await activityManageApi.onEdit(submitData).finally(() => {
-  //       loading.value = false;
-  //     });
-  //     messageKey = 'action.updateSuccess';
-  //     break;
-  //   case ActionTypeEnum.CREATE:
-  //   case ActionTypeEnum.COPY:
-  //     result = await activityManageApi.onCreate(submitData).finally(() => {
-  //       loading.value = false;
-  //     });
-  //     messageKey = 'action.createSuccess';
-  //     break;
-  //   default:
-  //     loading.value = false;
-  //     return;
-  // }
+  switch (actionType.value) {
+    case ActionTypeEnum.EDIT:
+      result = await activityManageApi.onEdit(submitData).finally(() => {
+        loading.value = false;
+      });
+      messageKey = 'action.updateSuccess';
+      break;
+    case ActionTypeEnum.CREATE:
+    case ActionTypeEnum.COPY:
+      result = await activityManageApi.onCreate(submitData).finally(() => {
+        loading.value = false;
+      });
+      messageKey = 'action.createSuccess';
+      break;
+    default:
+      loading.value = false;
+      return;
+  }
 
-  // handleReturnResults({
-  //   onSuccess: (res) => {
-  //     ElMessage.success(i18nText(messageKey));
-  //     goBack();
-  //   },
-  //   params: result,
-  // });
+  handleReturnResults({
+    onSuccess: (res) => {
+      ElMessage.success(i18nText(messageKey));
+      goBack();
+    },
+    params: result,
+  });
 };
 
 // 组件挂载时加载数据

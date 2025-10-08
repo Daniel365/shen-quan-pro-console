@@ -6,12 +6,12 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 // models
-import { Activity, Order, ProfitRecord, User } from '@/models/app';
+import { Activity, ActivityTranslation, Order, ProfitRecord, User } from '@/models/app';
 // utils
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-import { GenderEnum, OrderStatusEnum, ProfitStatusEnum, StatusEnum } from '@/types/database';
+import { GenderEnum, OrderStatusEnum, ProfitStatusEnum, StatusEnum } from '@/enum';
 // services
 import { ConfigService } from '@/services/ConfigService';
 import { ProfitService } from '@/services/ProfitService';
@@ -38,12 +38,20 @@ export class OrderController {
           {
             model: Activity,
             as: 'activity',
-            attributes: ['title', 'location', 'start_time'],
+            attributes: ['location', 'start_time'],
+            include: [
+              {
+                model: ActivityTranslation,
+                as: 'translations',
+                attributes: ['title', 'language'],
+                required: false,
+              },
+            ],
           },
           {
             model: User,
             as: 'orderer',
-            attributes: ['username', 'phone', 'gender'],
+            attributes: ['nickname', 'phone', 'gender'],
           },
         ],
       });
@@ -64,7 +72,7 @@ export class OrderController {
   }
 
   /**
-   * 创建活动订单（报名）
+   * 创建订单
    */
   static async create(req: Request, res: Response) {
     try {
@@ -102,7 +110,12 @@ export class OrderController {
 
       // 检查是否已报名
       const existingOrder = await Order.findOne({
-        where: { orderer_uuid, target_uuid, order_type: 'activity', order_status: { [Op.ne]: OrderStatusEnum.REFUNDED } },
+        where: {
+          orderer_uuid,
+          target_uuid,
+          order_type: 'activity',
+          order_status: { [Op.ne]: OrderStatusEnum.REFUNDED },
+        },
       });
       if (existingOrder) {
         return res.responseBuilder.error('order.alreadyRegistered', 400);
@@ -162,10 +175,7 @@ export class OrderController {
       }
 
       // 更新订单状态为已支付
-      await Order.update(
-        { order_status: OrderStatusEnum.PAID },
-        { where: { uuid: order_uuid } }
-      );
+      await Order.update({ order_status: OrderStatusEnum.PAID }, { where: { uuid: order_uuid } });
 
       // 注意：报名人数现在通过订单表统计，不再更新活动表的regCount字段
 
@@ -274,7 +284,7 @@ export class OrderController {
   /**
    * 获取订单详情（包含订单状态自动检查）
    */
-  static async getOrderDetail(req: Request, res: Response) {
+  static async getDetails(req: Request, res: Response) {
     try {
       const { order_uuid } = req.body;
 
@@ -333,7 +343,15 @@ export class OrderController {
           {
             model: Activity,
             as: 'activity',
-            attributes: ['title', 'location', 'start_time', 'end_time'],
+            attributes: ['location', 'start_time', 'end_time'],
+            include: [
+              {
+                model: ActivityTranslation,
+                as: 'translations',
+                attributes: ['title', 'language'],
+                required: false,
+              },
+            ],
           },
         ],
       });

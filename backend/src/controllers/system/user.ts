@@ -10,8 +10,6 @@ import { Role, User } from '@/models/system';
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-// type
-import { MatchTypeEnum } from '@/types/database';
 
 export class UserController {
   // 获取用户列表
@@ -23,9 +21,9 @@ export class UserController {
       const where: any = buildWhereCondition(reqBody, [
         { field: 'username' },
         { field: 'email' },
-        { field: 'username', matchType: MatchTypeEnum.NE, queryValue: 'admin' },
+        // { field: 'username', matchType: MatchTypeEnum.NE, queryValue: 'admin' },
         // 排除当前登录用户
-        { field: 'uuid', matchType: MatchTypeEnum.NE, queryValue: account_uuid },
+        // { field: 'uuid', matchType: MatchTypeEnum.NE, queryValue: account_uuid },
       ]);
 
       const { rows, count } = await User.findAndCountAll({

@@ -7,7 +7,7 @@ import { Role } from '@/models/system';
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 
-import { DataTypeEnum, MatchTypeEnum } from '@/types/database';
+import { DataTypeEnum, MatchTypeEnum } from '@/enum';
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';

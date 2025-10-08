@@ -57,7 +57,7 @@
     "deleteFailed": "删除失败",
     "deleteSuccess": "删除成功",
     "edit": "编辑",
-    "detail": "详情",
+    "details": "详情",
     "loading": "加载中...",
     "modify": "修改",
     "preview": "预览",
@@ -79,7 +79,8 @@
     "updateFail": "更新失败",
     "updateSuccess": "更新成功",
     "view": "查看",
-    "addLanguage": "添加语言"
+    "addLanguage": "添加语言",
+    "export": "导出"
   },
   "admin": {
     "agree": "我已同意并阅读",
@@ -515,5 +516,118 @@
     "paymentAlipay": "支付宝",
     "paymentBankCard": "银行卡",
     "paymentBalance": "余额支付"
+  },
+  "membershipCardManage": {
+    "codeLabel": "会员卡编码",
+    "codePlaceholder": "请输入会员卡编码",
+    "roleLabel": "关联角色",
+    "rolePlaceholder": "请选择关联角色",
+    "priceLabel": "售价",
+    "pricePlaceholder": "请输入售价",
+    "durationDaysLabel": "有效天数",
+    "durationDaysPlaceholder": "请输入有效天数",
+    "sortLabel": "排序权重",
+    "sortPlaceholder": "请输入排序权重",
+    "statusLabel": "状态",
+    "statusPlaceholder": "请选择状态",
+    "nameLabel": "会员卡名称",
+    "namePlaceholder": "请输入会员卡名称",
+    "descriptionLabel": "权益描述",
+    "descriptionPlaceholder": "请输入权益描述",
+    "languageLabel": "语言",
+    "languagePlaceholder": "请选择语言",
+    "coverLabel": "封面图",
+    "deleteConfirmSingle": "确定要删除该会员卡吗？",
+    "deleteConfirmMultiple": "确定要删除这 {count} 个会员卡吗？",
+    "deleteLanguageConfirm": "确定要删除{lang}语言吗？删除后该语言的数据将丢失。",
+    "deleteLanguageSuccess": "已删除{lang}语言",
+    "statusEnabled": "上架",
+    "statusDisabled": "下架",
+    "toggleStatusConfirm": "确定要{action}该会员卡吗？",
+    "message": {
+      "code": {
+        "required": "请输入会员卡编码",
+        "maxLength": "会员卡编码不能超过30个字符",
+        "exists": "会员卡编码已存在"
+      },
+      "roleUuid": {
+        "required": "请选择关联角色"
+      },
+      "price": {
+        "required": "请输入售价",
+        "min": "售价不能小于0"
+      },
+      "durationDays": {
+        "required": "请输入有效天数",
+        "min": "有效天数不能小于1"
+      },
+      "sort": {
+        "required": "请输入排序权重"
+      },
+      "status": {
+        "required": "请选择状态"
+      },
+      "name": {
+        "required": "请输入会员卡名称",
+        "maxLength": "会员卡名称不能超过50个字符"
+      },
+      "description": {
+        "maxLength": "权益描述不能超过500个字符"
+      },
+      "language": {
+        "required": "请选择语言"
+      }
+    }
+  },
+  "profitManage": {
+    "profitNo": "收益编号",
+    "profitNoLabel": "收益编号",
+    "profitNoPlaceholder": "请输入收益编号",
+    "userName": "用户名称",
+    "userNameLabel": "用户名称",
+    "userNamePlaceholder": "请输入用户名称",
+    "activityName": "活动名称",
+    "activityNameLabel": "活动名称",
+    "activityNamePlaceholder": "请输入活动名称",
+    "amount": "收益金额",
+    "amountLabel": "收益金额",
+    "amountPlaceholder": "请输入收益金额",
+    "source": "收益来源",
+    "sourceLabel": "收益来源",
+    "sourcePlaceholder": "请选择收益来源",
+    "type": "收益类型",
+    "typeLabel": "收益类型",
+    "typePlaceholder": "请选择收益类型",
+    "status": "收益状态",
+    "statusLabel": "收益状态",
+    "statusPlaceholder": "请选择收益状态",
+    "startTime": "开始时间",
+    "startTimeLabel": "开始时间",
+    "startTimePlaceholder": "请选择开始时间",
+    "endTime": "结束时间",
+    "endTimeLabel": "结束时间",
+    "endTimePlaceholder": "请选择结束时间",
+    "settledTime": "结算时间",
+    "deleteConfirmSingle": "确定要删除该收益记录吗？",
+    "deleteConfirmMultiple": "确定要删除这 {count} 个收益记录吗？",
+    "message": {
+      "profitNo": {
+        "required": "请输入收益编号",
+        "maxLength": "收益编号不能超过30个字符"
+      },
+      "amount": {
+        "required": "请输入收益金额",
+        "min": "收益金额不能小于0"
+      },
+      "source": {
+        "required": "请选择收益来源"
+      },
+      "type": {
+        "required": "请选择收益类型"
+      },
+      "status": {
+        "required": "请选择收益状态"
+      }
+    }
   }
 }

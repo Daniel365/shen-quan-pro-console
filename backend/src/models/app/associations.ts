@@ -9,11 +9,17 @@ import {
   ActivityTranslation,
   Order,
   ProfitRecord,
+  Role,
   Tag,
   TagTranslation,
   User,
   UserInvite,
   UserTag,
+  PaymentRecord,
+  RefundRecord,
+  MembershipCard,
+  MembershipCardTranslation,
+  OrderMembershipCard,
 } from './index';
 
 // user - 邀请
@@ -126,6 +132,62 @@ Tag.hasMany(TagTranslation, {
 TagTranslation.belongsTo(Tag, {
   foreignKey: 'tag_uuid',
   as: 'tag',
+});
+
+// Order - PaymentRecord associations
+Order.hasMany(PaymentRecord, {
+  foreignKey: 'order_uuid',
+  as: 'paymentRecords',
+});
+
+PaymentRecord.belongsTo(Order, {
+  foreignKey: 'order_uuid',
+  as: 'order',
+});
+
+// Order - RefundRecord associations
+Order.hasMany(RefundRecord, {
+  foreignKey: 'order_uuid',
+  as: 'refundRecords',
+});
+
+RefundRecord.belongsTo(Order, {
+  foreignKey: 'order_uuid',
+  as: 'order',
+});
+
+// Order - OrderMembershipCard associations
+Order.hasOne(OrderMembershipCard, {
+  foreignKey: 'order_uuid',
+  as: 'membershipCard',
+});
+
+OrderMembershipCard.belongsTo(Order, {
+  foreignKey: 'order_uuid',
+  as: 'order',
+});
+
+// Role - OrderMembershipCard associations
+OrderMembershipCard.belongsTo(Role, {
+  foreignKey: 'role_uuid',
+  as: 'role',
+});
+
+// Role - MembershipCard associations
+MembershipCard.belongsTo(Role, {
+  foreignKey: 'role_uuid',
+  as: 'role',
+});
+
+// MembershipCard - MembershipCardTranslation associations
+MembershipCard.hasMany(MembershipCardTranslation, {
+  foreignKey: 'membership_card_uuid',
+  as: 'translations',
+});
+
+MembershipCardTranslation.belongsTo(MembershipCard, {
+  foreignKey: 'membership_card_uuid',
+  as: 'membershipCard',
 });
 
 console.log('App models associations initialized');

@@ -33,13 +33,13 @@ export class TagTranslationService {
           }
         } else {
           // 没有uuid的新记录，需要验证language
-          if (!trans.language || !trans.language) {
+          if (!trans.language) {
             return 'tag.languageRequired';
           }
         }
       } else {
         // 创建模式需要language
-        if (!trans.language || !trans.language) {
+        if (!trans.language) {
           return 'tag.languageRequired';
         }
       }
@@ -128,28 +128,6 @@ export class TagTranslationService {
 
       await TagTranslation.bulkCreate(translationData, { transaction });
     }
-  }
-
-  /**
-   * 批量更新翻译记录（向后兼容）
-   */
-  static async updateTranslations(
-    translations: any[],
-    transaction: any,
-    tag_uuid: string
-  ): Promise<void> {
-    return this.saveTranslations(translations, transaction, tag_uuid, true);
-  }
-
-  /**
-   * 批量创建翻译记录（向后兼容）
-   */
-  static async createTranslations(
-    translations: any[],
-    transaction: any,
-    tag_uuid: string
-  ): Promise<void> {
-    return this.saveTranslations(translations, transaction, tag_uuid, false);
   }
 
   /**

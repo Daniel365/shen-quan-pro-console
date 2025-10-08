@@ -1,11 +1,11 @@
 <template>
   <!-- 弹窗表单组件 -->
-  <el-dialog 
-    v-model="visible" 
-    :title="dialogTitle" 
-    :width="width" 
-    @close="handleClose"
+  <el-dialog
+    v-model="visible"
+    :title="dialogTitle"
+    :width="width"
     :close-on-click-modal="false"
+    @close="handleClose"
   >
     <FormGroup
       ref="formGroupRef"
@@ -35,8 +35,11 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
+
 import { ElMessage } from 'element-plus';
+
 import FormGroup from './FormGroup.vue';
+
 import type { FormGroupProps } from './types';
 
 interface Props {
@@ -65,29 +68,29 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  formRules: () => ({}),
   detailsData: () => ({}),
-  width: '500px',
+  formRules: () => ({}),
   labelWidth: '100px',
-  titleMap: () => ({
-    [ActionTypeEnum.CREATE]: 'action.add',
-    [ActionTypeEnum.EDIT]: 'action.edit',
-    [ActionTypeEnum.DETAIL]: 'action.detail',
-    [ActionTypeEnum.COPY]: 'action.copy',
-  }),
   submitButtonTextMap: () => ({
     [ActionTypeEnum.CREATE]: 'action.submit',
     [ActionTypeEnum.EDIT]: 'action.save',
     [ActionTypeEnum.DETAIL]: 'action.confirm',
     [ActionTypeEnum.COPY]: 'action.save',
   }),
+  titleMap: () => ({
+    [ActionTypeEnum.CREATE]: 'action.add',
+    [ActionTypeEnum.EDIT]: 'action.edit',
+    [ActionTypeEnum.DETAIL]: 'action.detail',
+    [ActionTypeEnum.COPY]: 'action.copy',
+  }),
+  width: '500px',
 });
 
 const emit = defineEmits<{
   'update:visible': [value: boolean];
   'update:detailsData': [data: Record<string, any>];
-  'success': [];
-  'cancel': [];
+  success: [];
+  cancel: [];
 }>();
 
 const formGroupRef = ref<InstanceType<typeof FormGroup>>();
@@ -133,7 +136,7 @@ watch(
       formValid.value = true;
     } else {
       // 弹窗关闭时，清空表单数据
-      Object.keys(formData).forEach(key => {
+      Object.keys(formData).forEach((key) => {
         delete formData[key];
       });
     }
@@ -205,9 +208,9 @@ const handleSubmit = async () => {
 
 // 暴露方法给父组件
 defineExpose({
-  validate: () => formGroupRef.value?.validate(),
-  resetFields: () => formGroupRef.value?.resetFields(),
   clearValidate: () => formGroupRef.value?.clearValidate(),
+  resetFields: () => formGroupRef.value?.resetFields(),
+  validate: () => formGroupRef.value?.validate(),
 });
 </script>
 

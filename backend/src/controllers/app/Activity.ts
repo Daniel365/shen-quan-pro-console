@@ -12,7 +12,7 @@ import { Activity, ActivityTranslation, Order } from '@/models/app';
 import { defaultExcludeQueryFields, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-import { StatusEnum } from '@/types/database';
+import { StatusEnum } from '@/enum';
 // services
 import { ActivityTranslationService } from '@/services/ActivityTranslationService';
 
@@ -35,11 +35,30 @@ export class ActivityController {
             model: ActivityTranslation,
             as: 'translations',
             required: false,
-            attributes: { exclude: [...defaultExcludeQueryFields, 'activity_uuid'] },
+            attributes: {
+              exclude: [...defaultExcludeQueryFields, 'activity_uuid', 'cover_images'],
+            },
           },
         ],
         ...defaultListQuery(reqBody),
       });
+
+      // 获取每个活动的报名人数
+      const activityListWithRegCount = await Promise.all(
+        rows.map(async (activity) => {
+          const regCount = await Order.count({
+            where: {
+              target_uuid: activity.uuid,
+              order_type: 'activity',
+            },
+          });
+
+          return {
+            ...activity.toJSON(),
+            regCount,
+          };
+        })
+      );
 
       const pageInfo = getPageInfoConfig({
         count,
@@ -47,7 +66,7 @@ export class ActivityController {
       });
 
       return res.responseBuilder.success({
-        list: rows,
+        list: activityListWithRegCount,
         pageInfo,
       });
     } catch (error) {
@@ -60,10 +79,9 @@ export class ActivityController {
    * 获取活动详情
    */
   @IgnoreLog()
-  static async detail(req: Request, res: Response) {
+  static async details(req: Request, res: Response) {
     try {
-      const { uuid } = req.body;
-      const language = req.locale;
+      const { uuid } = req.query as any;
 
       if (!uuid) {
         return res.responseBuilder.error('activity.uuidRequired', 400);
@@ -75,8 +93,8 @@ export class ActivityController {
           {
             model: ActivityTranslation,
             as: 'translations',
-            where: { language },
             required: false,
+            attributes: { exclude: [...defaultExcludeQueryFields, 'activity_uuid'] },
           },
         ],
       });

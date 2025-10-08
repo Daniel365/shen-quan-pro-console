@@ -56,6 +56,7 @@
     "deleteFailed": "Delete failed",
     "deleteSuccess": "Deleted successfully",
     "edit": "Edit",
+    "details": "Details",
     "loading": "Loading...",
     "modify": "Modify",
     "preview": "Preview",
@@ -77,7 +78,8 @@
     "updateFail": "Update failed",
     "updateSuccess": "Updated successfully",
     "view": "View",
-    "addLanguage": "Add language"
+    "addLanguage": "Add language",
+    "export": "Export"
   },
   "admin": {
     "agree": "I have read and agree to",
@@ -514,5 +516,118 @@
     "paymentAlipay": "Alipay",
     "paymentBankCard": "Bank Card",
     "paymentBalance": "Balance"
+  },
+  "membershipCardManage": {
+    "codeLabel": "Membership Card Code",
+    "codePlaceholder": "Please enter membership card code",
+    "roleLabel": "Associated Role",
+    "rolePlaceholder": "Please select associated role",
+    "priceLabel": "Price",
+    "pricePlaceholder": "Please enter price",
+    "durationDaysLabel": "Valid Days",
+    "durationDaysPlaceholder": "Please enter valid days",
+    "sortLabel": "Sort Weight",
+    "sortPlaceholder": "Please enter sort weight",
+    "statusLabel": "Status",
+    "statusPlaceholder": "Please select status",
+    "nameLabel": "Membership Card Name",
+    "namePlaceholder": "Please enter membership card name",
+    "descriptionLabel": "Benefits Description",
+    "descriptionPlaceholder": "Please enter benefits description",
+    "languageLabel": "Language",
+    "languagePlaceholder": "Please select language",
+    "coverLabel": "Cover Image",
+    "deleteConfirmSingle": "Are you sure you want to delete this membership card?",
+    "deleteConfirmMultiple": "Are you sure you want to delete these {count} membership cards?",
+    "deleteLanguageConfirm": "Are you sure you want to delete {lang} language? Data for this language will be lost after deletion.",
+    "deleteLanguageSuccess": "{lang} language has been deleted",
+    "statusEnabled": "Enable",
+    "statusDisabled": "Disable",
+    "toggleStatusConfirm": "Are you sure you want to {action} this membership card?",
+    "message": {
+      "code": {
+        "required": "Please enter membership card code",
+        "maxLength": "Membership card code cannot exceed 30 characters",
+        "exists": "Membership card code already exists"
+      },
+      "roleUuid": {
+        "required": "Please select associated role"
+      },
+      "price": {
+        "required": "Please enter price",
+        "min": "Price cannot be less than 0"
+      },
+      "durationDays": {
+        "required": "Please enter valid days",
+        "min": "Valid days cannot be less than 1"
+      },
+      "sort": {
+        "required": "Please enter sort weight"
+      },
+      "status": {
+        "required": "Please select status"
+      },
+      "name": {
+        "required": "Please enter membership card name",
+        "maxLength": "Membership card name cannot exceed 50 characters"
+      },
+      "description": {
+        "maxLength": "Benefits description cannot exceed 500 characters"
+      },
+      "language": {
+        "required": "Please select language"
+      }
+    }
+  },
+  "profitManage": {
+    "profitNo": "Profit No",
+    "profitNoLabel": "Profit No",
+    "profitNoPlaceholder": "Please enter profit number",
+    "userName": "User Name",
+    "userNameLabel": "User Name",
+    "userNamePlaceholder": "Please enter user name",
+    "activityName": "Activity Name",
+    "activityNameLabel": "Activity Name",
+    "activityNamePlaceholder": "Please enter activity name",
+    "amount": "Amount",
+    "amountLabel": "Amount",
+    "amountPlaceholder": "Please enter amount",
+    "source": "Source",
+    "sourceLabel": "Source",
+    "sourcePlaceholder": "Please select profit source",
+    "type": "Type",
+    "typeLabel": "Type",
+    "typePlaceholder": "Please select profit type",
+    "status": "Status",
+    "statusLabel": "Status",
+    "statusPlaceholder": "Please select status",
+    "startTime": "Start Time",
+    "startTimeLabel": "Start Time",
+    "startTimePlaceholder": "Please select start time",
+    "endTime": "End Time",
+    "endTimeLabel": "End Time",
+    "endTimePlaceholder": "Please select end time",
+    "settledTime": "Settled Time",
+    "deleteConfirmSingle": "Are you sure you want to delete this profit record?",
+    "deleteConfirmMultiple": "Are you sure you want to delete these {count} profit records?",
+    "message": {
+      "profitNo": {
+        "required": "Please enter profit number",
+        "maxLength": "Profit number cannot exceed 30 characters"
+      },
+      "amount": {
+        "required": "Please enter amount",
+        "min": "Amount cannot be less than 0"
+      },
+      "source": {
+        "required": "Please select profit source"
+      },
+      "type": {
+        "required": "Please select profit type"
+      },
+      "status": {
+        "required": "Please select status"
+      }
+    }
   }
 }

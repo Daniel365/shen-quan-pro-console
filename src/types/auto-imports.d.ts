@@ -37,13 +37,13 @@ declare global {
   const ThemeMode: typeof import('../enums/ui')['ThemeMode']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const accountManageApi: typeof import('../api/index')['accountManageApi']
-  const activityManageApi: typeof import('../api/index')['activityManageApi']
+  const activityManageApi: typeof import('../api/app/index')['activityManageApi']
   const activityOrderManageApi: typeof import('../api/index')['activityOrderManageApi']
   const adminManageApi: typeof import('../api/index')['adminManageApi']
   const apiVersionUrl: typeof import('../api/requestUtils')['apiVersionUrl']
   const app: typeof import('../api/index')['app']
-  const appRoleManageApi: typeof import('../api/index')['appRoleManageApi']
-  const appUserManageApi: typeof import('../api/index')['appUserManageApi']
+  const appRoleManageApi: typeof import('../api/app/index')['appRoleManageApi']
+  const appUserManageApi: typeof import('../api/app/index')['appUserManageApi']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const commonApi: typeof import('../api/index')['commonApi']
@@ -111,9 +111,10 @@ declare global {
   const mapStores: typeof import('pinia')['mapStores']
   const mapWritableState: typeof import('pinia')['mapWritableState']
   const markRaw: typeof import('vue')['markRaw']
-  const menuManageApi: typeof import('../api/index')['menuManageApi']
+  const membershipCardManageApi: typeof import('../api/app/index')['membershipCardManageApi']
+  const menuManageApi: typeof import('../api/system/index')['menuManageApi']
   const nextTick: typeof import('vue')['nextTick']
-  const notificationManageApi: typeof import('../api/index')['notificationManageApi']
+  const notificationManageApi: typeof import('../api/system/index')['notificationManageApi']
   const onActivated: typeof import('vue')['onActivated']
   const onBeforeMount: typeof import('vue')['onBeforeMount']
   const onBeforeRouteLeave: typeof import('vue-router')['onBeforeRouteLeave']
@@ -135,10 +136,10 @@ declare global {
   const onUnmounted: typeof import('vue')['onUnmounted']
   const onUpdated: typeof import('vue')['onUpdated']
   const onWatcherCleanup: typeof import('vue')['onWatcherCleanup']
-  const operationLogApi: typeof import('../api/index')['operationLogApi']
-  const orderManageApi: typeof import('../api/index')['orderManageApi']
+  const operationLogApi: typeof import('../api/system/index')['operationLogApi']
+  const orderManageApi: typeof import('../api/app/index')['orderManageApi']
   const pausableWatch: typeof import('@vueuse/core')['pausableWatch']
-  const profitManageApi: typeof import('../api/index')['profitManageApi']
+  const profitManageApi: typeof import('../api/app/index')['profitManageApi']
   const provide: typeof import('vue')['provide']
   const provideLocal: typeof import('@vueuse/core')['provideLocal']
   const reactify: typeof import('@vueuse/core')['reactify']
@@ -157,7 +158,7 @@ declare global {
   const resolveComponent: typeof import('vue')['resolveComponent']
   const resolveRef: typeof import('@vueuse/core')['resolveRef']
   const resolveUnref: typeof import('@vueuse/core')['resolveUnref']
-  const roleManageApi: typeof import('../api/index')['roleManageApi']
+  const roleManageApi: typeof import('../api/system/index')['roleManageApi']
   const setActivePinia: typeof import('pinia')['setActivePinia']
   const setLocales: typeof import('../utils/tool')['setLocales']
   const setMapStoreSuffix: typeof import('pinia')['setMapStoreSuffix']
@@ -171,7 +172,7 @@ declare global {
   const syncRef: typeof import('@vueuse/core')['syncRef']
   const syncRefs: typeof import('@vueuse/core')['syncRefs']
   const system: typeof import('../api/index')['system']
-  const tagManageApi: typeof import('../api/index')['tagManageApi']
+  const tagManageApi: typeof import('../api/app/index')['tagManageApi']
   const templateRef: typeof import('@vueuse/core')['templateRef']
   const throttledRef: typeof import('@vueuse/core')['throttledRef']
   const throttledWatch: typeof import('@vueuse/core')['throttledWatch']
@@ -374,7 +375,7 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core')['useWindowFocus']
   const useWindowScroll: typeof import('@vueuse/core')['useWindowScroll']
   const useWindowSize: typeof import('@vueuse/core')['useWindowSize']
-  const userManageApi: typeof import('../api/index')['userManageApi']
+  const userManageApi: typeof import('../api/system/index')['userManageApi']
   const watch: typeof import('vue')['watch']
   const watchArray: typeof import('@vueuse/core')['watchArray']
   const watchAtMost: typeof import('@vueuse/core')['watchAtMost']
@@ -446,11 +447,11 @@ declare module 'vue' {
     readonly ThemeMode: UnwrapRef<typeof import('../enums/ui')['ThemeMode']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly accountManageApi: UnwrapRef<typeof import('../api/index')['accountManageApi']>
-    readonly activityManageApi: UnwrapRef<typeof import('../api/index')['activityManageApi']>
+    readonly activityManageApi: UnwrapRef<typeof import('../api/app/index')['activityManageApi']>
     readonly adminManageApi: UnwrapRef<typeof import('../api/index')['adminManageApi']>
     readonly apiVersionUrl: UnwrapRef<typeof import('../api/requestUtils')['apiVersionUrl']>
-    readonly appRoleManageApi: UnwrapRef<typeof import('../api/index')['appRoleManageApi']>
-    readonly appUserManageApi: UnwrapRef<typeof import('../api/index')['appUserManageApi']>
+    readonly appRoleManageApi: UnwrapRef<typeof import('../api/app/index')['appRoleManageApi']>
+    readonly appUserManageApi: UnwrapRef<typeof import('../api/app/index')['appUserManageApi']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly commonApi: UnwrapRef<typeof import('../api/index')['commonApi']>
@@ -515,9 +516,10 @@ declare module 'vue' {
     readonly mapStores: UnwrapRef<typeof import('pinia')['mapStores']>
     readonly mapWritableState: UnwrapRef<typeof import('pinia')['mapWritableState']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
-    readonly menuManageApi: UnwrapRef<typeof import('../api/index')['menuManageApi']>
+    readonly membershipCardManageApi: UnwrapRef<typeof import('../api/app/index')['membershipCardManageApi']>
+    readonly menuManageApi: UnwrapRef<typeof import('../api/system/index')['menuManageApi']>
     readonly nextTick: UnwrapRef<typeof import('vue')['nextTick']>
-    readonly notificationManageApi: UnwrapRef<typeof import('../api/index')['notificationManageApi']>
+    readonly notificationManageApi: UnwrapRef<typeof import('../api/system/index')['notificationManageApi']>
     readonly onActivated: UnwrapRef<typeof import('vue')['onActivated']>
     readonly onBeforeMount: UnwrapRef<typeof import('vue')['onBeforeMount']>
     readonly onBeforeRouteLeave: UnwrapRef<typeof import('vue-router')['onBeforeRouteLeave']>
@@ -539,10 +541,10 @@ declare module 'vue' {
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
-    readonly operationLogApi: UnwrapRef<typeof import('../api/index')['operationLogApi']>
-    readonly orderManageApi: UnwrapRef<typeof import('../api/index')['orderManageApi']>
+    readonly operationLogApi: UnwrapRef<typeof import('../api/system/index')['operationLogApi']>
+    readonly orderManageApi: UnwrapRef<typeof import('../api/app/index')['orderManageApi']>
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>
-    readonly profitManageApi: UnwrapRef<typeof import('../api/index')['profitManageApi']>
+    readonly profitManageApi: UnwrapRef<typeof import('../api/app/index')['profitManageApi']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly provideLocal: UnwrapRef<typeof import('@vueuse/core')['provideLocal']>
     readonly reactify: UnwrapRef<typeof import('@vueuse/core')['reactify']>
@@ -561,7 +563,7 @@ declare module 'vue' {
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly resolveRef: UnwrapRef<typeof import('@vueuse/core')['resolveRef']>
     readonly resolveUnref: UnwrapRef<typeof import('@vueuse/core')['resolveUnref']>
-    readonly roleManageApi: UnwrapRef<typeof import('../api/index')['roleManageApi']>
+    readonly roleManageApi: UnwrapRef<typeof import('../api/system/index')['roleManageApi']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
     readonly setLocales: UnwrapRef<typeof import('../utils/tool')['setLocales']>
     readonly setMapStoreSuffix: UnwrapRef<typeof import('pinia')['setMapStoreSuffix']>
@@ -573,7 +575,7 @@ declare module 'vue' {
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly syncRef: UnwrapRef<typeof import('@vueuse/core')['syncRef']>
     readonly syncRefs: UnwrapRef<typeof import('@vueuse/core')['syncRefs']>
-    readonly tagManageApi: UnwrapRef<typeof import('../api/index')['tagManageApi']>
+    readonly tagManageApi: UnwrapRef<typeof import('../api/app/index')['tagManageApi']>
     readonly templateRef: UnwrapRef<typeof import('@vueuse/core')['templateRef']>
     readonly throttledRef: UnwrapRef<typeof import('@vueuse/core')['throttledRef']>
     readonly throttledWatch: UnwrapRef<typeof import('@vueuse/core')['throttledWatch']>
@@ -774,7 +776,7 @@ declare module 'vue' {
     readonly useWindowFocus: UnwrapRef<typeof import('@vueuse/core')['useWindowFocus']>
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
-    readonly userManageApi: UnwrapRef<typeof import('../api/index')['userManageApi']>
+    readonly userManageApi: UnwrapRef<typeof import('../api/system/index')['userManageApi']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>
     readonly watchAtMost: UnwrapRef<typeof import('@vueuse/core')['watchAtMost']>

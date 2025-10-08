@@ -3,30 +3,44 @@
  * @Date: 2025-08-28 23:06:01
  * @Description:
  */
-import express from 'express';
-import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
 import process from 'node:process';
 // config
-import {LOCAL_UPLOAD_PATH, PORT, UPLOAD_STRATEGY } from './config/process';
 import { API_VERSION } from './config/default';
+import { LOCAL_UPLOAD_PATH, PORT, UPLOAD_STRATEGY } from './config/process';
 // database
 import sequelize from './database';
 // 导入模型关联定义
-import './models/system/associations';
 import './models/app/associations';
+import './models/system/associations';
 // middleware
 import autoLogOperation from './middleware/autoLog';
+import errorHandler from './middleware/errorHandler';
 import i18nMiddleware from './middleware/i18n';
 import responseMiddleware from './middleware/response';
-import errorHandler from './middleware/errorHandler';
 // router
-import emailRoutes from './routes/email';
-import adminRoutes from './routes/admin';
 import accountRoutes from './routes/account';
+import adminRoutes from './routes/admin';
+import {
+  appActivityRoutes,
+  appMembershipCardRoutes,
+  appOrderRoutes,
+  appProfitRecordRoutes,
+  appRoleRoutes,
+  appTagRoutes,
+  appUserRoutes,
+} from './routes/app';
+import emailRoutes from './routes/email';
+import {
+  menuRoutes,
+  notificationRoutes,
+  operationLogRoutes,
+  roleRoutes,
+  userRoutes,
+} from './routes/system';
 import uploadRoutes from './routes/upload';
-import { userRoutes, roleRoutes, menuRoutes, operationLogRoutes, notificationRoutes } from './routes/system';
-import { appUserRoutes, appRoleRoutes, appActivityRoutes, appOrderRoutes, appProfitRecordRoutes, appTagRoutes } from './routes/app';
 // utils
 import { sequelizeSyncConfig } from './utils/database';
 
@@ -74,6 +88,7 @@ app.use(`${API_VERSION}/app/activity`, appActivityRoutes);
 app.use(`${API_VERSION}/app/order`, appOrderRoutes);
 app.use(`${API_VERSION}/app/profit-record`, appProfitRecordRoutes);
 app.use(`${API_VERSION}/app/tag`, appTagRoutes);
+app.use(`${API_VERSION}/app/membership-card`, appMembershipCardRoutes);
 
 // 根路由
 app.get('/', (req, res) => {

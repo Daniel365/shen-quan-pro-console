@@ -7,6 +7,8 @@ import { createAlova } from 'alova';
 import adapterFetch from 'alova/fetch';
 
 // utils
+import { ElMessage } from 'element-plus';
+
 import { transformKeys } from '@/utils/format/letter';
 
 /**
@@ -32,6 +34,15 @@ const alovaInstance = createAlova({
   },
   requestAdapter: adapterFetch(),
   responded: {
+    onError: (response) => {
+      // const { onLogout } = useAccountStoreHook();
+      // // 处理 401 未授权（Token 失效或不存在）
+      // if (response?.status === 401) {
+      //   onLogout();
+      // }
+      ElMessage.error(response?.status);
+      return response;
+    },
     onSuccess: async (response) => {
       const { setToken, onLogout } = useAccountStoreHook();
 
@@ -44,8 +55,10 @@ const alovaInstance = createAlova({
       // 处理 401 未授权（Token 失效或不存在）
       if (response?.status === 401) {
         onLogout();
+      } else if (response?.status !== 200) {
+        ElMessage.error(String(response?.status));
       }
-      const res: InterfaceResult = (await response.json()) as any;
+      const res: InterfaceResult = (await response?.json()) as any;
       // 转换数据格式 - (下划线 -> 小驼峰)
       const data = transformKeys({
         data: res.data,

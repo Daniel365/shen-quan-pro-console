@@ -4,9 +4,10 @@
  * @Description: 数据库相关方法封装
  */
 
+import { isDev } from '@/config/process';
+import { DataTypeEnum, MatchTypeEnum } from '@/enum';
+import { WhereQueryConfig } from '@/types/database';
 import { Op } from 'sequelize';
-import { isDev } from '../config/process';
-import { DataTypeEnum, MatchTypeEnum, WhereQueryConfig } from '../types/database';
 
 /** 初始sequelize的配置 */
 export const sequelizeSyncConfig = () => {

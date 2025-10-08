@@ -10,7 +10,7 @@ import { TagFormData, TagListParams } from './types';
 
 export default {
   // 获取标签详情
-  getDetail(data: { uuid: string }): Promise<InterfaceResult> {
+  getDetails(data: { uuid: string }): Promise<InterfaceResult> {
     return alovaInstance.Get(RequestPath.APP_TAG_DETAILS, { params: data });
   },
 

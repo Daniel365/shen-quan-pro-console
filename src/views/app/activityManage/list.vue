@@ -18,7 +18,7 @@
       v-model:selected-rows="selectedRows"
       :api="activityManageApi.getList"
       :search-params="searchParams"
-      :columns="columns"
+      :columns="tableColumns"
       :selectable="true"
     >
       <!-- 新增按钮 -->
@@ -27,22 +27,17 @@
       </template>
       <template #bodyCell="{ column, record }">
         <!-- 封面图列渲染 -->
-        <template v-if="column.key === 'coverImage'">
+        <!-- <template v-if="column.key === 'coverImage'">
           <el-image
             :src="record.coverImage"
             :preview-src-list="[record.coverImage]"
             fit="cover"
             style="width: 80px; height: 60px; border-radius: 4px"
           />
-        </template>
-
-        <!-- 开始时间列渲染 -->
-        <template v-else-if="column.key === 'startTime'">
-          {{ formatDateTime(record.startTime) }}
-        </template>
+        </template> -->
 
         <!-- 报名人数列渲染 -->
-        <template v-else-if="column.key === 'regCount'">
+        <template v-if="column.key === 'regCount'">
           <span>{{ record.regCount }}/{{ record.regLimit }}</span>
         </template>
 
@@ -50,9 +45,6 @@
         <template v-else-if="column.key === 'status'">
           <StatusText :options="activityStatusOptions" :value="record.status" />
         </template>
-
-        <!-- 价格列渲染 -->
-        <template v-else-if="column.key === 'basePrice'"> ¥{{ record.basePrice }} </template>
 
         <!-- 创建时间列渲染 -->
         <template v-else-if="column.key === 'createdAt'">
@@ -73,6 +65,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 
 // type
 import type { ActivityListItem, ActivityListParams } from '@/api/app/activityManage/types';
+import { ActionTypeEnum } from '@/enums';
 
 import { activityStatusOptions } from './utils/options';
 
@@ -113,9 +106,13 @@ const searchFields = computed(() => [
 ]);
 
 // 表格列配置
-const columns = [
-  { align: 'center', key: 'coverImage', titleKey: 'activityManage.coverImage', width: 120 },
-  { key: 'title', minWidth: 200, titleKey: 'activityManage.title' },
+const tableColumns = [
+  {
+    key: 'title',
+    minWidth: 200,
+    multilingualKey: 'translations',
+    titleKey: 'activityManage.title',
+  },
   { key: 'location', titleKey: 'activityManage.location', width: 150 },
   { key: 'startTime', titleKey: 'activityManage.startTime', width: 180 },
   { key: 'endTime', titleKey: 'activityManage.endTime', width: 180 },
@@ -159,6 +156,7 @@ const tableButtonGroup: ButtonGroupOptions[] = [
     permission: [RequestPath.APP_ACTIVITY_UPDATE],
     query: (record: ActivityListItem) => {
       return {
+        actionType: ActionTypeEnum.EDIT,
         uuid: record.uuid,
       };
     },
@@ -167,20 +165,28 @@ const tableButtonGroup: ButtonGroupOptions[] = [
     value: 'edit',
   },
   {
-    handler: (record: ActivityListItem) => {
-      handleCopy(record);
-    },
     labelKey: 'action.copy',
     permission: [RequestPath.APP_ACTIVITY_CREATE],
+    query: (record: ActivityListItem) => {
+      return {
+        actionType: ActionTypeEnum.COPY,
+        uuid: record.uuid,
+      };
+    },
+    to: RouterPath.ACTIVITY_FORM,
     type: 'success',
     value: 'copy',
   },
   {
-    handler: (record: ActivityListItem) => {
-      handleDetail(record);
-    },
-    labelKey: 'action.detail',
+    labelKey: 'action.details',
     permission: [RequestPath.APP_ACTIVITY_DETAILS],
+    query: (record: ActivityListItem) => {
+      return {
+        actionType: ActionTypeEnum.DETAIL,
+        uuid: record.uuid,
+      };
+    },
+    to: RouterPath.ACTIVITY_FORM,
     value: 'detail',
   },
   {
@@ -197,18 +203,6 @@ const tableButtonGroup: ButtonGroupOptions[] = [
 // 处理搜索和重置
 const handleRefresh = () => {
   tableRef.value?.refresh();
-};
-
-// 处理复制活动
-const handleCopy = (record: ActivityListItem) => {
-  currentActivity.value = { ...record, uuid: '' };
-  editVisible.value = true;
-};
-
-// 处理查看详情
-const handleDetail = (record: ActivityListItem) => {
-  currentActivity.value = record;
-  editVisible.value = true;
 };
 
 // 处理删除活动

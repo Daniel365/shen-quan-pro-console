@@ -145,6 +145,8 @@ interface Props {
   modelValue?: Record<string, any>;
   /** 标签宽度 */
   labelWidth?: string;
+  /** 内容宽度 */
+  contentWidth?: string;
   /** 是否行内布局 */
   inline?: boolean;
   /** 是否禁用 */
@@ -157,6 +159,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   clearable: true,
+  contentWidth: '520px',
   disabled: false,
   formRules: () => ({}),
   inline: false,
@@ -274,13 +277,8 @@ initFormData();
 :deep(.el-form-item) {
   margin-bottom: 20px;
 }
-
-:deep(.el-input) {
-  width: 240px;
-}
-
-:deep(.el-input__wrapper) {
-  width: 218px;
+:deep(.el-form-item__content) {
+  width: v-bind(contentWidth);
 }
 
 .unsupported-type {

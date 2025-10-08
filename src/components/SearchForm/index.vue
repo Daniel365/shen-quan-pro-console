@@ -8,6 +8,7 @@
       :inline="true"
       :clearable="true"
       :item-class="'search-form-item'"
+      :content-width="contentWidth"
       @update:model-value="handleFormUpdate"
     >
       <!-- 搜索和重置按钮 -->
@@ -46,12 +47,15 @@ interface Props {
   modelValue: Record<string, any>;
   /** 加载状态 */
   loading?: boolean;
+  /** 内容宽度 */
+  contentWidth?: string;
 }
 
 /**
  * 组件属性定义
  */
 const props = withDefaults(defineProps<Props>(), {
+  contentWidth: '240px',
   loading: false,
 });
 

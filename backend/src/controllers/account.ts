@@ -13,7 +13,7 @@ import { JwtUtils } from '@/utils/jwt';
 import { buildRouterTree } from '@/utils/menu';
 import { onPattern, RegexPatterns } from '@/utils/regexPatterns';
 // type
-import { StatusEnum } from '@/types/database';
+import { StatusEnum } from '@/enum';
 import { EmailVerificationType } from '@/types/email';
 
 export class AccountController {

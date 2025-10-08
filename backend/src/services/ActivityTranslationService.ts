@@ -28,18 +28,18 @@ export class ActivityTranslationService {
         // - 没有uuid的记录需要验证language（表示是新添加的记录）
         if (trans.uuid) {
           // 有uuid的现有记录，需要验证uuid格式
-          if (typeof trans.uuid !== 'string' || !trans.uuid.trim()) {
+          if (typeof trans.uuid !== 'string' || !trans.uuid) {
             return 'activity.uuidRequired';
           }
         } else {
           // 没有uuid的新记录，需要验证language
-          if (!trans.language || !trans.language.trim()) {
+          if (!trans.language) {
             return 'activity.languageRequired';
           }
         }
       } else {
         // 创建模式需要language
-        if (!trans.language || !trans.language.trim()) {
+        if (!trans.language) {
           return 'activity.languageRequired';
         }
       }
@@ -74,17 +74,17 @@ export class ActivityTranslationService {
       });
 
       // 提取传入翻译的UUID集合
-      const incomingUuids = new Set(translations.map(trans => trans.uuid).filter(Boolean));
-      
+      const incomingUuids = new Set(translations.map((trans) => trans.uuid).filter(Boolean));
+
       // 删除不再存在的翻译记录
       const translationsToDelete = existingTranslations.filter(
-        existing => !incomingUuids.has(existing.uuid)
+        (existing) => !incomingUuids.has(existing.uuid)
       );
-      
+
       if (translationsToDelete.length > 0) {
         await ActivityTranslation.destroy({
           where: {
-            uuid: translationsToDelete.map(trans => trans.uuid),
+            uuid: translationsToDelete.map((trans) => trans.uuid),
           },
           transaction,
         });
@@ -123,7 +123,7 @@ export class ActivityTranslationService {
       // 创建模式：直接批量创建
       const translationData = translations.map((trans: any) => ({
         activity_uuid,
-        language: trans.lang,
+        language: trans.language,
         title: trans.title,
         description: trans.description || '',
         cover_images: trans.cover_images || [],
@@ -131,24 +131,6 @@ export class ActivityTranslationService {
 
       await ActivityTranslation.bulkCreate(translationData, { transaction });
     }
-  }
-
-  /**
-   * 批量更新翻译记录（向后兼容）
-   */
-  static async updateTranslations(translations: any[], transaction: any, activity_uuid: string): Promise<void> {
-    return this.saveTranslations(translations, transaction, activity_uuid, true);
-  }
-
-  /**
-   * 批量创建翻译记录（向后兼容）
-   */
-  static async createTranslations(
-    translations: any[],
-    transaction: any,
-    activity_uuid: string
-  ): Promise<void> {
-    return this.saveTranslations(translations, transaction, activity_uuid, false);
   }
 
   /**

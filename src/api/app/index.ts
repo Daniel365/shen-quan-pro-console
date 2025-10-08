@@ -4,6 +4,7 @@
  * @Description: 统一接口输出
  */
 import activityManageApi from './activityManage';
+import membershipCardManageApi from './membershipCardManage';
 import orderManageApi from './orderManage';
 import profitManageApi from './profitManage';
 import appRoleManageApi from './roleManage';
@@ -14,6 +15,7 @@ export {
   activityManageApi,
   appRoleManageApi,
   appUserManageApi,
+  membershipCardManageApi,
   orderManageApi,
   profitManageApi,
   tagManageApi,

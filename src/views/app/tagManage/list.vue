@@ -36,16 +36,6 @@
           <StatusText :options="enabledStatusOptions" :value="record.status" />
         </template>
 
-        <!-- 标签名称列渲染（多语言显示） -->
-        <template v-else-if="column.key === 'name'">
-          <span>{{ getLanguageObj(record.tagTranslations).name }}</span>
-        </template>
-
-        <!-- 创建时间列渲染 -->
-        <template v-else-if="column.key === 'createdAt'">
-          {{ formatDateTime(record.createdAt) }}
-        </template>
-
         <!-- 操作列渲染 -->
         <template v-else-if="column.key === 'action'">
           <ButtonGroup :options="tableButtonGroup" :record="record" link />
@@ -139,11 +129,11 @@ const searchFields = computed(() => [
 
 // 表格列配置
 const columns = [
-  { key: 'name', minWidth: 200, titleKey: 'tagManage.name' },
-  { key: 'type', titleKey: 'form.type', width: 120 },
-  { key: 'status', titleKey: 'form.status', width: 100 },
-  { key: 'createdAt', titleKey: 'form.createTime', width: 180 },
-  { fixed: 'right', key: 'action', titleKey: 'form.action', width: 200 },
+  { key: 'name', multilingualKey: 'tagTranslations', titleKey: 'tagManage.name' },
+  { key: 'type', titleKey: 'form.type' },
+  { key: 'status', titleKey: 'form.status' },
+  { key: 'createdAt', titleKey: 'form.createTime' },
+  { fixed: 'right', key: 'action', titleKey: 'form.action' },
 ];
 
 /** 操作按钮组 */

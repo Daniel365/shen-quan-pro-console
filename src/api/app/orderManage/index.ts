@@ -9,13 +9,13 @@ import { OrderListParams } from './types';
 
 export default {
   // 获取订单详情
-  getDetail(data: { orderUuid: string }): Promise<InterfaceResult> {
-    return alovaInstance.Get(RequestPath.APP_ORDER_DETAIL, { params: data });
+  getDetails(data: { orderUuid: string }): Promise<InterfaceResult> {
+    return alovaInstance.Get(RequestPath.APP_ORDER_DETAILS, { params: data });
   },
 
   // 获取订单列表
   getList(data: OrderListParams): Promise<InterfaceResult> {
-    return alovaInstance.Get(RequestPath.APP_ORDER_LIST, { params: data });
+    return alovaInstance.Post(RequestPath.APP_ORDER_LIST, { params: data });
   },
 
   // 获取订单统计

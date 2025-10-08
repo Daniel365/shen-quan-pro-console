@@ -5,7 +5,7 @@
  */
 
 import { ProfitDistribution, Role, User } from '@/models/app';
-import { StatusEnum } from '@/types/database';
+import { StatusEnum } from '@/enum';
 
 export class ProfitDistributionService {
   /**

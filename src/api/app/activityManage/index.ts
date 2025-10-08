@@ -10,7 +10,7 @@ import { ActivityFormData, ActivityListParams } from './types';
 
 export default {
   // 获取活动详情
-  getDetail(data: { uuid: string }): Promise<InterfaceResult> {
+  getDetails(data: { uuid: string }): Promise<InterfaceResult> {
     return alovaInstance.Get(RequestPath.APP_ACTIVITY_DETAILS, { params: data });
   },
   // 获取活动列表

@@ -4,6 +4,7 @@
  * @Description: App routes index
  */
 import appActivityRoutes from './Activity';
+import appMembershipCardRoutes from './MembershipCard';
 import appOrderRoutes from './Order';
 import appProfitRecordRoutes from './ProfitRecord';
 import appRoleRoutes from './Roles';
@@ -12,6 +13,7 @@ import appUserRoutes from './Users';
 
 export {
   appActivityRoutes,
+  appMembershipCardRoutes,
   appOrderRoutes,
   appProfitRecordRoutes,
   appRoleRoutes,

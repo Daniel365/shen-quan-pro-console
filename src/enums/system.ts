@@ -93,6 +93,8 @@ export enum RouterPath {
 
   // 活动管理 - 表单
   ACTIVITY_FORM = '/app/activityManage/form',
+  // 会员卡管理 - 表单
+  MEMBERSHIP_CARD_FORM = '/app/membershipCardManage/form',
 }
 
 /** 接口 */
@@ -203,22 +205,18 @@ export enum RequestPath {
   APP_ACTIVITY_DETAILS = '/app/activity/details',
 
   /** 收益列表 */
-  APP_PROFIT_LIST = '/app/profit/list',
+  APP_PROFIT_LIST = '/app/profit-record/list',
   /** 收益详情 */
-  APP_PROFIT_DETAIL = '/app/profit/detail',
-  /** 结算收益 */
-  APP_PROFIT_SETTLE = '/app/profit/settle',
-  /** 取消收益 */
-  APP_PROFIT_CANCEL = '/app/profit/cancel',
-  /** 收益统计 */
-  APP_PROFIT_STATS = '/app/profit/stats',
+  APP_PROFIT_DETAILS = '/app/profit-record/details',
   /** 导出收益数据 */
-  APP_PROFIT_EXPORT = '/app/profit/export',
+  APP_PROFIT_EXPORT = '/app/profit-record/export',
+  /** 收益统计 */
+  APP_PROFIT_STATS = '/app/profit-record/stats',
 
   /** 订单列表 */
   APP_ORDER_LIST = '/app/order/list',
   /** 订单详情 */
-  APP_ORDER_DETAIL = '/app/order/detail',
+  APP_ORDER_DETAILS = '/app/order/details',
   /** 订单退款 */
   APP_ORDER_REFUND = '/app/order/refund',
   /** 导出订单数据 */
@@ -236,4 +234,19 @@ export enum RequestPath {
   APP_TAG_DELETE = '/app/tag/delete',
   /** 标签详情 */
   APP_TAG_DETAILS = '/app/tag/details',
+
+  /** 会员卡列表 */
+  APP_MEMBERSHIP_CARD_LIST = '/app/membership-card/list',
+  /** 新增会员卡 */
+  APP_MEMBERSHIP_CARD_CREATE = '/app/membership-card/create',
+  /** 编辑会员卡 */
+  APP_MEMBERSHIP_CARD_UPDATE = '/app/membership-card/update',
+  /** 删除会员卡 */
+  APP_MEMBERSHIP_CARD_DELETE = '/app/membership-card/delete',
+  /** 会员卡详情 */
+  APP_MEMBERSHIP_CARD_DETAILS = '/app/membership-card/details',
+  /** 上架/下架会员卡 */
+  APP_MEMBERSHIP_CARD_TOGGLE_STATUS = '/app/membership-card/toggle-status',
+  /** 批量更新排序 */
+  APP_MEMBERSHIP_CARD_UPDATE_SORT = '/app/membership-card/update-sort',
 }

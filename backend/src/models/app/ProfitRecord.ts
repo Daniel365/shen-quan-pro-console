@@ -5,17 +5,20 @@
  */
 
 import sequelize from '@/database';
-import { getAppDbName, sequelizeCommonFields, sequelizeCommonConfig } from '@/database/common';
+import { getAppDbName, sequelizeCommonConfig, sequelizeCommonFields } from '@/database/common';
+import { ProfitStatusEnum } from '@/enum';
 import { CreateAttributes } from '@/types/database';
 import { DataTypes, Model } from 'sequelize';
 
 interface ProfitRecordAttributes {
   uuid: string;
   order_uuid: string;
-  activity_uuid: string;
+  activity_uuid?: string; // 活动UUID（可为空，用于会员卡收益）
+  membership_card_uuid?: string; // 会员卡UUID（可为空，用于活动收益）
   user_uuid: string; // 参与用户UUID
   inviter_uuid?: string; // 上级用户UUID（邀请人）
   total_amount: number;
+  order_type: string; // 订单类型：'activity' | 'membership_card'
   status: number;
   created_at: Date;
   settled_at?: Date;
@@ -74,7 +77,7 @@ ProfitRecord.init(
       comment: '收益状态：1冻结中，2已结算，3已取消',
       type: DataTypes.TINYINT,
       allowNull: false,
-      defaultValue: 1,
+      defaultValue: ProfitStatusEnum.FROZEN,
     },
     settled_at: {
       comment: '结算时间',

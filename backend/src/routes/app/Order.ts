@@ -16,7 +16,4 @@ router.post('/create', requireAuth(), OrderController.create);
 router.put('/pay', requireAuth(), OrderController.pay);
 router.put('/refund', requireAuth(), OrderController.refund);
 
-// 用户订单列表
-router.post('/user-orders', requireAuth(), OrderController.userOrders);
-
 export default router;

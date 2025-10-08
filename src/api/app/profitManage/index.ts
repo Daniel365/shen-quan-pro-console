@@ -7,19 +7,9 @@
 import alovaInstance from '@/utils/instance';
 
 export default {
-  // 取消收益
-  cancelProfit(data: { uuid: string }): Promise<InterfaceResult> {
-    return alovaInstance.Post(RequestPath.APP_PROFIT_CANCEL, data);
-  },
-
-  // 导出收益数据
-  exportData(data: any): Promise<InterfaceResult> {
-    return alovaInstance.Get(RequestPath.APP_PROFIT_EXPORT, { params: data });
-  },
-
   // 获取收益详情
-  getDetail(data: { uuid: string }): Promise<InterfaceResult> {
-    return alovaInstance.Get(RequestPath.APP_PROFIT_DETAIL, { params: data });
+  getDetails(data: { uuid: string }): Promise<InterfaceResult> {
+    return alovaInstance.Get(RequestPath.APP_PROFIT_DETAILS, { params: data });
   },
   // 获取收益列表
   getList(data: any): Promise<InterfaceResult> {
@@ -30,9 +20,8 @@ export default {
   getStats(data: any): Promise<InterfaceResult> {
     return alovaInstance.Get(RequestPath.APP_PROFIT_STATS, { params: data });
   },
-
-  // 结算收益
-  settleProfit(data: { uuid: string }): Promise<InterfaceResult> {
-    return alovaInstance.Post(RequestPath.APP_PROFIT_SETTLE, data);
+  // 导出收益数据
+  onExportData(data: any): Promise<InterfaceResult> {
+    return alovaInstance.Get(RequestPath.APP_PROFIT_EXPORT, { params: data });
   },
 };

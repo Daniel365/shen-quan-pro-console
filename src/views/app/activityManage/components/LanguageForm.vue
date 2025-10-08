@@ -5,6 +5,7 @@
     :rules="formRules"
     label-width="120px"
     label-position="top"
+    :disabled="disabled"
   >
     <!-- 基础信息 -->
     <el-row :gutter="20">
@@ -14,7 +15,6 @@
           <el-input
             v-model="formData.title"
             :placeholder="$t('activityManage.titlePlaceholder')"
-            :readonly="actionType === ActionTypeEnum.DETAIL"
             maxlength="100"
             show-word-limit
             clearable
@@ -45,7 +45,6 @@
         type="textarea"
         :rows="4"
         :placeholder="$t('activityManage.descriptionPlaceholder')"
-        :readonly="actionType === ActionTypeEnum.DETAIL"
         maxlength="500"
         show-word-limit
         resize="none"
@@ -63,6 +62,7 @@ interface Props {
   formData: ActivityTranslationItem;
   actionType: string;
   language: string;
+  disabled?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -96,7 +96,14 @@ const beforeUpload = (file: File) => {
 // 上传成功处理
 const handleUploadSuccess = (response: any) => {
   if (response.code === 200) {
-    const updatedData = { ...props.formData, coverImage: response.data.url };
+    const newImage = {
+      sort: fileList.value.length,
+      type: 'main',
+      url: response.data.url,
+    };
+
+    const updatedCoverImages = [...(props.formData.coverImages || []), newImage];
+    const updatedData = { ...props.formData, coverImages: updatedCoverImages };
     emit('update:formData', updatedData);
     ElMessage.success('上传成功');
   } else {
@@ -105,8 +112,11 @@ const handleUploadSuccess = (response: any) => {
 };
 
 // 删除文件
-const handleRemove = () => {
-  const updatedData = { ...props.formData, coverImage: '' };
+const handleRemove = (file: any) => {
+  const updatedCoverImages = (props.formData.coverImages || []).filter(
+    (img: any) => img.url !== file.url
+  );
+  const updatedData = { ...props.formData, coverImages: updatedCoverImages };
   emit('update:formData', updatedData);
 };
 

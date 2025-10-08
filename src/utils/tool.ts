@@ -35,6 +35,6 @@ export const getLanguageObj = (
   locale: LanguageEnum = i18n.global.locale.value,
   fieldKey: string = 'language'
 ) => {
-  const obj = data.find((item) => item[fieldKey] === locale) || {};
+  const obj = data?.find((item) => item[fieldKey] === locale) || {};
   return obj;
 };

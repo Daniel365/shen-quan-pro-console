@@ -11,7 +11,7 @@ import { Role, User, UserInvite } from '@/models/app';
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-import { GenderEnum, StatusEnum } from '@/types/database';
+import { GenderEnum, StatusEnum } from '@/enum';
 
 export class UserController {
   /**

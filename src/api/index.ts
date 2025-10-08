@@ -5,20 +5,7 @@
  */
 export { default as accountManageApi } from './accountManage';
 export { default as adminManageApi } from './adminManage';
-export {
-  activityManageApi,
-  appRoleManageApi,
-  appUserManageApi,
-  orderManageApi,
-  profitManageApi,
-  tagManageApi,
-} from './app';
+export * from './app';
 export { default as commonApi } from './common';
-export {
-  menuManageApi,
-  notificationManageApi,
-  operationLogApi,
-  roleManageApi,
-  userManageApi,
-} from './system';
+export * from './system';
 export { default as uploadManageApi } from './uploadManage';

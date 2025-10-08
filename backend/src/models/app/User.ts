@@ -1,5 +1,6 @@
 import sequelize from '@/database';
-import { getAppDbName, sequelizeCommonFields, sequelizeCommonConfig } from '@/database/common';
+import { getAppDbName, sequelizeCommonConfig, sequelizeCommonFields } from '@/database/common';
+import { StatusEnum } from '@/enum';
 import { CreateAttributes } from '@/types/database';
 import bcrypt from 'bcryptjs';
 import { DataTypes, Model } from 'sequelize';
@@ -101,7 +102,7 @@ AppUser.init(
       comment: '状态（1-正常，0-禁用）',
       type: DataTypes.TINYINT,
       allowNull: false,
-      defaultValue: 1,
+      defaultValue: StatusEnum.ENABLE,
     },
     last_login_at: {
       comment: '最后登录时间',

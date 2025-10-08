@@ -11,6 +11,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { RouterPath } from '@/enums';
 
 import admin from './admin';
+import app from './app';
 import system from './system';
 
 export const constantRoutes: RouteRecordRaw[] = [
@@ -27,6 +28,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         path: '/404',
       },
       ...system,
+      ...app,
     ],
     component: import('@/layouts/index.vue'),
     name: 'layout',

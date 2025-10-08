@@ -3,12 +3,12 @@
  * @Date: 2025-10-04 13:05:24
  * @Description: 角色 - 控制器
  */
+import { Role } from '@/models/app';
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
-import { Role } from '@/models/app';
 
+import { DataTypeEnum, MatchTypeEnum } from '@/enum';
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
-import { DataTypeEnum, MatchTypeEnum } from '@/types/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
 

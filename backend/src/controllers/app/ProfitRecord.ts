@@ -6,12 +6,19 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 // models
-import { ProfitRecord, Activity, Order, User, ProfitDistribution } from '@/models/app';
+import {
+  Activity,
+  ActivityTranslation,
+  Order,
+  ProfitDistribution,
+  ProfitRecord,
+  User,
+} from '@/models/app';
 // utils
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-import { ProfitStatusEnum } from '@/types/database';
+import { ProfitStatusEnum } from '@/enum';
 
 export class ProfitRecordController {
   /**
@@ -21,11 +28,12 @@ export class ProfitRecordController {
   static async list(req: Request, res: Response) {
     try {
       const reqBody = req.body;
-      const where: any = buildWhereCondition(reqBody, [
-        { field: 'user_uuid' },
-        { field: 'inviter_uuid' },
-        { field: 'status' },
+      const where: any = buildWhereCondition(reqBody, [{ field: 'status' }]);
+      const activityWhere: any = buildWhereCondition(reqBody, [
+        { field: 'title', queryValue: reqBody?.['activity_title'] },
       ]);
+      const orderWhere: any = buildWhereCondition(reqBody, [{ field: 'order_type' }]);
+      const userWhere: any = buildWhereCondition(reqBody, [{ field: 'nickname' }]);
 
       const { rows, count } = await ProfitRecord.findAndCountAll({
         where,
@@ -34,22 +42,28 @@ export class ProfitRecordController {
           {
             model: Activity,
             as: 'activity',
-            attributes: ['title', 'startTime', 'refundDeadline'],
+            attributes: ['location', 'start_time'],
+            include: [
+              {
+                model: ActivityTranslation,
+                as: 'translations',
+                attributes: ['title', 'language'],
+                where: activityWhere,
+                required: false,
+              },
+            ],
           },
           {
             model: Order,
             as: 'order',
-            attributes: ['actual_price'],
+            where: orderWhere,
+            attributes: ['actual_price', 'order_type'],
           },
           {
             model: User,
             as: 'user',
-            attributes: ['username', 'phone'],
-          },
-          {
-            model: ProfitDistribution,
-            as: 'profit_distributions',
-            attributes: ['role_uuid', 'share_amount', 'percentage'],
+            where: userWhere,
+            attributes: ['nickname', 'phone'],
           },
         ],
       });
@@ -91,29 +105,29 @@ export class ProfitRecordController {
 
       for (const record of frozenRecords) {
         const activity = (record as any).activity;
-        
+
         // 检查活动是否已结束且超过退款期
-        if (activity && 
-            activity.startTime < now && 
-            activity.refundDeadline < now) {
-          
+        if (activity && activity.startTime < now && activity.refundDeadline < now) {
           // 更新收益记录状态为已结算
           await ProfitRecord.update(
-            { 
+            {
               status: ProfitStatusEnum.SETTLED,
-              settled_at: new Date() 
+              settled_at: new Date(),
             },
             { where: { uuid: record.uuid } }
           );
-          
+
           settledRecords.push(record.uuid);
         }
       }
 
-      return res.responseBuilder.success({
-        settled_count: settledRecords.length,
-        settled_records: settledRecords,
-      }, 'profit.settleSuccess');
+      return res.responseBuilder.success(
+        {
+          settled_count: settledRecords.length,
+          settled_records: settledRecords,
+        },
+        'profit.settleSuccess'
+      );
     } catch (error) {
       console.error('Settle profit failed:', error);
       return res.responseBuilder.error('profit.settleFailed', 500);
@@ -130,10 +144,7 @@ export class ProfitRecordController {
 
       const where: any = {};
       if (user_uuid) {
-        where[Op.or] = [
-          { user_uuid },
-          { inviter_uuid: user_uuid },
-        ];
+        where[Op.or] = [{ user_uuid }, { inviter_uuid: user_uuid }];
       }
 
       if (start_time && end_time) {
@@ -149,8 +160,14 @@ export class ProfitRecordController {
           'user_uuid',
           'inviter_uuid',
           'status',
-          [ProfitRecord.sequelize!.fn('SUM', ProfitRecord.sequelize!.col('total_amount')), 'total_amount'],
-          [ProfitRecord.sequelize!.fn('COUNT', ProfitRecord.sequelize!.col('uuid')), 'record_count'],
+          [
+            ProfitRecord.sequelize!.fn('SUM', ProfitRecord.sequelize!.col('total_amount')),
+            'total_amount',
+          ],
+          [
+            ProfitRecord.sequelize!.fn('COUNT', ProfitRecord.sequelize!.col('uuid')),
+            'record_count',
+          ],
         ],
         group: ['user_uuid', 'inviter_uuid', 'status'],
       });
@@ -166,8 +183,17 @@ export class ProfitRecordController {
         ],
         attributes: [
           'role_uuid',
-          [ProfitDistribution.sequelize!.fn('SUM', ProfitDistribution.sequelize!.col('share_amount')), 'total_share'],
-          [ProfitDistribution.sequelize!.fn('COUNT', ProfitDistribution.sequelize!.col('uuid')), 'distribution_count'],
+          [
+            ProfitDistribution.sequelize!.fn(
+              'SUM',
+              ProfitDistribution.sequelize!.col('share_amount')
+            ),
+            'total_share',
+          ],
+          [
+            ProfitDistribution.sequelize!.fn('COUNT', ProfitDistribution.sequelize!.col('uuid')),
+            'distribution_count',
+          ],
         ],
         group: ['role_uuid'],
       });

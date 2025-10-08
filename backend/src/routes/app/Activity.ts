@@ -12,7 +12,7 @@ const router = Router();
 
 // 活动管理
 router.post('/list', requireAuth(), ActivityController.list);
-router.post('/detail', requireAuth(), ActivityController.detail);
+router.get('/details', requireAuth(), ActivityController.details);
 router.post('/create', requireAuth(), ActivityController.create);
 router.put('/update', requireAuth(), ActivityController.update);
 router.put('/delete', requireAuth(), ActivityController.delete);

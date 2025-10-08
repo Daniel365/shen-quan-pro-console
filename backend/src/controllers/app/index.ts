@@ -5,6 +5,7 @@
  */
 
 import { ActivityController } from './Activity';
+import { MembershipCardController } from './MembershipCard';
 import { OrderController } from './OrderManage';
 import { ProfitRecordController } from './ProfitRecord';
 import { RoleController } from './Roles';
@@ -14,6 +15,7 @@ import { UserController } from './Users';
 // 统一导出控制器
 export {
   ActivityController,
+  MembershipCardController,
   OrderController,
   ProfitRecordController,
   RoleController,
