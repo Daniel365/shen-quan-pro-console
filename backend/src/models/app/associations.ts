@@ -10,6 +10,7 @@ import {
   Order,
   ProfitRecord,
   Role,
+  RoleTranslation,
   Tag,
   TagTranslation,
   User,
@@ -175,6 +176,17 @@ OrderMembershipCard.belongsTo(Role, {
 
 // Role - MembershipCard associations
 MembershipCard.belongsTo(Role, {
+  foreignKey: 'role_uuid',
+  as: 'role',
+});
+
+// Role - RoleTranslation associations
+Role.hasMany(RoleTranslation, {
+  foreignKey: 'role_uuid',
+  as: 'role_translations',
+});
+
+RoleTranslation.belongsTo(Role, {
   foreignKey: 'role_uuid',
   as: 'role',
 });

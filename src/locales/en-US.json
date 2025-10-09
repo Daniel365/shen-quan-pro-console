@@ -227,7 +227,12 @@
     "lastLoginTime": "Last Login Time",
     "inviteCode": "Invite Code",
     "enterInviteCode": "Please enter invite code",
-    "selectGender": "Please select gender"
+    "selectGender": "Please select gender",
+    "typeString": "String",
+    "typeNumber": "Number",
+    "typeBoolean": "Boolean",
+    "typeJson": "JSON",
+    "array": "Array"
   },
   "menuManage": {
     "button": "Button",
@@ -322,6 +327,8 @@
     "deleteConfirm": "Are you sure you want to delete role {roleName}?",
     "editRole": "Edit Role",
     "permissionAssignment": "【{roleName}】 Permission Assignment",
+    "profitRatio": "Profit Ratio",
+    "enterProfitRatio": "Please enter profit ratio",
     "message": {
       "roleCode": {
         "required": "Please enter role code",
@@ -336,6 +343,10 @@
       },
       "status": {
         "required": "Please select status"
+      },
+      "profitRatio": {
+        "required": "Please enter profit ratio",
+        "range": "Profit ratio must be between 0-100"
       }
     }
   },
@@ -627,6 +638,64 @@
       },
       "status": {
         "required": "Please select status"
+      }
+    }
+  },
+  "systemConfigManage": {
+    "addSystemConfig": "Add System Configuration",
+    "editSystemConfig": "Edit System Configuration",
+    "deleteConfirm": "Are you sure you want to delete system configuration {configKey}?",
+    "keyLabel": "Configuration Key",
+    "keyPlaceholder": "Please enter configuration key",
+    "valueLabel": "Configuration Value",
+    "valuePlaceholder": "Please enter configuration value",
+    "descriptionLabel": "Configuration Description",
+    "descriptionPlaceholder": "Please enter configuration description",
+    "typeLabel": "Configuration Type",
+    "typePlaceholder": "Please select configuration type",
+    "message": {
+      "key": {
+        "required": "Please enter configuration key",
+        "maxLength": "Configuration key cannot exceed 100 characters"
+      },
+      "value": {
+        "required": "Please enter configuration value"
+      },
+      "type": {
+        "required": "Please select configuration type"
+      },
+      "description": {
+        "maxLength": "Configuration description cannot exceed 200 characters"
+      }
+    }
+  },
+  "profitDistributionManage": {
+    "addProfitDistribution": "Add Profit Distribution Configuration",
+    "editProfitDistribution": "Edit Profit Distribution Configuration",
+    "deleteConfirm": "Are you sure you want to delete profit distribution configuration {configName}?",
+    "enableConfirm": "Are you sure you want to enable profit distribution configuration {configName}?",
+    "configNameLabel": "Configuration Name",
+    "configNamePlaceholder": "Please enter configuration name",
+    "roleSharesLabel": "Role Distribution Ratio",
+    "roleSharesPlaceholder": "Please set role distribution ratio",
+    "statusLabel": "Configuration Status",
+    "statusPlaceholder": "Please select configuration status",
+    "enableConfig": "Enable Configuration",
+    "enableSuccess": "Enabled successfully",
+    "enableFailed": "Enable failed",
+    "cannotDeleteEnabled": "Cannot delete enabled configuration",
+    "message": {
+      "configName": {
+        "required": "Please enter configuration name",
+        "maxLength": "Configuration name cannot exceed 100 characters",
+        "exists": "Configuration name already exists"
+      },
+      "roleShares": {
+        "required": "Please set role distribution ratio",
+        "total100": "Total role distribution ratio must be 100%"
+      },
+      "status": {
+        "required": "Please select configuration status"
       }
     }
   }

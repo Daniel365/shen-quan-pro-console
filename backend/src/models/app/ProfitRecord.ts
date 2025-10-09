@@ -1,7 +1,7 @@
 /*
  * @Author: 350296245@qq.com
  * @Date: 2025-10-05 00:00:00
- * @Description: 收益记录表 - 简化为只记录role_uuid
+ * @Description: 收益记录表 - 主收益记录，对应一条订单的总收益
  */
 
 import sequelize from '@/database';
@@ -18,7 +18,6 @@ interface ProfitRecordAttributes {
   user_uuid: string; // 参与用户UUID
   inviter_uuid?: string; // 上级用户UUID（邀请人）
   total_amount: number;
-  order_type: string; // 订单类型：'activity' | 'membership_card'
   status: number;
   created_at: Date;
   settled_at?: Date;
@@ -63,14 +62,14 @@ ProfitRecord.init(
       type: DataTypes.UUID,
       allowNull: false,
     },
-    inviter_uuid: {
-      comment: '上级用户UUID（邀请人）',
-      type: DataTypes.UUID,
-    },
     total_amount: {
       comment: '订单总金额',
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
+    },
+    inviter_uuid: {
+      comment: '上级用户UUID（邀请人）',
+      type: DataTypes.UUID,
     },
 
     status: {
@@ -89,6 +88,33 @@ ProfitRecord.init(
     sequelize,
     tableName: getAppDbName('profit_record'),
     ...sequelizeCommonConfig(),
+    indexes: [
+      // 核心复合索引 - 按用户+状态+时间排序（最常用查询）
+      {
+        name: 'idx_profit_record_user_status_created',
+        fields: ['user_uuid', 'status', 'created_at']
+      },
+      // 状态+时间索引 - 用于后台管理查询
+      {
+        name: 'idx_profit_record_status_created',
+        fields: ['status', 'created_at']
+      },
+      // 订单UUID索引 - 用于关联查询
+      {
+        name: 'idx_profit_record_order_uuid',
+        fields: ['order_uuid']
+      },
+      // 活动UUID索引 - 用于按活动统计
+      {
+        name: 'idx_profit_record_activity_uuid',
+        fields: ['activity_uuid']
+      },
+      // 邀请人索引 - 用于邀请关系统计
+      {
+        name: 'idx_profit_record_inviter_uuid',
+        fields: ['inviter_uuid']
+      }
+    ]
   }
 );
 

@@ -8,13 +8,14 @@ import sequelize from '@/database';
 import { getAppDbName, sequelizeCommonFields, sequelizeCommonConfig } from '@/database/common';
 import { CreateAttributes } from '@/types/database';
 import { DataTypes, Model } from 'sequelize';
+import { SystemConfigTypeEnum } from '@/enum';
 
 interface SystemConfigAttributes {
   uuid: string;
   key: string;
   value: string;
   description?: string;
-  type: number; // 1: 字符串, 2: 数字, 3: 布尔值, 4: JSON
+  type: SystemConfigTypeEnum;
   created_at: Date;
   updated_at: Date;
 }
@@ -32,6 +33,54 @@ class SystemConfig
   public type!: number;
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+
+  /**
+   * 获取配置值（根据类型自动转换）
+   */
+  public getValue(): any {
+    const rawValue = this.value;
+    
+    switch (this.type) {
+      case SystemConfigTypeEnum.NUMBER:
+        return parseFloat(rawValue) || 0;
+      case SystemConfigTypeEnum.BOOLEAN:
+        return rawValue === 'true' || rawValue === '1';
+      case SystemConfigTypeEnum.JSON:
+        try {
+          return JSON.parse(rawValue);
+        } catch {
+          return {};
+        }
+      case SystemConfigTypeEnum.ARRAY:
+        try {
+          return JSON.parse(rawValue);
+        } catch {
+          return [];
+        }
+      default:
+        return rawValue;
+    }
+  }
+
+  /**
+   * 设置配置值（根据类型自动序列化）
+   */
+  public setValue(value: any): void {
+    switch (this.type) {
+      case SystemConfigTypeEnum.NUMBER:
+        this.value = String(value);
+        break;
+      case SystemConfigTypeEnum.BOOLEAN:
+        this.value = value ? 'true' : 'false';
+        break;
+      case SystemConfigTypeEnum.JSON:
+      case SystemConfigTypeEnum.ARRAY:
+        this.value = JSON.stringify(value);
+        break;
+      default:
+        this.value = String(value);
+    }
+  }
 }
 
 SystemConfig.init(
@@ -48,7 +97,7 @@ SystemConfig.init(
       unique: 'unique_key',
     },
     value: {
-      comment: '配置值',
+      comment: '配置值（根据类型存储：字符串直接存储，数字/布尔值转字符串，JSON/数组转JSON字符串）',
       type: DataTypes.TEXT,
       allowNull: false,
     },
@@ -57,10 +106,10 @@ SystemConfig.init(
       type: DataTypes.STRING,
     },
     type: {
-      comment: '配置类型：1字符串, 2数字, 3布尔值, 4JSON',
+      comment: '配置类型：1字符串, 2数字, 3布尔值, 4JSON, 5数组',
       type: DataTypes.TINYINT,
       allowNull: false,
-      defaultValue: 1,
+      defaultValue: SystemConfigTypeEnum.STRING,
     },
     ...sequelizeCommonFields(),
   },
@@ -68,6 +117,16 @@ SystemConfig.init(
     sequelize,
     tableName: getAppDbName('system_config'),
     ...sequelizeCommonConfig(),
+    indexes: [
+      {
+        name: 'idx_system_config_key',
+        fields: ['key']
+      },
+      {
+        name: 'idx_system_config_type',
+        fields: ['type']
+      }
+    ]
   }
 );
 

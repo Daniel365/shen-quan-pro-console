@@ -6,14 +6,14 @@
 
 /** 默认搜索参数 */
 export const defaultSearchParams = {
-  orderNo: '',
-  userName: '',
   activityName: '',
-  status: undefined,
+  endTime: '',
+  orderNo: '',
   paymentMethod: undefined,
   refundStatus: undefined,
   startTime: '',
-  endTime: '',
+  status: undefined,
+  userName: '',
 };
 
 /** 导出字段配置 */

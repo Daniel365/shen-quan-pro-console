@@ -1,5 +1,5 @@
 import { apiVersionUrl } from '@/api/requestUtils';
-import i18n from '@/locale';
+import i18n from '@/locales';
 
 /** 获取api连接 */
 export const getApiUrl = (path: string) => {

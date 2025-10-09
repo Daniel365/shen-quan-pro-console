@@ -127,6 +127,24 @@ Activity.init(
     sequelize,
     tableName: getAppDbName('activity'),
     ...sequelizeCommonConfig(),
+    indexes: [
+      {
+        name: 'idx_activity_status',
+        fields: ['status']
+      },
+      {
+        name: 'idx_activity_start_time',
+        fields: ['start_time']
+      },
+      {
+        name: 'idx_activity_publisher',
+        fields: ['publisher_uuid']
+      },
+      {
+        name: 'idx_activity_created_at',
+        fields: ['created_at']
+      }
+    ]
   }
 );
 

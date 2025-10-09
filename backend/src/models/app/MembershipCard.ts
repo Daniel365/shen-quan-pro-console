@@ -52,7 +52,7 @@ MembershipCard.init(
       comment: '会员卡编码（如 "ANNUAL_CARD"、"HALF_YEAR_CARD"，唯一）',
       type: DataTypes.STRING(30),
       allowNull: false,
-      unique: true,
+      unique: 'unique_code',
     },
     role_uuid: {
       comment: '关联角色 ID（外键，对应 role 表中的会员角色）',

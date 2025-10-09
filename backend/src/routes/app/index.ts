@@ -6,8 +6,10 @@
 import appActivityRoutes from './Activity';
 import appMembershipCardRoutes from './MembershipCard';
 import appOrderRoutes from './Order';
+import appProfitDistributionRoutes from './profitDistribution';
 import appProfitRecordRoutes from './ProfitRecord';
 import appRoleRoutes from './Roles';
+import appSystemConfigRoutes from './systemConfig';
 import appTagRoutes from './Tag';
 import appUserRoutes from './Users';
 
@@ -15,8 +17,10 @@ export {
   appActivityRoutes,
   appMembershipCardRoutes,
   appOrderRoutes,
+  appProfitDistributionRoutes,
   appProfitRecordRoutes,
   appRoleRoutes,
+  appSystemConfigRoutes,
   appTagRoutes,
   appUserRoutes,
 };

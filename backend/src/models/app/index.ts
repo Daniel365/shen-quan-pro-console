@@ -11,15 +11,17 @@ import Order from './Order';
 import OrderMembershipCard from './OrderMembershipCard';
 import PaymentRecord from './PaymentRecord';
 import ProfitDistribution from './ProfitDistribution';
+import ProfitDistributionRecord from './ProfitDistributionRecord';
 import ProfitRecord from './ProfitRecord';
 import RefundRecord from './RefundRecord';
-import Role from './Role';
+import Role from './AppRole';
+import RoleTranslation from './AppRoleTranslation';
 import SystemConfig from './SystemConfig';
 import Tag from './Tag';
 import TagTranslation from './TagTranslation';
-import User from './User';
-import UserInvite from './UserInvite';
-import UserTag from './UserTag';
+import User from './AppUser';
+import UserInvite from './AppUserInvite';
+import UserTag from './AppUserTag';
 
 export {
   Activity,
@@ -30,9 +32,11 @@ export {
   OrderMembershipCard,
   PaymentRecord,
   ProfitDistribution,
+  ProfitDistributionRecord,
   ProfitRecord,
   RefundRecord,
   Role,
+  RoleTranslation,
   SystemConfig,
   Tag,
   TagTranslation,

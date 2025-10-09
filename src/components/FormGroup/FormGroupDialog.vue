@@ -2,7 +2,7 @@
   <!-- 弹窗表单组件 -->
   <el-dialog
     v-model="visible"
-    :title="dialogTitle"
+    :title="dialogTitle || getActionTitle(actionType)"
     :width="width"
     :close-on-click-modal="false"
     @close="handleClose"
@@ -13,12 +13,10 @@
       :form-rules="formRules"
       :model-value="formData"
       :label-width="labelWidth"
+      :label-position="labelPosition"
       @update:model-value="handleFormUpdate"
       @validate="handleValidate"
-    >
-      <!-- 插槽用于自定义表单内容 -->
-      <slot />
-    </FormGroup>
+    />
 
     <template #footer>
       <div class="dialog-footer">
@@ -40,34 +38,10 @@ import { ElMessage } from 'element-plus';
 
 import FormGroup from './FormGroup.vue';
 
-import type { FormGroupProps } from './types';
+import type { FormGroupDialogProps } from './types';
 
-interface Props {
-  /** 是否显示弹窗 */
-  visible: boolean;
-  /** 操作类型 */
-  actionType: ActionTypeEnum;
-  /** 表单字段配置 */
-  formFields: FormGroupProps['formFields'];
-  /** 表单验证规则 */
-  formRules?: FormGroupProps['formRules'];
-  /** 新增API */
-  addApi?: FormGroupProps['addApi'];
-  /** 编辑API */
-  editApi?: FormGroupProps['editApi'];
-  /** 详情数据 */
-  detailsData?: FormGroupProps['detailsData'];
-  /** 弹窗宽度 */
-  width?: FormGroupProps['width'];
-  /** 标签宽度 */
-  labelWidth?: FormGroupProps['labelWidth'];
-  /** 弹窗标题映射 */
-  titleMap?: FormGroupProps['titleMap'];
-  /** 提交按钮文本映射 */
-  submitButtonTextMap?: FormGroupProps['submitButtonTextMap'];
-}
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<FormGroupDialogProps>(), {
   detailsData: () => ({}),
   formRules: () => ({}),
   labelWidth: '100px',
@@ -76,12 +50,6 @@ const props = withDefaults(defineProps<Props>(), {
     [ActionTypeEnum.EDIT]: 'action.save',
     [ActionTypeEnum.DETAIL]: 'action.confirm',
     [ActionTypeEnum.COPY]: 'action.save',
-  }),
-  titleMap: () => ({
-    [ActionTypeEnum.CREATE]: 'action.add',
-    [ActionTypeEnum.EDIT]: 'action.edit',
-    [ActionTypeEnum.DETAIL]: 'action.detail',
-    [ActionTypeEnum.COPY]: 'action.copy',
   }),
   width: '500px',
 });
@@ -106,10 +74,6 @@ const visible = computed({
   set: (value: boolean) => emit('update:visible', value),
 });
 
-// 弹窗标题
-const dialogTitle = computed(() => {
-  return i18nText(props.titleMap[props.actionType]);
-});
 
 // 获取提交按钮文本
 const getSubmitButtonText = () => {
@@ -178,7 +142,7 @@ const handleSubmit = async () => {
 
     loading.value = true;
 
-    const submitData = { ...formData };
+    const submitData = props.handleSubmitData ? props.handleSubmitData(formData) :  { ...formData };
 
     let response: any;
     if (props.actionType === ActionTypeEnum.EDIT && props.editApi) {

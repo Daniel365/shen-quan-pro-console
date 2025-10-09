@@ -13,7 +13,7 @@ interface UserTagAttributes {
 
 interface UserTagCreationAttributes extends CreateAttributes<UserTagAttributes> {}
 
-class UserTag
+class AppUserTag
   extends Model<UserTagAttributes, UserTagCreationAttributes>
   implements UserTagAttributes
 {
@@ -24,7 +24,7 @@ class UserTag
   public readonly updated_at!: Date;
 }
 
-UserTag.init(
+AppUserTag.init(
   {
     uuid: {
       type: DataTypes.UUID,
@@ -50,4 +50,4 @@ UserTag.init(
   }
 );
 
-export default UserTag;
+export default AppUserTag;

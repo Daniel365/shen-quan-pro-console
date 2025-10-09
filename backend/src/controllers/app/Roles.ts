@@ -3,12 +3,14 @@
  * @Date: 2025-10-04 13:05:24
  * @Description: 角色 - 控制器
  */
-import { Role } from '@/models/app';
+import sequelize from '@/database';
+import { Role, RoleTranslation } from '@/models/app';
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
-
+// services
+import { RoleTranslationService } from '@/services/RoleTranslationService';
 import { DataTypeEnum, MatchTypeEnum } from '@/enum';
-import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
+import { buildWhereCondition, defaultExcludeQueryFields, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
 
@@ -29,6 +31,14 @@ export class RoleController {
 
       const { rows, count } = await Role.findAndCountAll({
         where,
+        include: [
+          {
+            model: RoleTranslation,
+            as: 'role_translations',
+            required: false,
+            attributes: { exclude: [...defaultExcludeQueryFields, 'role_uuid'] },
+          },
+        ],
         ...defaultListQuery(reqBody),
       });
       // 分页信息
@@ -42,66 +52,111 @@ export class RoleController {
         pageInfo,
       });
     } catch (error) {
+      console.log("role-list=>", error)
       return res.responseBuilder.error('common.serverError', 500);
     }
   }
 
-  // 创建角色
-  static async create(req: Request, res: Response) {
+  /**
+   * 创建或编辑角色
+   */
+  static async save(req: Request, res: Response) {
+    const { uuid, code, profit_ratio, status, menu_ids = [], role_translations = [] } = req.body;
+    const isEdit = !!uuid;
+    
     try {
-      const { name, code, description } = req.body;
-
-      // 检查角色名称是否已存在
-      const existingName = await Role.findOne({ where: { name } });
-      if (existingName) {
-        return res.responseBuilder.error('role.nameExists');
+      // 验证必填字段
+      if (!code) {
+        return res.responseBuilder.error('role.codeRequired', 400);
       }
 
-      // 检查角色编码是否已存在
-      const existingCode = await Role.findOne({ where: { code } });
+      // 验证翻译数据
+      const validationError = RoleTranslationService.validateTranslations(role_translations, isEdit);
+      if (validationError) {
+        return res.responseBuilder.error(validationError, 400);
+      }
+
+      // 检查角色编码是否已存在（排除当前角色）
+      const existingCode = await Role.findOne({ 
+        where: { 
+          code, 
+          uuid: isEdit ? { [Op.ne]: uuid } : { [Op.ne]: null } 
+        } 
+      });
       if (existingCode) {
         return res.responseBuilder.error('role.codeExists');
       }
 
-      const role = await Role.create({
-        name,
-        code,
-        description,
-      });
+      if (isEdit) {
+        // 编辑模式：验证角色是否存在
+        const role = await Role.findOne({ where: { uuid } });
+        if (!role) {
+          return res.responseBuilder.error('role.notFound', 404);
+        }
+      }
 
-      return res.responseBuilder.created({ uuid: role.uuid }, 'role.createSuccess');
+      const transaction = await sequelize.transaction();
+
+      try {
+        let role;
+        const formData = {
+          code,
+          profit_ratio,
+          status,
+          menu_ids,
+        };
+        
+        if (isEdit) {
+          // 编辑模式：更新角色主记录
+          await Role.update(formData, {
+            where: { uuid },
+            transaction,
+          });
+          
+          role = { uuid };
+          
+          // 统一处理翻译记录
+          await RoleTranslationService.saveTranslations(role_translations, transaction, role.uuid, true);
+        } else {
+          // 创建模式：创建角色主记录
+          role = await Role.create(formData, { transaction });
+          
+          // 统一处理翻译记录
+          await RoleTranslationService.saveTranslations(role_translations, transaction, role.uuid, false);
+        }
+
+        await transaction.commit();
+
+        const message = isEdit ? 'role.updateSuccess' : 'role.createSuccess';
+        return res.responseBuilder.success({ uuid: role.uuid }, message);
+      } catch (error) {
+        await transaction.rollback();
+        throw error;
+      }
     } catch (error) {
-      return res.responseBuilder.error('role.createFailed', 500);
+      console.log(`save->`, error);
+      const message = isEdit ? 'role.updateFailed' : 'role.createFailed';
+      return res.responseBuilder.error(message, 500);
     }
   }
 
-  // 更新角色
+  /**
+   * 创建角色
+   */
+  static async create(req: Request, res: Response) {
+    // 删除请求体中的uuid，确保创建模式
+    const body = { ...req.body };
+    delete body.uuid;
+    req.body = body;
+
+    return RoleController.save(req, res);
+  }
+
+  /**
+   * 编辑角色
+   */
   static async update(req: Request, res: Response) {
-    try {
-      const { uuid, name, code, description, status } = req.body;
-
-      // 检查角色名称是否已存在（排除当前角色）
-      if (name) {
-        const existingName = await Role.findOne({ where: { name, uuid: { [Op.ne]: uuid } } });
-        if (existingName) {
-          return res.responseBuilder.error('role.nameExists');
-        }
-      }
-
-      // 检查角色编码是否已存在（排除当前角色）
-      if (code) {
-        const existingCode = await Role.findOne({ where: { code, uuid: { [Op.ne]: uuid } } });
-        if (existingCode) {
-          return res.responseBuilder.error('role.codeExists');
-        }
-      }
-
-      await Role.update({ name, code, description, status }, { where: { uuid } });
-
-      return res.responseBuilder.success({}, 'role.updateSuccess');
-    } catch (error) {
-      return res.responseBuilder.error('role.updateFailed', 500);
-    }
+    return RoleController.save(req, res);
   }
 
   // 分配角色权限
@@ -117,13 +172,49 @@ export class RoleController {
     }
   }
 
-  // 删除角色
+  /**
+   * 批量删除角色
+   */
   static async delete(req: Request, res: Response) {
     try {
-      const { uuid } = req.body;
-      await Role.destroy({ where: { uuid } });
-      return res.responseBuilder.success({ uuid }, 'role.deleteSuccess');
+      const { role_uuids } = req.body;
+
+      if (!role_uuids || !Array.isArray(role_uuids) || role_uuids.length === 0) {
+        return res.responseBuilder.error('role.uuidsRequired', 400);
+      }
+
+      // 验证角色是否存在
+      const roles = await Role.findAll({ 
+        where: { uuid: { [Op.in]: role_uuids } } 
+      });
+      
+      if (roles.length !== role_uuids.length) {
+        return res.responseBuilder.error('role.someNotFound', 404);
+      }
+
+      const transaction = await sequelize.transaction();
+
+      try {
+        // 批量删除角色翻译记录（使用服务层）
+        for (const role_uuid of role_uuids) {
+          await RoleTranslationService.deleteTranslationsByRole(role_uuid, transaction);
+        }
+
+        // 批量删除角色主记录
+        await Role.destroy({
+          where: { uuid: { [Op.in]: role_uuids } },
+          transaction,
+        });
+
+        await transaction.commit();
+
+        return res.responseBuilder.success({ deleted_uuids: role_uuids }, 'role.deleteSuccess');
+      } catch (error) {
+        await transaction.rollback();
+        throw error;
+      }
     } catch (error) {
+      console.log(`delete->`, error);
       return res.responseBuilder.error('role.deleteFailed', 500);
     }
   }

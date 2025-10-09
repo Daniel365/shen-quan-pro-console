@@ -55,8 +55,6 @@ const alovaInstance = createAlova({
       // 处理 401 未授权（Token 失效或不存在）
       if (response?.status === 401) {
         onLogout();
-      } else if (response?.status !== 200) {
-        ElMessage.error(String(response?.status));
       }
       const res: InterfaceResult = (await response?.json()) as any;
       // 转换数据格式 - (下划线 -> 小驼峰)

@@ -251,5 +251,31 @@
     "contentTypeRequired": "Content-Type 请求头不能为空",
     "invalidContentType": "无效的 Content-Type，必须是 multipart/form-data",
     "boundaryRequired": "multipart/form-data 请求必须包含 boundary 参数"
+  },
+  "systemConfig": {
+    "notFound": "系统配置不存在",
+    "keyExists": "配置键名已存在",
+    "createSuccess": "系统配置创建成功",
+    "createFailed": "系统配置创建失败",
+    "updateSuccess": "系统配置更新成功",
+    "updateFailed": "系统配置更新失败",
+    "deleteSuccess": "系统配置删除成功",
+    "deleteFailed": "系统配置删除失败"
+  },
+  "profitDistribution": {
+    "notFound": "利润分配配置不存在",
+    "nameExists": "配置名称已存在",
+    "rolesNotFound": "部分角色不存在",
+    "createSuccess": "利润分配配置创建成功",
+    "createFailed": "利润分配配置创建失败",
+    "updateSuccess": "利润分配配置更新成功",
+    "updateFailed": "利润分配配置更新失败",
+    "enableSuccess": "利润分配配置启用成功",
+    "enableFailed": "利润分配配置启用失败",
+    "deleteSuccess": "利润分配配置删除成功",
+    "deleteFailed": "利润分配配置删除失败",
+    "cannotDeleteEnabled": "不能删除已启用的配置",
+    "valid": "配置有效",
+    "invalid": "配置无效，分润比例总和超过100%"
   }
 }

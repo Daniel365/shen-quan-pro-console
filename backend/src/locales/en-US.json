@@ -218,5 +218,31 @@
     "contentTypeRequired": "Content-Type header is required",
     "invalidContentType": "Invalid Content-Type, must be multipart/form-data",
     "boundaryRequired": "Multipart/form-data request must contain boundary parameter"
+  },
+  "systemConfig": {
+    "notFound": "System configuration not found",
+    "keyExists": "Configuration key already exists",
+    "createSuccess": "System configuration created successfully",
+    "createFailed": "System configuration creation failed",
+    "updateSuccess": "System configuration updated successfully",
+    "updateFailed": "System configuration update failed",
+    "deleteSuccess": "System configuration deleted successfully",
+    "deleteFailed": "System configuration deletion failed"
+  },
+  "profitDistribution": {
+    "notFound": "Profit distribution configuration not found",
+    "nameExists": "Configuration name already exists",
+    "rolesNotFound": "Some roles not found",
+    "createSuccess": "Profit distribution configuration created successfully",
+    "createFailed": "Profit distribution configuration creation failed",
+    "updateSuccess": "Profit distribution configuration updated successfully",
+    "updateFailed": "Profit distribution configuration update failed",
+    "enableSuccess": "Profit distribution configuration enabled successfully",
+    "enableFailed": "Profit distribution configuration enabling failed",
+    "deleteSuccess": "Profit distribution configuration deleted successfully",
+    "deleteFailed": "Profit distribution configuration deletion failed",
+    "cannotDeleteEnabled": "Cannot delete enabled configuration",
+    "valid": "Configuration is valid",
+    "invalid": "Configuration is invalid, profit share total exceeds 100%"
   }
 }

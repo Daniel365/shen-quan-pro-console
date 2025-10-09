@@ -31,6 +31,8 @@ import {
   appRoleRoutes,
   appTagRoutes,
   appUserRoutes,
+  appSystemConfigRoutes,
+  appProfitDistributionRoutes,
 } from './routes/app';
 import emailRoutes from './routes/email';
 import {
@@ -89,6 +91,9 @@ app.use(`${API_VERSION}/app/order`, appOrderRoutes);
 app.use(`${API_VERSION}/app/profit-record`, appProfitRecordRoutes);
 app.use(`${API_VERSION}/app/tag`, appTagRoutes);
 app.use(`${API_VERSION}/app/membership-card`, appMembershipCardRoutes);
+// app-config
+app.use(`${API_VERSION}/app/system-config`, appSystemConfigRoutes);
+app.use(`${API_VERSION}/app/profit-distribution`, appProfitDistributionRoutes);
 
 // 根路由
 app.get('/', (req, res) => {
@@ -118,6 +123,7 @@ if (syncConfig) {
     .sync(syncConfig)
     .then(() => {
       console.log('开启数据库同步成功');
+      // console.log('已注册的模型:', Object.keys(sequelize.models));
       listenServer();
     })
     .catch((err) => {
