@@ -6,8 +6,10 @@
 import activityManageApi from './activityManage';
 import membershipCardManageApi from './membershipCardManage';
 import orderManageApi from './orderManage';
+import profitDistributionManageApi from './profitDistributionManage';
 import profitManageApi from './profitManage';
 import appRoleManageApi from './roleManage';
+import systemConfigManageApi from './systemConfigManage';
 import tagManageApi from './tagManage';
 import appUserManageApi from './userManage';
 
@@ -17,6 +19,8 @@ export {
   appUserManageApi,
   membershipCardManageApi,
   orderManageApi,
+  profitDistributionManageApi,
   profitManageApi,
+  systemConfigManageApi,
   tagManageApi,
 };

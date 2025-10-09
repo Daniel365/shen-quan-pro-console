@@ -32,6 +32,7 @@ declare global {
   const SidebarColor: typeof import('../enums/ui')['SidebarColor']
   const SidebarStatus: typeof import('../enums/ui')['SidebarStatus']
   const StorageKeyEnum: typeof import('../enums/storageKeys')['StorageKeyEnum']
+  const SystemConfigTypeEnum: typeof import('../enums/systemConfig')['SystemConfigTypeEnum']
   const THEME_COLOR_KEY: typeof import('../enums/storageKeys')['THEME_COLOR_KEY']
   const THEME_KEY: typeof import('../enums/storageKeys')['THEME_KEY']
   const ThemeMode: typeof import('../enums/ui')['ThemeMode']
@@ -43,6 +44,7 @@ declare global {
   const apiVersionUrl: typeof import('../api/requestUtils')['apiVersionUrl']
   const app: typeof import('../api/index')['app']
   const appRoleManageApi: typeof import('../api/app/index')['appRoleManageApi']
+  const appSystemConfigManageApi: typeof import('../api/app/index')['systemConfigManageApi']
   const appUserManageApi: typeof import('../api/app/index')['appUserManageApi']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
@@ -139,6 +141,7 @@ declare global {
   const operationLogApi: typeof import('../api/system/index')['operationLogApi']
   const orderManageApi: typeof import('../api/app/index')['orderManageApi']
   const pausableWatch: typeof import('@vueuse/core')['pausableWatch']
+  const profitDistributionManageApi: typeof import('../api/app/index')['profitDistributionManageApi']
   const profitManageApi: typeof import('../api/app/index')['profitManageApi']
   const provide: typeof import('vue')['provide']
   const provideLocal: typeof import('@vueuse/core')['provideLocal']
@@ -172,6 +175,8 @@ declare global {
   const syncRef: typeof import('@vueuse/core')['syncRef']
   const syncRefs: typeof import('@vueuse/core')['syncRefs']
   const system: typeof import('../api/index')['system']
+  const systemConfigManageApi: typeof import('../api/app/index')['systemConfigManageApi']
+  const systemConfigTypeOptions: typeof import('../utils/options')['systemConfigTypeOptions']
   const tagManageApi: typeof import('../api/app/index')['tagManageApi']
   const templateRef: typeof import('@vueuse/core')['templateRef']
   const throttledRef: typeof import('@vueuse/core')['throttledRef']
@@ -544,6 +549,7 @@ declare module 'vue' {
     readonly operationLogApi: UnwrapRef<typeof import('../api/system/index')['operationLogApi']>
     readonly orderManageApi: UnwrapRef<typeof import('../api/app/index')['orderManageApi']>
     readonly pausableWatch: UnwrapRef<typeof import('@vueuse/core')['pausableWatch']>
+    readonly profitDistributionManageApi: UnwrapRef<typeof import('../api/app/index')['profitDistributionManageApi']>
     readonly profitManageApi: UnwrapRef<typeof import('../api/app/index')['profitManageApi']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly provideLocal: UnwrapRef<typeof import('@vueuse/core')['provideLocal']>
@@ -575,6 +581,7 @@ declare module 'vue' {
     readonly storeToRefs: UnwrapRef<typeof import('pinia')['storeToRefs']>
     readonly syncRef: UnwrapRef<typeof import('@vueuse/core')['syncRef']>
     readonly syncRefs: UnwrapRef<typeof import('@vueuse/core')['syncRefs']>
+    readonly systemConfigManageApi: UnwrapRef<typeof import('../api/app/index')['systemConfigManageApi']>
     readonly tagManageApi: UnwrapRef<typeof import('../api/app/index')['tagManageApi']>
     readonly templateRef: UnwrapRef<typeof import('@vueuse/core')['templateRef']>
     readonly throttledRef: UnwrapRef<typeof import('@vueuse/core')['throttledRef']>

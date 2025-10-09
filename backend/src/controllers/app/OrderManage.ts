@@ -6,14 +6,14 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 // models
-import { Activity, ActivityTranslation, Order, ProfitRecord, User } from '@/models/app';
+import { Activity, ActivityTranslation, Order, ProfitRecord, User, UserInvite } from '@/models/app';
 // utils
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-import { GenderEnum, OrderStatusEnum, ProfitStatusEnum, StatusEnum } from '@/enum';
+import { GenderEnum, OrderStatusEnum, ProfitStatusEnum, StatusEnum, SystemConfigKeyEnum } from '@/enum';
 // services
-import { ConfigService } from '@/services/ConfigService';
+import { SystemConfigService } from '@/services/SystemConfigService';
 import { ProfitService } from '@/services/ProfitService';
 
 export class OrderController {
@@ -179,7 +179,7 @@ export class OrderController {
 
       // 注意：报名人数现在通过订单表统计，不再更新活动表的regCount字段
 
-      // 生成分账记录
+      // 生成收益记录和分润记录
       await this.generateProfitRecord(order);
 
       return res.responseBuilder.success({ order_uuid }, 'order.paySuccess');
@@ -188,6 +188,20 @@ export class OrderController {
     }
   }
 
+  /**
+ * 计算退款截止时间
+ * @param hours 获取活动退款截止时间配置（小时数）
+ * @param startTime 活动开始时间
+ * @returns 退款截止时间
+ */
+  static async calculateRefundDeadline(startTime: Date): Promise<Date> {
+    const hours = await SystemConfigService.getConfig({
+      key: SystemConfigKeyEnum.activity_refund_deadline_hours,
+      defaultValue: 2
+    }); // 默认2小时
+    const deadline = new Date(startTime.getTime() - hours * 60 * 60 * 1000);
+    return deadline;
+  }
   /**
    * 申请退款
    */
@@ -213,7 +227,7 @@ export class OrderController {
 
       // 检查退款时间是否在截止时间前 - 动态计算退款截止时间
       const now = new Date();
-      const refundDeadline = await ConfigService.calculateRefundDeadline(
+      const refundDeadline = await OrderController.calculateRefundDeadline(
         (order as any).activity.start_time
       );
       if (now > refundDeadline) {
@@ -231,7 +245,7 @@ export class OrderController {
 
       // 注意：报名人数现在通过订单表统计，不再更新活动表的regCount字段
 
-      // 更新分账记录状态为已取消
+      // 更新收益记录状态为已取消
       await ProfitRecord.update({ status: ProfitStatusEnum.CANCELLED }, { where: { order_uuid } });
 
       return res.responseBuilder.success({ order_uuid }, 'order.refundSuccess');
@@ -412,34 +426,34 @@ export class OrderController {
   }
 
   /**
-   * 生成分润记录
+   * 生成收益记录和分润记录
    */
   private static async generateProfitRecord(order: Order) {
     try {
       const activity = await Activity.findOne({ where: { uuid: order.target_uuid } });
-      const user = await User.findOne({ where: { uuid: order.orderer_uuid } });
+      // const user = await User.findOne({ where: { uuid: order.orderer_uuid } });
+      const userInviter = await UserInvite.findOne({ where: { user_uuid: order.orderer_uuid } })
 
-      if (!activity || !user) {
+      if (!activity || !userInviter) {
         throw new Error('Activity or User not found');
       }
 
       const totalAmount = order.actual_price;
 
-      // 使用动态分润服务创建分润记录
-      const profitRecord = await ProfitService.createProfitRecord(
+      // 使用动态分润服务创建收益记录和分润记录
+      const { profitRecord, distributionRecords } = await ProfitService.createProfitRecord(
         order.uuid,
         order.target_uuid,
         order.orderer_uuid,
-        totalAmount
+        totalAmount,
+        userInviter.inviter_uuid  // 传递邀请人UUID用于合伙人分润
       );
 
-      // 创建分润记录
-      await ProfitRecord.create(profitRecord);
-
-      console.log('分润记录创建成功:', {
+      console.log('收益记录和分润记录创建成功:', {
         orderId: order.uuid,
         totalAmount,
-        distribution: profitRecord.profit_distribution,
+        profitRecordId: profitRecord.uuid,
+        distributionRecordsCount: distributionRecords.length,
       });
     } catch (error) {
       console.error('Generate profit record failed:', error);

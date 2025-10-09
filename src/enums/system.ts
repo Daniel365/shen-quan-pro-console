@@ -249,4 +249,24 @@ export enum RequestPath {
   APP_MEMBERSHIP_CARD_TOGGLE_STATUS = '/app/membership-card/toggle-status',
   /** 批量更新排序 */
   APP_MEMBERSHIP_CARD_UPDATE_SORT = '/app/membership-card/update-sort',
+
+  /** 系统配置列表 */
+  APP_SYSTEM_CONFIG_LIST = '/app/system-config/list',
+  /** 新增系统配置 */
+  APP_SYSTEM_CONFIG_CREATE = '/app/system-config/create',
+  /** 编辑系统配置 */
+  APP_SYSTEM_CONFIG_UPDATE = '/app/system-config/update',
+  /** 删除系统配置 */
+  APP_SYSTEM_CONFIG_DELETE = '/app/system-config/delete',
+
+  /** 利润分配配置列表 */
+  APP_PROFIT_DISTRIBUTION_LIST = '/app/profit-distribution/list',
+  /** 新增利润分配配置 */
+  APP_PROFIT_DISTRIBUTION_CREATE = '/app/profit-distribution/create',
+  /** 编辑利润分配配置 */
+  APP_PROFIT_DISTRIBUTION_UPDATE = '/app/profit-distribution/update',
+  /** 删除利润分配配置 */
+  APP_PROFIT_DISTRIBUTION_DELETE = '/app/profit-distribution/delete',
+  /** 启用利润分配配置 */
+  APP_PROFIT_DISTRIBUTION_ENABLE = '/app/profit-distribution/enable',
 }

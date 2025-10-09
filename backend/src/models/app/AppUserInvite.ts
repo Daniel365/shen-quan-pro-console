@@ -2,7 +2,7 @@ import sequelize from '@/database';
 import { getAppDbName, sequelizeCommonFields, sequelizeCommonConfig } from '@/database/common';
 import { CreateAttributes } from '@/types/database';
 import { Association, DataTypes, Model } from 'sequelize';
-import User from './User';
+import User from './AppUser';
 
 // 定义用户邀请关系属性接口
 interface UserInviteAttributes {
@@ -19,7 +19,7 @@ interface UserInviteAttributes {
 interface UserInviteCreationAttributes extends CreateAttributes<UserInviteAttributes> {}
 
 // 用户邀请关系模型
-class UserInvite
+class AppUserInvite
   extends Model<UserInviteAttributes, UserInviteCreationAttributes>
   implements UserInviteAttributes
 {
@@ -38,13 +38,13 @@ class UserInvite
 
   // 关联关系定义
   public static associations: {
-    user: Association<UserInvite, User>;
-    inviter: Association<UserInvite, User>;
+    user: Association<AppUserInvite, User>;
+    inviter: Association<AppUserInvite, User>;
   };
 }
 
 // 初始化模型
-UserInvite.init(
+AppUserInvite.init(
   {
     uuid: {
       type: DataTypes.UUID,
@@ -81,4 +81,4 @@ UserInvite.init(
   }
 );
 
-export default UserInvite;
+export default AppUserInvite;

@@ -5,6 +5,7 @@
     :model="formData"
     :rules="formRules"
     :label-width="labelWidth"
+    :label-position="labelPosition"
     :inline="inline"
     :disabled="disabled"
   >
@@ -132,7 +133,7 @@
 </template>
 
 <script setup lang="ts">
-import { type FormInstance } from 'element-plus';
+import { FormProps, type FormInstance } from 'element-plus';
 
 import { FormGroupFieldConfig } from './types';
 
@@ -144,7 +145,9 @@ interface Props {
   /** 表单数据 */
   modelValue?: Record<string, any>;
   /** 标签宽度 */
-  labelWidth?: string;
+  labelWidth?: FormProps["labelWidth"];
+  /** 标签方位 */
+  labelPosition?: FormProps["labelPosition"];
   /** 内容宽度 */
   contentWidth?: string;
   /** 是否行内布局 */
@@ -164,6 +167,7 @@ const props = withDefaults(defineProps<Props>(), {
   formRules: () => ({}),
   inline: false,
   itemClass: '',
+  labelPosition: 'left',
   labelWidth: '100px',
   modelValue: () => ({}),
 });

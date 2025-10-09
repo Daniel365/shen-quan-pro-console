@@ -73,7 +73,7 @@ AppUser.init(
     phone: {
       comment: '手机号',
       type: DataTypes.STRING(20),
-      unique: 'uk_phone',
+      unique: 'unique_phone',
     },
     role_uuids: {
       comment: '角色UUID数组',
@@ -114,6 +114,28 @@ AppUser.init(
     sequelize,
     tableName: getAppDbName('user'),
     ...sequelizeCommonConfig(),
+    indexes: [
+      {
+        name: 'idx_user_nickname',
+        fields: ['nickname']
+      },
+      {
+        name: 'idx_user_status',
+        fields: ['status']
+      },
+      {
+        name: 'idx_user_created_at',
+        fields: ['created_at']
+      },
+      {
+        name: 'idx_user_invite_code',
+        fields: ['invite_code']
+      },
+      {
+        name: 'idx_user_last_login_at',
+        fields: ['last_login_at']
+      }
+    ]
   }
 );
 

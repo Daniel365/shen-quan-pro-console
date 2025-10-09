@@ -10,7 +10,7 @@
       :maxlength="props.maxLength"
       :placeholder="props.placeholder"
       :size="props.size"
-      @update:model-value="(v: string) => emit('update:modelValue', v)"
+      @update:model-value="(val: string) => emit('update:modelValue', val)"
     />
     <el-button
       class="code-input-btn"
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus';
+import { ElMessage, InputProps } from 'element-plus';
 
 interface Props {
   modelValue?: string;
@@ -35,7 +35,7 @@ interface Props {
   /** 倒计时秒数，默认 60 */
   countdown?: number;
   /** 按钮尺寸，默认 large */
-  size?: 'small' | 'middle' | 'large';
+  size?: InputProps['size'];
   /** 是否禁用发送 */
   disabled?: boolean;
   /** 发送验证码的 api，返回 Promise；由外部负责实际请求 */

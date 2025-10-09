@@ -5,12 +5,17 @@
  */
 
 import { ProfitDistributionService } from './ProfitDistributionService';
+import { ProfitRecord, ProfitDistributionRecord } from '@/models/app';
+import { ProfitStatusEnum } from '@/enum';
 
 export class ProfitService {
   /**
    * 创建分润记录
    */
-  static async createProfitRecord(orderUuid: string, activityUuid: string, userUuid: string, totalAmount: number): Promise<any> {
+  static async createProfitRecord(orderUuid: string, activityUuid: string, userUuid: string, totalAmount: number, inviterUuid?: string): Promise<{
+    profitRecord: ProfitRecord;
+    distributionRecords: ProfitDistributionRecord[];
+  }> {
     try {
       // 获取启用的利润分配配置
       const distribution = await ProfitDistributionService.getEnabledDistribution();
@@ -21,31 +26,50 @@ export class ProfitService {
       // 计算分润结果
       const { distribution: profitDetails, remainingAmount, isValid } = await ProfitDistributionService.calculateProfitShare(
         totalAmount, 
-        userUuid
+        userUuid,
+        inviterUuid
       );
 
       if (!isValid) {
         console.warn('分润比例配置无效，但继续创建分润记录');
       }
 
-      // 创建分润记录
-      const profitRecord = {
+      // 创建主收益记录
+      const profitRecord = await ProfitRecord.create({
         order_uuid: orderUuid,
         activity_uuid: activityUuid,
         user_uuid: userUuid,
         total_amount: totalAmount,
-        status: 1, // 冻结中
-        created_at: new Date()
-      };
+        status: ProfitStatusEnum.FROZEN,
+      });
+
+      // 创建多条分润分配记录
+      const distributionRecords: ProfitDistributionRecord[] = [];
+      for (const detail of profitDetails) {
+        const distributionRecord = await ProfitDistributionRecord.create({
+          profit_record_uuid: profitRecord.uuid,
+          role_uuid: detail.role_uuid,
+          user_uuid: detail.user_uuid,
+          base_amount: totalAmount,
+          distribution_amount: detail.amount,
+          share_percentage: detail.amount / totalAmount * 100,
+          status: ProfitStatusEnum.FROZEN,
+        });
+        distributionRecords.push(distributionRecord);
+      }
 
       console.log('分润记录创建成功:', {
         orderUuid,
         totalAmount,
-        profitDetails,
+        profitDetailsCount: profitDetails.length,
+        distributionRecordsCount: distributionRecords.length,
         remainingAmount
       });
 
-      return profitRecord;
+      return {
+        profitRecord,
+        distributionRecords
+      };
     } catch (error) {
       console.error('创建分润记录失败:', error);
       throw error;

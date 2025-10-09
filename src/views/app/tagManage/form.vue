@@ -4,7 +4,7 @@
  * @Description: 标签管理表单组件 - 多语言版本
 -->
 <template>
-  <div class="tag-form-component">
+  <div class="tag-form-page">
     <!-- 语言切换标签 -->
     <el-tabs v-model="activeLanguage" type="card" @tab-change="handleLanguageChange">
       <el-tab-pane v-for="item in enabledLanguages" :key="item.value" :name="item.value">
@@ -27,11 +27,12 @@
           :form-data="getTranslationByLanguage(item.value)"
           :action-type="actionType"
           :language="item.value"
+          :disabled="isReadonly"
         />
       </el-tab-pane>
 
       <!-- 添加语言选择器 -->
-      <el-tab-pane name="add" :disabled="true">
+      <el-tab-pane v-if="!isReadonly" name="add" :disabled="true">
         <template #label>
           <el-dropdown trigger="click" :disabled="!canAddLanguage" @command="handleAddLanguage">
             <el-button type="text" size="small" :disabled="!canAddLanguage">
@@ -56,35 +57,19 @@
     </el-tabs>
 
     <!-- 通用信息（不属于任何语言） -->
-    <el-form
+    <FormGroup
       ref="mainFormRef"
-      :model="formData"
-      :rules="mainFormRules"
+      :model-value="formData"
+      :form-fields="mainFormFields"
+      :form-rules="mainFormRules"
       label-width="120px"
       label-position="top"
-      class="common-form-section"
-    >
-      <!-- 标签类型 -->
-      <el-form-item :label="$t('tagManage.typeLabel')" prop="type">
-        <Select
-          v-model="formData.type"
-          :options="tagTypeOptions"
-          :placeholder="$t('tagManage.typePlaceholder')"
-          :disabled="isReadonly"
-          width="100%"
-        />
-      </el-form-item>
-
-      <!-- 状态 -->
-      <el-form-item :label="$t('form.status')" prop="status">
-        <RadioGroup v-model="formData.status" :options="enabledStatusOptions" />
-      </el-form-item>
-    </el-form>
-
-    <!-- 操作按钮 -->
-    <div class="text-right">
+      :disabled="isReadonly"
+      @update:model-value="(val) => Object.assign(formData, val)"
+    />
+    <div class="text-align-right mt-10">
       <el-button @click="handleCancel">
-        {{ $t('action.cancel') }}
+        {{ isReadonly ? i18nText('action.close') : i18nText('action.cancel') }}
       </el-button>
       <el-button
         v-if="actionType !== ActionTypeEnum.DETAIL"
@@ -92,7 +77,7 @@
         :loading="loading"
         @click="handleSubmit"
       >
-        {{ $t('action.submit') }}
+        {{ i18nText('action.submit') }}
       </el-button>
     </div>
   </div>
@@ -132,6 +117,11 @@ const loading = ref(false);
 // 使用props的操作类型
 const actionType = computed(() => props.actionType);
 
+// 页面标题
+const pageTitle = computed(() => {
+  return getActionTitle(actionType.value);
+});
+
 // 是否为只读模式（详情页时禁用编辑）
 const isReadonly = computed(() => actionType.value === ActionTypeEnum.DETAIL);
 
@@ -163,6 +153,26 @@ const mainFormRef = ref<FormInstance>();
 const languageFormRefs = ref<FormInstance[]>();
 
 const getRequiredMessage = (key: string) => i18nText(`tagManage.message.${key}.required`);
+
+// 主表单字段配置
+const mainFormFields = computed(() => [
+  {
+    key: 'type',
+    label: i18nText('tagManage.typeLabel'),
+    options: tagTypeOptions,
+    placeholder: i18nText('tagManage.typePlaceholder'),
+    required: true,
+    type: FormTypeEnum.SELECT,
+    disabled: isReadonly.value,
+  },
+  {
+    key: 'status',
+    label: i18nText('form.status'),
+    options: enabledStatusOptions,
+    required: true,
+    type: FormTypeEnum.RADIO_GROUP,
+  },
+]);
 
 // 主表单验证规则
 const mainFormRules = {
@@ -329,17 +339,7 @@ const handleCancel = () => {
 // 重置表单数据
 const resetForm = () => {
   // 重置主表单数据
-  Object.assign(formData, {
-    status: EnabledStatusEnum.ENABLED,
-    tagTranslations: [
-      {
-        description: '',
-        language: LanguageEnum.ZH,
-        name: '',
-      },
-    ],
-    type: TagTypeEnum.ACTIVITY,
-  });
+  Object.assign(formData, defaultFormData);
 
   // 重置启用的语言列表
   enabledLanguages.value = [languageOptions.find((item) => item.value === LanguageEnum.ZH)!];

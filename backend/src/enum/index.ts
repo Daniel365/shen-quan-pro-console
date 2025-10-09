@@ -10,3 +10,6 @@ export * from './business';
 
 // 订单相关枚举
 export * from './order';
+
+// 系统配置相关枚举
+export * from './systemConfig'

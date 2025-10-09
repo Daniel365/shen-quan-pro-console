@@ -78,6 +78,18 @@ ActivityTranslation.init(
         unique: true,
         fields: ['activity_uuid', 'language'],
       },
+      {
+        name: 'idx_activity_translation_title',
+        fields: ['title']
+      },
+      {
+        name: 'idx_activity_translation_language',
+        fields: ['language']
+      },
+      {
+        name: 'idx_activity_translation_created_at',
+        fields: ['created_at']
+      }
     ],
   }
 );

@@ -6,7 +6,9 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 // models
-import { Role, User, UserInvite } from '@/models/app';
+import { Role, RoleTranslation, User, UserInvite } from '@/models/app';
+// services
+import { RoleTranslationService } from '@/services/RoleTranslationService';
 // utils
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
@@ -15,21 +17,24 @@ import { GenderEnum, StatusEnum } from '@/enum';
 
 export class UserController {
   /**
-   * 根据角色UUID数组查询角色名称
-   * @param roleUuids 角色UUID数组
-   * @returns 角色名称字符串
+   * 根据角色UUID数组查询角色名称（多语言支持）
+   * @param role_uuid 角色UUID数组
+   * @returns 角色多语言名称数组对象[{ role_uuid: xxx, name: xxx }]
    */
-  private static async getRoleNames(roleUuids: string[]): Promise<string> {
-    if (!roleUuids || roleUuids.length === 0) {
-      return '';
+  private static async getRoleNames(role_uuid: string[]): Promise<RoleTranslation[]> {
+    if (!role_uuid || role_uuid.length === 0) {
+      return [];
     }
 
-    const roles = await Role.findAll({
-      where: { uuid: { [Op.in]: roleUuids } },
-      attributes: ['name'],
+    // 使用服务层方法获取角色名称
+    const translations = await RoleTranslation.findAll({
+      where: {
+        role_uuid
+      },
+      attributes: ['role_uuid', "name", "language"],
     });
 
-    return roles.map((role) => role.name).join(', ');
+    return translations;
   }
 
   /**

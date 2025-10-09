@@ -87,6 +87,28 @@ Order.init(
     sequelize,
     tableName: getAppDbName('order'),
     ...sequelizeCommonConfig(),
+    indexes: [
+      {
+        name: 'idx_order_status',
+        fields: ['order_status']
+      },
+      {
+        name: 'idx_order_orderer',
+        fields: ['orderer_uuid']
+      },
+      {
+        name: 'idx_order_type',
+        fields: ['order_type']
+      },
+      {
+        name: 'idx_order_created_at',
+        fields: ['created_at']
+      },
+      {
+        name: 'idx_order_order_time',
+        fields: ['order_time']
+      }
+    ]
   }
 );
 

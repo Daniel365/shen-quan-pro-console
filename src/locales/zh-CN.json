@@ -228,7 +228,12 @@
     "lastLoginTime": "最后登录时间",
     "inviteCode": "邀请码",
     "enterInviteCode": "请输入邀请码",
-    "selectGender": "请选择性别"
+    "selectGender": "请选择性别",
+    "typeString": "字符串",
+    "typeNumber": "数字",
+    "typeBoolean": "布尔值",
+    "typeJson": "JSON",
+    "array": "数组"
   },
   "menuManage": {
     "button": "按钮",
@@ -324,6 +329,8 @@
     "deleteConfirm": "确定要删除角色 {roleName} 吗？",
     "editRole": "编辑角色",
     "permissionAssignment": "【{roleName}】 权限分配",
+    "profitRatio": "分润比例",
+    "enterProfitRatio": "请输入分润比例",
     "message": {
       "roleCode": {
         "required": "请输入角色编码",
@@ -338,6 +345,10 @@
       },
       "status": {
         "required": "请选择状态"
+      },
+      "profitRatio": {
+        "required": "请输入分润比例",
+        "range": "分润比例必须在0-100之间"
       }
     }
   },
@@ -579,6 +590,34 @@
       }
     }
   },
+  "systemConfigManage": {
+    "addSystemConfig": "新增系统配置",
+    "editSystemConfig": "编辑系统配置",
+    "deleteConfirm": "确定要删除系统配置 {configKey} 吗？",
+    "keyLabel": "配置键名",
+    "keyPlaceholder": "请输入配置键名",
+    "valueLabel": "配置值",
+    "valuePlaceholder": "请输入配置值",
+    "descriptionLabel": "配置描述",
+    "descriptionPlaceholder": "请输入配置描述",
+    "typeLabel": "配置类型",
+    "typePlaceholder": "请选择配置类型",
+    "message": {
+      "key": {
+        "required": "请输入配置键名",
+        "maxLength": "配置键名不能超过100个字符"
+      },
+      "value": {
+        "required": "请输入配置值"
+      },
+      "type": {
+        "required": "请选择配置类型"
+      },
+      "description": {
+        "maxLength": "配置描述不能超过200个字符"
+      }
+    }
+  },
   "profitManage": {
     "profitNo": "收益编号",
     "profitNoLabel": "收益编号",
@@ -627,6 +666,46 @@
       },
       "status": {
         "required": "请选择收益状态"
+      }
+    }
+  },
+  "profitDistributionManage": {
+    "addProfitDistribution": "新增利润分配配置",
+    "editProfitDistribution": "编辑利润分配配置",
+    "deleteConfirm": "确定要删除利润分配配置 {configName} 吗？",
+    "enableConfirm": "确定要启用利润分配配置 {configName} 吗？",
+    "configNameLabel": "配置名称",
+    "configNamePlaceholder": "请输入配置名称",
+    "roleSharesLabel": "角色分配比例",
+    "roleSharesPlaceholder": "请设置角色分配比例",
+    "roleShareLabel": "角色 {index}",
+    "profitPointsPlaceholder": "请输入利润点数",
+    "addRoleShare": "添加角色分配",
+    "statusLabel": "配置状态",
+    "statusPlaceholder": "请选择配置状态",
+    "enableConfig": "启用配置",
+    "enableSuccess": "启用成功",
+    "enableFailed": "启用失败",
+    "cannotDeleteEnabled": "无法删除已启用的配置",
+    "message": {
+      "configName": {
+        "required": "请输入配置名称",
+        "maxLength": "配置名称不能超过100个字符",
+        "exists": "配置名称已存在"
+      },
+      "roleShares": {
+        "required": "请设置角色分配比例",
+        "total100": "角色分配比例总和必须为100%"
+      },
+      "role": {
+        "required": "请选择角色"
+      },
+      "profitPoints": {
+        "required": "利润点数不能为空",
+        "min": "利润点数不能为负数"
+      },
+      "status": {
+        "required": "请选择配置状态"
       }
     }
   }

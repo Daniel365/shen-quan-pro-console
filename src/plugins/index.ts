@@ -7,7 +7,7 @@
 import type { App } from 'vue';
 
 import { setupDirective } from '@/directive';
-import { setupI18n } from '@/locale';
+import { setupI18n } from '@/locales';
 import { setupRouter } from '@/router';
 import { setupStore } from '@/store';
 

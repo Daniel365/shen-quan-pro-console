@@ -18,7 +18,7 @@
       v-model:selected-rows="selectedRows"
       :api="orderManageApi.getList"
       :search-params="searchParams"
-      :columns="columns"
+      :columns="tableColumns"
       :selectable="true"
     >
       <!-- 操作按钮 -->
@@ -73,6 +73,7 @@ import type { OrderListItem, OrderListParams } from '@/api/app/orderManage/types
 
 // utils
 import { defaultSearchParams, exportFields, tableColumns } from './utils/const';
+import { OrderStatusEnum, RefundStatusEnum } from './utils/enum';
 import { orderStatusOptions, paymentMethodOptions, refundStatusOptions } from './utils/options';
 
 // 表格引用
@@ -144,9 +145,6 @@ const searchFields = computed(() => [
   },
 ]);
 
-// 表格列配置
-const columns = tableColumns;
-
 /** 操作按钮组 */
 const actionButtonGroup = computed<ButtonGroupOptions[]>(() => [
   {
@@ -167,13 +165,13 @@ const tableButtonGroup: ButtonGroupOptions[] = [
     handler: (record: OrderListItem) => {
       handleRefund(record);
     },
+    // 只有已支付且未退款或退款失败的订单可以退款
+    isShow: (record: OrderListItem) =>
+      record.status === OrderStatusEnum.PAID &&
+      (record.refundStatus === RefundStatusEnum.NONE ||
+        record.refundStatus === RefundStatusEnum.FAILED),
     labelKey: 'orderManage.refund',
     permission: [RequestPath.APP_ORDER_REFUND],
-    // 只有已支付且未退款或退款失败的订单可以退款
-    // show: (record: OrderListItem) =>
-    //   record.status === OrderStatusEnum.PAID &&
-    //   (record.refundStatus === RefundStatusEnum.NONE ||
-    //     record.refundStatus === RefundStatusEnum.FAILED),
     type: 'warning',
     value: 'refund',
   },

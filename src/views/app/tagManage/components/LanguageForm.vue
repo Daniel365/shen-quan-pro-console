@@ -1,6 +1,7 @@
 <template>
   <el-form
     ref="formRef"
+    :disabled="disabled"
     :model="formData"
     :rules="formRules"
     label-width="120px"
@@ -12,7 +13,7 @@
         v-model="formData.name"
         :placeholder="$t('tagManage.namePlaceholder')"
         :readonly="actionType === ActionTypeEnum.DETAIL"
-        maxlength="50"
+        :maxlength="50"
         show-word-limit
         clearable
       />
@@ -43,6 +44,7 @@ interface Props {
   formData: TagTranslationItem;
   actionType: string;
   language: string;
+  disabled?: boolean
 }
 
 const props = defineProps<Props>();
@@ -74,13 +76,21 @@ watch(
   { deep: true }
 );
 
-// 暴露方法给父组件
+/** 验证 */
 const validate = () => {
   if (!formRef.value) return Promise.resolve(true);
   return formRef.value.validate();
 };
 
+/** 重置表单 */
+const resetFields = () => {
+  if (!formRef.value) return Promise.resolve(true);
+  return formRef.value.resetFields();
+};
+
+// 定义暴露的方法
 defineExpose({
+  resetFields,
   validate,
 });
 </script>

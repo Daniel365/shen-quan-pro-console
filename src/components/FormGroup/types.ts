@@ -46,15 +46,19 @@ export interface FormGroupFieldConfig {
   props?: Record<string, any>;
 }
 
-export interface FormGroupProps {
+export interface FormGroupDialogProps {
   /** 是否显示弹窗 */
-  visible: boolean;
+  visible?: boolean;
+  /** 弹窗标题 */
+  dialogTitle?: string
   /** 操作类型 */
   actionType: ActionTypeEnum;
   /** 表单字段配置 */
   formFields: FormGroupFieldConfig[];
   /** 表单验证规则 */
   formRules?: FormRules;
+  /** 处理提交数据 */
+  handleSubmitData?: (params: any) => any;
   /** 新增API */
   addApi?: (params: any) => Promise<InterfaceResult>;
   /** 编辑API */
@@ -65,6 +69,8 @@ export interface FormGroupProps {
   width?: string | number;
   /** 标签宽度 */
   labelWidth?: string;
+  /** 标签方位 */
+  labelPosition?: string;
   /** 弹窗标题映射 */
   titleMap?: Record<ActionTypeEnum, string>;
   /** 提交按钮文本映射 */

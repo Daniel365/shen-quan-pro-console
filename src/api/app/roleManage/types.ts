@@ -15,6 +15,22 @@ export interface RoleListParams extends PageQuery {
 }
 
 /**
+ * 角色翻译数据结构接口
+ */
+export interface RoleTranslationItem {
+  /** 翻译唯一标识 */
+  uuid?: string;
+  /** 角色UUID */
+  roleUuid?: string;
+  /** 语言代码 */
+  language: string;
+  /** 角色名称（多语言） */
+  name: string;
+  /** 角色描述（多语言） */
+  description?: string;
+}
+
+/**
  * 角色数据结构接口
  */
 export interface RoleListItem {
@@ -22,18 +38,22 @@ export interface RoleListItem {
   uuid: string;
   /** 角色代码（唯一） */
   code: string;
-  /** 创建时间 */
-  createdAt: string;
-  /** 角色描述 */
-  description: string;
-  /** 关联的菜单ID列表 */
-  menuIds: string[];
   /** 角色名称 */
   name: string;
+  /** 角色描述 */
+  description?: string;
+  /** 关联的菜单ID列表 */
+  menuIds: string[];
+  /** 分润比例 */
+  profitRatio?: number;
   /** 角色状态（0-禁用，1-启用） */
   status: number;
+  /** 创建时间 */
+  createdAt: string;
   /** 更新时间 */
   updatedAt: string;
+  /** 角色翻译列表 */
+  roleTranslations?: RoleTranslationItem[];
 }
 
 /**
@@ -41,14 +61,14 @@ export interface RoleListItem {
  */
 export interface RoleFormData {
   uuid?: string;
-  /** 角色名称 */
-  name: string;
   /** 角色代码（唯一） */
   code: string;
-  /** 角色描述 */
-  description?: string;
+  /** 分润比例 */
+  profitRatio?: number;
   /** 角色状态（0-禁用，1-启用） */
   status?: number;
   /** 关联的菜单ID列表 */
   menuIds?: string[];
+  /** 角色翻译列表 */
+  roleTranslations: RoleTranslationItem[];
 }

@@ -22,7 +22,7 @@ export default {
     return alovaInstance.Post(RequestPath.APP_ROLE_CREATE, data);
   },
   // 删除角色
-  onDelete(data: { uuid: string }): Promise<InterfaceResult> {
+  onDelete(data: { roleUuids: string[] }): Promise<InterfaceResult> {
     return alovaInstance.Delete(RequestPath.APP_ROLE_DELETE, data);
   },
   // 编辑角色
