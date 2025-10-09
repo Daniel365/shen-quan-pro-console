@@ -8,9 +8,14 @@ import { Role, RoleTranslation } from '@/models/app';
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 // services
-import { RoleTranslationService } from '@/services/RoleTranslationService';
 import { DataTypeEnum, MatchTypeEnum } from '@/enum';
-import { buildWhereCondition, defaultExcludeQueryFields, defaultListQuery, getPageInfoConfig } from '@/utils/database';
+import { RoleTranslationService } from '@/services/RoleTranslationService';
+import {
+  buildWhereCondition,
+  defaultExcludeQueryFields,
+  defaultListQuery,
+  getPageInfoConfig,
+} from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
 
@@ -21,13 +26,13 @@ export class RoleController {
     try {
       const reqBody = req.body;
       const where: any = buildWhereCondition(reqBody, [
-        { field: 'name' },
         {
           field: 'status',
           dataType: DataTypeEnum.NUMBER,
           matchType: MatchTypeEnum.EXACT,
         },
       ]);
+      const translationsWhere: any = buildWhereCondition(reqBody, [{ field: 'name' }]);
 
       const { rows, count } = await Role.findAndCountAll({
         where,
@@ -36,6 +41,7 @@ export class RoleController {
             model: RoleTranslation,
             as: 'role_translations',
             required: false,
+            where: translationsWhere,
             attributes: { exclude: [...defaultExcludeQueryFields, 'role_uuid'] },
           },
         ],
@@ -52,7 +58,7 @@ export class RoleController {
         pageInfo,
       });
     } catch (error) {
-      console.log("role-list=>", error)
+      console.log('role-list=>', error);
       return res.responseBuilder.error('common.serverError', 500);
     }
   }
@@ -63,7 +69,7 @@ export class RoleController {
   static async save(req: Request, res: Response) {
     const { uuid, code, profit_ratio, status, menu_ids = [], role_translations = [] } = req.body;
     const isEdit = !!uuid;
-    
+
     try {
       // 验证必填字段
       if (!code) {
@@ -71,17 +77,20 @@ export class RoleController {
       }
 
       // 验证翻译数据
-      const validationError = RoleTranslationService.validateTranslations(role_translations, isEdit);
+      const validationError = RoleTranslationService.validateTranslations(
+        role_translations,
+        isEdit
+      );
       if (validationError) {
         return res.responseBuilder.error(validationError, 400);
       }
 
       // 检查角色编码是否已存在（排除当前角色）
-      const existingCode = await Role.findOne({ 
-        where: { 
-          code, 
-          uuid: isEdit ? { [Op.ne]: uuid } : { [Op.ne]: null } 
-        } 
+      const existingCode = await Role.findOne({
+        where: {
+          code,
+          uuid: isEdit ? { [Op.ne]: uuid } : { [Op.ne]: null },
+        },
       });
       if (existingCode) {
         return res.responseBuilder.error('role.codeExists');
@@ -105,24 +114,34 @@ export class RoleController {
           status,
           menu_ids,
         };
-        
+
         if (isEdit) {
           // 编辑模式：更新角色主记录
           await Role.update(formData, {
             where: { uuid },
             transaction,
           });
-          
+
           role = { uuid };
-          
+
           // 统一处理翻译记录
-          await RoleTranslationService.saveTranslations(role_translations, transaction, role.uuid, true);
+          await RoleTranslationService.saveTranslations(
+            role_translations,
+            transaction,
+            role.uuid,
+            true
+          );
         } else {
           // 创建模式：创建角色主记录
           role = await Role.create(formData, { transaction });
-          
+
           // 统一处理翻译记录
-          await RoleTranslationService.saveTranslations(role_translations, transaction, role.uuid, false);
+          await RoleTranslationService.saveTranslations(
+            role_translations,
+            transaction,
+            role.uuid,
+            false
+          );
         }
 
         await transaction.commit();
@@ -184,10 +203,10 @@ export class RoleController {
       }
 
       // 验证角色是否存在
-      const roles = await Role.findAll({ 
-        where: { uuid: { [Op.in]: role_uuids } } 
+      const roles = await Role.findAll({
+        where: { uuid: { [Op.in]: role_uuids } },
       });
-      
+
       if (roles.length !== role_uuids.length) {
         return res.responseBuilder.error('role.someNotFound', 404);
       }

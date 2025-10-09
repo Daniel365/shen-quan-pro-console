@@ -29,10 +29,9 @@ import {
   appOrderRoutes,
   appProfitRecordRoutes,
   appRoleRoutes,
+  appSystemConfigRoutes,
   appTagRoutes,
   appUserRoutes,
-  appSystemConfigRoutes,
-  appProfitDistributionRoutes,
 } from './routes/app';
 import emailRoutes from './routes/email';
 import {
@@ -42,7 +41,6 @@ import {
   roleRoutes,
   userRoutes,
 } from './routes/system';
-import uploadRoutes from './routes/upload';
 // utils
 import { sequelizeSyncConfig } from './utils/database';
 
@@ -76,7 +74,6 @@ app.use(autoLogOperation());
 app.use(`${API_VERSION}/email`, emailRoutes);
 app.use(`${API_VERSION}/admin`, adminRoutes);
 app.use(`${API_VERSION}/account`, accountRoutes);
-app.use(`${API_VERSION}/upload`, uploadRoutes);
 // system
 app.use(`${API_VERSION}/user`, userRoutes);
 app.use(`${API_VERSION}/role`, roleRoutes);
@@ -93,7 +90,6 @@ app.use(`${API_VERSION}/app/tag`, appTagRoutes);
 app.use(`${API_VERSION}/app/membership-card`, appMembershipCardRoutes);
 // app-config
 app.use(`${API_VERSION}/app/system-config`, appSystemConfigRoutes);
-app.use(`${API_VERSION}/app/profit-distribution`, appProfitDistributionRoutes);
 
 // 根路由
 app.get('/', (req, res) => {

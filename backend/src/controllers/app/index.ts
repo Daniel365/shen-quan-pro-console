@@ -7,24 +7,22 @@
 import { ActivityController } from './Activity';
 import { MembershipCardController } from './MembershipCard';
 import { OrderController } from './OrderManage';
-import { ProfitRecordController } from './ProfitRecord';
-import { ProfitDistributionController } from './ProfitDistributions';
 import { ProfitDistributionRecordController } from './ProfitDistributionRecord';
+import { ProfitRecordController } from './ProfitRecord';
 import { RoleController } from './Roles';
+import { SystemConfigController } from './SystemConfigs';
 import { TagController } from './Tag';
 import { UserController } from './Users';
-import { SystemConfigController } from './SystemConfigs';
 
 // 统一导出控制器
 export {
   ActivityController,
   MembershipCardController,
-  SystemConfigController,
   OrderController,
-  ProfitRecordController,
-  ProfitDistributionController,
   ProfitDistributionRecordController,
+  ProfitRecordController,
   RoleController,
+  SystemConfigController,
   TagController,
   UserController,
 };

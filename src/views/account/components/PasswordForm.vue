@@ -76,6 +76,12 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+// 定义emit事件
+const emit = defineEmits<{
+  success: [];
+  cancel: [];
+}>();
+
 const formRef = ref<FormInstance>();
 const loading = ref<boolean>(false);
 
@@ -134,6 +140,7 @@ const handleSubmit = async () => {
       onSuccess: () => {
         ElMessage.success(i18nText('account.passwordChangeSuccess'));
         formRef.value?.resetFields();
+        emit('success');
       },
       params: response,
     });

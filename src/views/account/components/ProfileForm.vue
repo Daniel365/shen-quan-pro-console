@@ -63,6 +63,12 @@ const { accountInfo, setAccountInfo } = useAccountStore();
 const formRef = ref<FormInstance>();
 const loading = ref<boolean>(false);
 
+// 定义emit事件
+const emit = defineEmits<{
+  success: [];
+  cancel: [];
+}>();
+
 interface formDataProps {
   username: string;
   email: string;
@@ -116,6 +122,7 @@ const handleSubmit = async () => {
           code: undefined,
         } as any);
         ElMessage.success(i18nText('action.updateSuccess'));
+        emit('success');
       },
       params: response,
     });

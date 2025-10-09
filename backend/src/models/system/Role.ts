@@ -13,7 +13,7 @@ interface RoleAttributes {
   name: string;
   code: string;
   description?: string;
-  menu_ids?: Number[];
+  menu_ids?: number[];
   status?: number;
   created_at: Date;
   updated_at: Date;

@@ -11,10 +11,16 @@ import { Activity, ActivityTranslation, Order, ProfitRecord, User, UserInvite } 
 import { buildWhereCondition, defaultListQuery, getPageInfoConfig } from '@/utils/database';
 // decorators
 import { IgnoreLog } from '@/decorators/autoLog';
-import { GenderEnum, OrderStatusEnum, ProfitStatusEnum, StatusEnum, SystemConfigKeyEnum } from '@/enum';
+import {
+  GenderEnum,
+  OrderStatusEnum,
+  ProfitStatusEnum,
+  StatusEnum,
+  SystemConfigKeyEnum,
+} from '@/enum';
 // services
-import { SystemConfigService } from '@/services/SystemConfigService';
 import { ProfitService } from '@/services/ProfitService';
+import { SystemConfigService } from '@/services/SystemConfigService';
 
 export class OrderController {
   /**
@@ -189,15 +195,15 @@ export class OrderController {
   }
 
   /**
- * 计算退款截止时间
- * @param hours 获取活动退款截止时间配置（小时数）
- * @param startTime 活动开始时间
- * @returns 退款截止时间
- */
+   * 计算退款截止时间
+   * @param hours 获取活动退款截止时间配置（小时数）
+   * @param startTime 活动开始时间
+   * @returns 退款截止时间
+   */
   static async calculateRefundDeadline(startTime: Date): Promise<Date> {
     const hours = await SystemConfigService.getConfig({
       key: SystemConfigKeyEnum.activity_refund_deadline_hours,
-      defaultValue: 2
+      defaultValue: 2,
     }); // 默认2小时
     const deadline = new Date(startTime.getTime() - hours * 60 * 60 * 1000);
     return deadline;
@@ -432,7 +438,7 @@ export class OrderController {
     try {
       const activity = await Activity.findOne({ where: { uuid: order.target_uuid } });
       // const user = await User.findOne({ where: { uuid: order.orderer_uuid } });
-      const userInviter = await UserInvite.findOne({ where: { user_uuid: order.orderer_uuid } })
+      const userInviter = await UserInvite.findOne({ where: { user_uuid: order.orderer_uuid } });
 
       if (!activity || !userInviter) {
         throw new Error('Activity or User not found');
@@ -446,7 +452,7 @@ export class OrderController {
         order.target_uuid,
         order.orderer_uuid,
         totalAmount,
-        userInviter.inviter_uuid  // 传递邀请人UUID用于合伙人分润
+        userInviter.inviter_uuid // 传递邀请人UUID用于合伙人分润
       );
 
       console.log('收益记录和分润记录创建成功:', {

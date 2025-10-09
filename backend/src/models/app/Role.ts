@@ -9,12 +9,12 @@ import { getAppDbName, sequelizeCommonConfig, sequelizeCommonFields } from '@/da
 import { StatusEnum } from '@/enum';
 import { CreateAttributes } from '@/types/database';
 import { DataTypes, Model } from 'sequelize';
-import RoleTranslation from './AppRoleTranslation';
+import RoleTranslation from './RoleTranslation';
 
 interface RoleAttributes {
   uuid: string;
   code: string;
-  menu_ids?: Number[];
+  menu_ids?: number[];
   profit_ratio?: number;
   status?: number;
   created_at: Date;
@@ -27,7 +27,10 @@ interface RoleAssociations {
 
 interface RoleCreationAttributes extends CreateAttributes<RoleAttributes> {}
 
-class AppRole extends Model<RoleAttributes, RoleCreationAttributes> implements RoleAttributes, RoleAssociations {
+class AppRole
+  extends Model<RoleAttributes, RoleCreationAttributes>
+  implements RoleAttributes, RoleAssociations
+{
   public uuid!: string;
   public code!: string;
   public menu_ids?: number[];
@@ -62,7 +65,7 @@ AppRole.init(
       comment: '分润比例（百分比）',
       type: DataTypes.DECIMAL(5, 2),
       allowNull: false,
-      defaultValue: 0.00,
+      defaultValue: 0.0,
     },
     status: {
       comment: '状态 1:启用 0:禁用',
