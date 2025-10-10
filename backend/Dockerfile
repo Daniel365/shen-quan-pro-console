@@ -1,22 +1,31 @@
-FROM node:16-alpine
+FROM node:22-alpine as builder
 
-# 维护者信息
-LABEL maintainer="your-name@example.com"
-
-# 创建工作目录
 WORKDIR /app
 
 # 复制依赖文件
-COPY package*.json./
+COPY package.json yarn.lock./
 
-# 安装生产依赖
-RUN npm ci --production
+# 安装依赖
+RUN yarn install --frozen-lockfile
 
-# 复制应用代码
+# 复制源代码和.env文件
 COPY..
+COPY.env./
 
-# 暴露后端服务端口
+# 编译TypeScript
+RUN yarn run build
+
+# 生产环境
+FROM node:22-alpine
+
+WORKDIR /app
+
+# 复制package文件和编译结果
+COPY package.json yarn.lock./
+COPY --from=builder /app/dist./dist
+COPY --from=builder /app/node_modules./node_modules
+COPY.env./
+
 EXPOSE 3000
 
-# 启动命令（根据实际入口文件调整）
-CMD ["node", "server.js"]
+CMD ["node", "dist/src/app.js"]

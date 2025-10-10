@@ -1,63 +1,92 @@
 version: '3.8'
 
 services:
+  # 前端服务
   frontend:
-    image: ${FRONTEND_IMAGE}
-    container_name: ${PROJECT_NAME}_frontend_1
-    restart: unless-stopped
+    image: vue-frontend:latest
+    container_name: vue-frontend
     ports:
       - "80:80"
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  backend:
-    image: ${BACKEND_IMAGE}
-    container_name: ${PROJECT_NAME}_backend_1
     restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-      # 后端所需的其他环境变量（根据实际需求添加）
-      # - DB_HOST=database
-      # - DB_USER=root
-      # - DB_PASS=password
     networks:
       - app-network
+    depends_on:
+      - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost"]
       interval: 30s
       timeout: 10s
       retries: 3
-    # 若后端依赖数据库等服务，可添加depends_on
-    # depends_on:
-    #   - database
 
-# 自定义网络
+  # 后端服务
+  backend:
+    image: node-backend:latest
+    container_name: node-backend
+    ports:
+      - "${PORT}:${PORT}"  # 使用.env中的PORT变量
+    restart: unless-stopped
+    environment:
+      - DB_HOST=mysql  # Docker内部通过服务名访问
+      - DB_PORT=${DB_PORT}  # 从.env读取
+      - NODE_ENV=${NODE_ENV}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - BASE_URL=${BASE_URL}
+      - PORT=${PORT}
+    networks:
+      - app-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:${PORT}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # MySQL数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: app-mysql
+    ports:
+      - "${DB_PORT}:${DB_PORT}"  # 使用.env中的数据库端口
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}  # 与.env中的密码保持一致
+      - MYSQL_DATABASE=${DB_NAME}  # 从.env读取数据库名
+      - MYSQL_USER=${DB_USER}  # 从.env读取用户名
+      - MYSQL_PASSWORD=${DB_PASSWORD}  # 从.env读取密码
+      - TZ=Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d  # 初始化脚本目录(可选)
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DB_USER}", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+
 networks:
   app-network:
     driver: bridge
 
-# 若需要数据库，可添加以下配置（以MySQL为例）
-# services:
-#   database:
-#     image: mysql:8.0
-#     container_name: ${PROJECT_NAME}_db_1
-#     restart: unless-stopped
-#     ports:
-#       - "3306:3306"
-#     environment:
-#       - MYSQL_ROOT_PASSWORD=password
-#       - MYSQL_DATABASE=app_db
-#     volumes:
-#       - db-data:/var/lib/mysql
-#     networks:
-#       - app-network
-# volumes:
-#   db-data:
+volumes:
+  mysql-data:  # 持久化MySQL数据

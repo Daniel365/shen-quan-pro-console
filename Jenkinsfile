@@ -1,173 +1,146 @@
 pipeline {
-    agent any  // 使用任意可用的Jenkins代理
+    agent any
     
-    // 工具配置（需在Jenkins全局工具中提前配置NodeJS 16）
     tools {
-        nodejs 'NodeJS_16'
+        nodejs 'NodeJS_22'  // 匹配你的Node.js配置
     }
     
-    // 环境变量定义
-    environment {
-        // 项目名称（自定义）
-        PROJECT_NAME ='my-vue-node-app'
-        // 前后端镜像名称
-        FRONTEND_IMAGE = "${PROJECT_NAME}-frontend:latest"
-        BACKEND_IMAGE = "${PROJECT_NAME}-backend:latest"
-        // docker-compose配置文件路径
-        COMPOSE_FILE = "${env.WORKSPACE}/docker-compose.yml"
+    parameters {
+        booleanParam(name: 'REBUILD_IMAGES', defaultValue: true, description: '是否重新构建Docker镜像')
+        booleanParam(name: 'RESTART_ONLY', defaultValue: false, description: '仅重启容器（不重新构建）')
     }
     
     stages {
-        // 1. 拉取代码
+        // 1. 拉取GitHub代码
         stage('拉取代码') {
             steps {
-                script {
-                    echo "从Git仓库拉取最新代码..."
-                    checkout scm  // 自动关联当前配置的Git仓库
-                    echo "代码拉取完成，当前目录: ${env.WORKSPACE}"
-                    sh "ls -la"  // 显示目录结构，确认代码拉取成功
-                }
+                echo "从GitHub拉取最新代码..."
+                checkout scm
+                sh 'git rev-parse --short HEAD > git-commit.txt'
+                sh 'cat git-commit.txt'
             }
         }
         
-        // 2. 前端项目构建
+        // 2. 构建前端项目（使用pnpm）
         stage('构建前端') {
+            when {
+                expression { return!params.RESTART_ONLY }
+            }
             steps {
-                script {
-                    echo "开始构建前端Vue项目..."
-                    dir('frontend') {  // 进入前端目录
-                        // 检查前端依赖文件
-                        sh "ls -la package.json"
-                        
-                        // 安装依赖（使用npm ci确保依赖版本一致）
-                        echo "安装前端依赖..."
-                        sh "npm ci"
-                        
-                        // 运行代码检查（可选）
-                        echo "运行代码 lint..."
-                        sh "npm run lint || true"  // 即使lint有警告也继续执行
-                        
-                        // 构建生产版本
-                        echo "构建前端生产包..."
-                        sh "npm run build"
-                        
-                        // 检查构建结果
-                        echo "构建结果检查..."
-                        sh "ls -la dist/"  // 确认dist目录生成
-                    }
-                    echo "前端构建完成"
+                dir('frontend') {
+                    echo "安装pnpm..."
+                    sh 'npm install -g pnpm'  // 全局安装pnpm
+                    
+                    echo "查看pnpm版本..."
+                    sh 'pnpm -v'
+                    
+                    echo "安装前端依赖..."
+                    sh 'pnpm install --registry=https://registry.npmmirror.com'  // 使用国内镜像
+                    
+                    echo "构建前端项目..."
+                    sh 'pnpm run build'  // pnpm构建命令
+                    
+                    echo "检查构建结果..."
+                    sh 'ls -l dist/'
                 }
             }
         }
         
-        // 3. 后端项目构建
+        // 3. 构建后端项目（使用yarn）
         stage('构建后端') {
+            when {
+                expression { return!params.RESTART_ONLY }
+            }
             steps {
-                script {
-                    echo "开始构建后端Node项目..."
-                    dir('backend') {  // 进入后端目录
-                        // 检查后端依赖文件
-                        sh "ls -la package.json"
-                        
-                        // 安装依赖（生产环境不安装devDependencies）
-                        echo "安装后端依赖..."
-                        sh "npm ci --production"
-                        
-                        // 运行单元测试（可选）
-                        echo "运行后端单元测试..."
-                        sh "npm test || true"  // 即使测试失败也继续（根据需要调整）
-                        
-                        // 检查项目文件
-                        sh "ls -la"  // 确认关键文件存在
-                    }
-                    echo "后端构建完成"
+                dir('backend') {
+                    echo "查看yarn版本..."
+                    sh 'yarn -v'  // Node.js通常预装yarn，若没有会自动安装
+                    
+                    echo "安装后端依赖..."
+                    sh 'yarn install --registry=https://registry.npmmirror.com'  // 使用国内镜像
+                    
+                    echo "检查.env文件..."
+                    sh 'if [ -f ".env" ]; then cat.env; else echo "警告：未找到.env文件"; fi'
+                    
+                    echo "编译TypeScript代码..."
+                    sh 'yarn run build'  // yarn编译命令
+                    
+                    echo "检查编译结果..."
+                    sh 'ls -l dist/src/app.js'
                 }
             }
         }
         
         // 4. 构建Docker镜像
         stage('构建Docker镜像') {
+            when {
+                expression { return params.REBUILD_IMAGES &&!params.RESTART_ONLY }
+            }
             steps {
                 script {
-                    // 构建前端镜像
-                    echo "构建前端Docker镜像: ${FRONTEND_IMAGE}"
                     dir('frontend') {
-                        sh "docker build -t ${FRONTEND_IMAGE}. -f Dockerfile"
+                        echo "构建前端Docker镜像..."
+                        sh 'docker build -t vue-frontend:latest.'
+                        sh 'docker images | grep vue-frontend'
                     }
                     
-                    // 构建后端镜像
-                    echo "构建后端Docker镜像: ${BACKEND_IMAGE}"
                     dir('backend') {
-                        sh "docker build -t ${BACKEND_IMAGE}. -f Dockerfile"
+                        echo "构建后端Docker镜像..."
+                        sh 'docker build -t node-backend:latest.'
+                        sh 'docker images | grep node-backend'
                     }
-                    
-                    // 确认镜像创建成功
-                    echo "已构建的镜像列表:"
-                    sh "docker images | grep ${PROJECT_NAME}"
                 }
             }
         }
         
-        // 5. 部署应用
+        // 5. 部署容器服务
         stage('部署应用') {
             steps {
                 script {
-                    // 检查docker-compose配置文件
-                    echo "检查docker-compose配置文件: ${COMPOSE_FILE}"
-                    sh "ls -la ${COMPOSE_FILE}"
+                    echo "停止当前运行的容器..."
+                    sh 'docker-compose down || true'
                     
-                    // 停止并移除现有容器
-                    echo "停止并清理旧容器..."
-                    sh "docker-compose -f ${COMPOSE_FILE} down || true"  // 即使没有旧容器也继续
+                    if (!params.RESTART_ONLY) {
+                        echo "启动新容器..."
+                        sh 'docker-compose up -d'
+                    } else {
+                        echo "仅重启容器..."
+                        sh 'docker-compose up -d --no-recreate'
+                    }
                     
-                    // 启动新容器
-                    echo "启动新容器..."
-                    sh "docker-compose -f ${COMPOSE_FILE} up -d"
-                    
-                    // 检查容器状态
-                    echo "当前容器状态:"
-                    sh "docker-compose -f ${COMPOSE_FILE} ps"
-                    
-                    // 查看服务日志（前10行）
-                    echo "前端服务日志:"
-                    sh "docker logs ${PROJECT_NAME}_frontend_1 --tail 10"
-                    echo "后端服务日志:"
-                    sh "docker logs ${PROJECT_NAME}_backend_1 --tail 10"
+                    echo "检查容器状态..."
+                    sh 'docker-compose ps'
                 }
             }
         }
         
         // 6. 健康检查
-        stage('健康检查') {
+        stage('服务健康检查') {
             steps {
                 script {
-                    echo "检查前端服务是否可用..."
-                    sh "curl -s --head --fail http://localhost:80 || (echo '前端服务不可用' && exit 1)"
+                    echo "检查前端服务..."
+                    sh 'curl -s --head --fail http://localhost:80 || { echo "前端服务不可用"; exit 1; }'
                     
-                    echo "检查后端服务是否可用..."
-                    sh "curl -s --head --fail http://localhost:3000 || (echo '后端服务不可用' && exit 1)"
+                    echo "检查后端服务..."
+                    sh 'curl -s --head --fail http://localhost:3000/health || { echo "后端服务不可用"; exit 1; }'
                     
-                    echo "所有服务健康检查通过"
+                    echo "检查数据库服务..."
+                    sh 'docker exec app-mysql mysqladmin ping -h localhost -u root -prootpassword || { echo "数据库服务不可用"; exit 1; }'
                 }
             }
         }
     }
     
-    // 构建后操作
     post {
         success {
-            echo "🎉 构建部署成功！"
-            echo "前端访问地址: http://${env.JENKINS_URL.split(':')[0]}:80"
-            echo "后端API地址: http://${env.JENKINS_URL.split(':')[0]}:3000"
+            echo "=============================================="
+            echo "部署成功！"
+            echo "前端访问地址: http://43.136.87.130:80"
+            echo "后端API地址: http://43.136.87.130:3000"
+            echo "=============================================="
         }
         failure {
-            echo "❌ 构建部署失败，请查看日志排查问题"
-            // 可选：发送邮件通知
-            // emailext to: 'your-email@example.com', subject: '构建失败', body: '详情请查看Jenkins日志'
-        }
-        always {
-            // 清理工作空间（可选）
-            // cleanWs()
+            echo "部署失败，请查看日志排查问题"
         }
     }
 }

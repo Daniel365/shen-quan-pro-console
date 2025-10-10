@@ -1,16 +1,31 @@
-FROM nginx:alpine AS builder
+FROM node:22-alpine as builder
 
-# 维护者信息
-LABEL maintainer="your-name@example.com"
+# 安装pnpm
+RUN npm install -g pnpm
 
-# 复制构建好的前端文件到Nginx
-COPY dist/ /usr/share/nginx/html/
+WORKDIR /app
 
-# 复制自定义Nginx配置（可选，如需修改默认配置）
+# 复制依赖文件
+COPY package.json pnpm-lock.yaml./
+
+# 安装依赖
+RUN pnpm install --frozen-lockfile
+
+# 复制源代码
+COPY..
+
+# 构建项目
+RUN pnpm run build
+
+# 生产环境
+FROM nginx:alpine
+
+# 复制构建结果到Nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# 复制Nginx配置
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# 暴露80端口
 EXPOSE 80
 
-# 启动Nginx
 CMD ["nginx", "-g", "daemon off;"]
