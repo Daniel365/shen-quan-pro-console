@@ -1,6 +1,10 @@
 pipeline {
     agent any
-    
+    stage('Test Node.js') {
+				steps {
+						sh 'node --version'
+				}
+		}
     tools {
         nodejs 'NodeJS_22'  // 匹配你的Node.js配置
     }
