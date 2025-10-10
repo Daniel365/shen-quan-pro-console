@@ -3,7 +3,7 @@
  * @Date: 2025-10-05 00:00:00
  * @Description: 个性化推荐控制器
  */
-import { Activity } from '@/models/app';
+import { Activity, Tag, User, UserTag } from '@/models/app';
 import { TagAnalysisService } from '@/services/TagAnalysisService';
 import { Request, Response } from 'express';
 
@@ -154,9 +154,6 @@ export class RecommendationController {
           message: '用户暂无标签，无法推荐相似用户',
         });
       }
-
-      // 查找有相似标签的其他用户
-      const { User, UserTag } = await import('@/models/app');
 
       const similarUserTags = await UserTag.findAll({
         where: {

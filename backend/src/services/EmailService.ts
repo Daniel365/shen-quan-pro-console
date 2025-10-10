@@ -1,8 +1,7 @@
-import nodemailer from "nodemailer";
-import crypto from "crypto";
-import { EmailVerificationType } from "../types/email";
-import { onErrorResult, onSuccessResult } from "../utils/controllersResult";
-import { ResponseResult } from "../types/interfaceResult";
+import nodemailer from 'nodemailer';
+import crypto from 'crypto';
+import { EmailVerificationType } from '../types/email';
+import { i18nText } from '../utils/i18n';
 
 interface EmailConfig {
   host: string;
@@ -26,29 +25,33 @@ export class EmailService {
   private verificationCodes: Map<string, VerificationCode> = new Map();
   private templateConfig = {
     [EmailVerificationType.LOGIN]: {
-      subject: "登录验证码",
-      color: "#ffc107",
+      subjectKey: 'email.loginSubject',
+      color: '#ffc107',
     },
     [EmailVerificationType.REGISTER]: {
-      subject: "注册验证码",
-      color: "#28a745",
+      subjectKey: 'email.registerSubject',
+      color: '#28a745',
     },
     [EmailVerificationType.RESET_PASSWORD]: {
-      subject: "重置密码验证码",
-      color: "#007bff",
+      subjectKey: 'email.resetPasswordSubject',
+      color: '#007bff',
     },
     [EmailVerificationType.EDIT_PASSWORD]: {
-      subject: "修改密码验证码",
-      color: "#007bff",
+      subjectKey: 'email.editPasswordSubject',
+      color: '#007bff',
+    },
+    [EmailVerificationType.EDIT_PROFILE]: {
+      subjectKey: 'email.editProfileSubject',
+      color: '#17a2b8',
     },
   };
   constructor(config: EmailConfig) {
     const transporter = nodemailer.createTransport(config);
     transporter.verify((error) => {
       if (error) {
-        console.log("连接错误:", error);
+        console.log('Email connection error:', error);
       } else {
-        console.log("服务器就绪，可以发送邮件");
+        console.log('Email server ready to send');
       }
     });
     this.transporter = transporter;
@@ -62,11 +65,12 @@ export class EmailService {
   // 发送验证码邮件
   async sendVerificationCode(
     email: string,
-    type: EmailVerificationType
-  ): Promise<ResponseResult> {
+    type: EmailVerificationType,
+    locale: string
+  ): Promise<{ success: boolean; messageKey: string }> {
     try {
       if (!type) {
-        return onErrorResult("验证码类型不能为空");
+        return { success: false, messageKey: 'email.typeRequired' };
       }
 
       const code = this.generateCode();
@@ -80,7 +84,7 @@ export class EmailService {
         expiresAt: new Date(Date.now() + 5 * 60 * 1000),
       });
 
-      const subject = this.getEmailField(type, "subject");
+      const subject = this.getEmailSubject(type);
       const html = this.getEmailTemplate(code, type);
 
       await this.transporter.sendMail({
@@ -90,15 +94,10 @@ export class EmailService {
         html,
       });
 
-      return onSuccessResult(
-        {},
-        {
-          message: "验证码发送成功",
-        }
-      );
+      return { success: true, messageKey: 'email.sendCodeSuccess' };
     } catch (error) {
-      console.error("发送邮件失败:", error);
-      return onErrorResult("发送邮件失败");
+      console.error('Send verification code failed:', error);
+      return { success: false, messageKey: 'email.emailFailed' };
     }
   }
 
@@ -107,32 +106,38 @@ export class EmailService {
     email: string,
     code: string,
     type: EmailVerificationType
-  ): { verifyFlag: boolean; message: string } {
+  ): { verifyFlag: boolean; messageKey: string } {
     if (!type) {
-      return { verifyFlag: false, message: "验证码类型不能为空" };
+      return { verifyFlag: false, messageKey: 'email.typeRequired' };
     }
 
     const key = `${email}_${type}`;
     const stored = this.verificationCodes.get(key);
 
     if (!stored) {
-      return { verifyFlag: false, message: "验证码不存在或已过期" };
+      return { verifyFlag: false, messageKey: 'email.codeExpired' };
     }
 
     if (stored.expiresAt < new Date()) {
       this.verificationCodes.delete(key);
-      return { verifyFlag: false, message: "验证码已过期" };
+      return { verifyFlag: false, messageKey: 'email.codeExpired' };
     }
 
     if (stored.code !== code) {
-      return { verifyFlag: false, message: "验证码错误" };
+      return { verifyFlag: false, messageKey: 'email.codeInvalid' };
     }
 
     this.verificationCodes.delete(key);
-    return { verifyFlag: true, message: "验证成功" };
+    return { verifyFlag: true, messageKey: 'email.verifyCodeSuccess' };
   }
 
-  private getEmailField<K extends keyof typeof this.templateConfig[EmailVerificationType]>(
+  // 获取邮件主题（支持国际化）
+  private getEmailSubject(type: EmailVerificationType) {
+    const subjectKey = this.templateConfig[type].subjectKey;
+    return i18nText(subjectKey);
+  }
+
+  private getEmailField<K extends keyof (typeof this.templateConfig)[EmailVerificationType]>(
     type: EmailVerificationType,
     field: K
   ) {
@@ -140,14 +145,21 @@ export class EmailService {
   }
 
   private getEmailTemplate(code: string, type: EmailVerificationType): string {
-    const color = this.getEmailField(type, "color");
-    const subject = this.getEmailField(type, "subject");
+    const color = this.getEmailField(type, 'color');
+    const subject = this.getEmailSubject(type);
+
+    // 国际化邮件内容
+    const title = i18nText('email.verificationTitle', {
+      subject: subject.replace(/验证码$/, ''),
+    });
+    const codeText = i18nText('email.yourVerificationCode');
+    const expiresText = i18nText('email.codeExpiresIn');
 
     return `
       <div style="padding: 20px; font-family: Arial, sans-serif;">
-        <h2>${subject.replace("验证码", "")}</h2>
-        <p>您的验证码是：<strong style="font-size: 24px; color: ${color};">${code}</strong></p>
-        <p>验证码5分钟内有效，请及时使用。</p>
+        <h2>${title}</h2>
+        <p>${codeText} <strong style="font-size: 24px; color: ${color};">${code}</strong></p>
+        <p>${expiresText}</p>
       </div>
     `;
   }

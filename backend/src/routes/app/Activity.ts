@@ -17,7 +17,5 @@ router.post('/create', requireAuth(), ActivityController.create);
 router.put('/update', requireAuth(), ActivityController.update);
 router.put('/delete', requireAuth(), ActivityController.delete);
 
-// 基于地点的活动列表
-router.post('/list-by-location', requireAuth(), ActivityController.listByLocation);
 
 export default router;

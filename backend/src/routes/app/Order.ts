@@ -12,8 +12,6 @@ const router = Router();
 
 // 订单管理
 router.post('/list', requireAuth(), OrderController.list);
-router.post('/create', requireAuth(), OrderController.create);
-router.put('/pay', requireAuth(), OrderController.pay);
-router.put('/refund', requireAuth(), OrderController.refund);
+router.post('/details', requireAuth(), OrderController.details);
 
 export default router;
