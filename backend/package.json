@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "shen-quan-pro-console-backend",
   "version": "1.0.0",
   "description": "Express TypeScript 后端",
   "main": "dist/index.js",
