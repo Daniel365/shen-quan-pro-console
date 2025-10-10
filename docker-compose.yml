@@ -63,10 +63,10 @@ services:
       - "${DB_PORT}:${DB_PORT}"  # 使用.env中的数据库端口
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}  # 与.env中的密码保持一致
-      - MYSQL_DATABASE=${DB_NAME}  # 从.env读取数据库名
-      - MYSQL_USER=${DB_USER}  # 从.env读取用户名
-      - MYSQL_PASSWORD=${DB_PASSWORD}  # 从.env读取密码
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}  # 从.env读取
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
       - TZ=Asia/Shanghai
     volumes:
       - mysql-data:/var/lib/mysql
